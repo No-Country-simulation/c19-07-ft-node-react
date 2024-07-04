@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "dotenv -e ./env/.env.development  nodemon src/index.ts",
+    "build": "tsc",
+    "dev": "dotenv -e ./env/.env.development nodemon  src/index.ts ",
     "start": "dotenv -e ./env/.env.production nodemon src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prisma:migrate:dev": "dotenv -e ./env/.env.development prisma migrate dev",
