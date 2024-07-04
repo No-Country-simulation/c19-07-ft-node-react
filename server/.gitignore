@@ -1,0 +1,25 @@
+# Dependencias instaladas por npm
+/node_modules
+
+# Dependencias de desarrollo instaladas por npm
+npm-debug.log
+*.swp
+.DS_Store
+
+# Archivos de configuración locales
+.env
+/env/*.env
+/env/.env.*
+!/env/.env.sample
+# Archivos de compilación de TypeScript
+/dist
+
+# Archivos de configuración de Visual Studio Code
+.vscode
+
+# Archivos de registro
+/logs
+
+# Archivos de respaldo
+*.bak
+*.backup
