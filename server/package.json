@@ -8,7 +8,8 @@
     "start": "dotenv -e ./env/.env.production nodemon src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prisma:migrate:dev": "dotenv -e ./env/.env.development prisma migrate dev",
-    "prisma:migrate:prod": "dotenv -e ./env/.env.production prisma migrate dev"
+    "prisma:migrate:prod": "dotenv -e ./env/.env.production prisma migrate dev",
+    "prisma:studio:prod": "dotenv -e ./env/.env.production prisma studio"
   },
   "keywords": [],
   "author": "",

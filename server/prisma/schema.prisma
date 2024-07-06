@@ -13,8 +13,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int @id @default(autoincrement())
-  name  String
-  email String
+enum type_user {
+  ADMIN
+  PROFESSOR
+  STUDENT
+  PARENTS
+}
+
+model Users {
+  user_id   String   @id @default(cuid())
+  name      String
+  email     String
+  password  String
+  type_user type_user
+  state     Boolean
+  createdAt DateTime
+  updatedAt DateTime
+}
+
+model Students {
+  student_id String   @id @default(cuid())
+  grade      String
+  section    String
+  state      Boolean
+  createdAt  DateTime
+  updatedAt  DateTime
+}
+
+model Messages{
+  message_id String @id @default(cuid())
+  message    String
+  state      Boolean
+  createdAt  DateTime
+  updatedAt  DateTime
 }
