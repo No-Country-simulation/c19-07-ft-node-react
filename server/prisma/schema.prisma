@@ -42,6 +42,8 @@ model Students {
   parent     Parents? @relation(fields: [parentId], references: [parent_id])
   historiales_academicos Academic_records[]
   evaluations_results Evaluations_results[]
+  educational_level_id String? @unique
+  educational_level Educational_level? @relation(fields:[educational_level_id], references: [level_id])
 }
 
 model Messages {
@@ -73,7 +75,8 @@ model Professor {
   area_academica_id  String
   fecha_contratacion String
   estado_empleado    String
-  nivel_educativo_id String
+  educational_level_id String
+  educational_level Educational_level @relation(fields: [educational_level_id], references: [level_id])
   areas_academicas   Areas_academicas @relation(fields: [area_academica_id], references: [area_academica_id])
 }
 
@@ -126,4 +129,12 @@ model Evaluations_results {
   student Students @relation(fields: [student_id], references: [student_id])
   mark Float
   comment String
+}
+
+model Educational_level {
+  level_id String @id @default(cuid())
+  name String
+  description String
+  student Students?
+  professor Professor[]
 }
