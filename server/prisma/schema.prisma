@@ -40,6 +40,7 @@ model Students {
   updatedAt  DateTime
   parentId   String?  @unique // Agregamos el campo parentId para la relación
   parent     Parents? @relation(fields: [parentId], references: [parent_id])
+  historiales_academicos Academic_records[]
 }
 
 model Messages {
@@ -91,4 +92,16 @@ model Cursos {
   professor_id      String
   area_academica_id String
   area_academica    Areas_academicas @relation(fields: [area_academica_id], references: [area_academica_id])
+  academic_record Academic_records[]
+}
+
+model Academic_records {
+  historial_id String @id @default(cuid())
+  curso_id String
+  curso Cursos @relation(fields: [curso_id], references: [cursos_id])
+  mark Float
+  comment String
+  date DateTime
+  student_id String
+  student Students @relation(fields: [student_id], references:[student_id])
 }
