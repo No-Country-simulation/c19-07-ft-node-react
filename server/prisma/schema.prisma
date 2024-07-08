@@ -41,9 +41,9 @@ model Students {
   parentId   String?  @unique // Agregamos el campo parentId para la relación
   parent     Parents? @relation(fields: [parentId], references: [parent_id])
   historiales_academicos Academic_records[]
-  evaluations_results Evaluations_results[]
+  evaluations_results Evaluation_results[]
   educational_level_id String? @unique
-  educational_level Educational_level? @relation(fields:[educational_level_id], references: [level_id])
+  educational_level Educational_levels? @relation(fields:[educational_level_id], references: [level_id])
 }
 
 model Messages {
@@ -70,32 +70,32 @@ model Alerts {
   parent    Parents  @relation(fields: [parentId], references: [parent_id])
 }
 
-model Professor {
+model Professors {
   professor_id       String           @id @default(cuid())
   area_academica_id  String
   fecha_contratacion String
   estado_empleado    String
   educational_level_id String
-  educational_level Educational_level @relation(fields: [educational_level_id], references: [level_id])
-  areas_academicas   Areas_academicas @relation(fields: [area_academica_id], references: [area_academica_id])
+  educational_level Educational_levels @relation(fields: [educational_level_id], references: [level_id])
+  areas_academicas   Academic_areas @relation(fields: [area_academica_id], references: [area_academica_id])
 }
 
-model Areas_academicas {
+model Academic_areas {
   area_academica_id String @id @default(cuid())
   nombre            String
   descripcion       String
   nivel_educativo   String
-  cursos    Cursos[]
-  professor Professor[]
+  cursos    Courses[]
+  professor Professors[]
 }
 
-model Cursos {
+model Courses {
   cursos_id         String           @id @default(cuid())
   nombre            String
   descripcion       String
   professor_id      String
   area_academica_id String
-  area_academica    Areas_academicas @relation(fields: [area_academica_id], references: [area_academica_id])
+  area_academica    Academic_areas @relation(fields: [area_academica_id], references: [area_academica_id])
   academic_record Academic_records[]
   evaluations Evaluations[]
 }
@@ -103,7 +103,7 @@ model Cursos {
 model Academic_records {
   historial_id String @id @default(cuid())
   curso_id String
-  curso Cursos @relation(fields: [curso_id], references: [cursos_id])
+  curso Courses @relation(fields: [curso_id], references: [cursos_id])
   mark Float
   comment String
   date DateTime
@@ -114,14 +114,14 @@ model Academic_records {
 model Evaluations {
   evaluation_id String @id @default(cuid())
   curso_id String
-  curso Cursos @relation(fields: [curso_id], references: [cursos_id])
+  curso Courses @relation(fields: [curso_id], references: [cursos_id])
   name String
   description String
   date DateTime
-  evaluation_result Evaluations_results[]
+  evaluation_result Evaluation_results[]
 }
 
-model Evaluations_results {
+model Evaluation_results {
   result_id String @id @default(cuid())
   evaluation_id String
   evaluation Evaluations @relation(fields:[evaluation_id], references: [evaluation_id])
@@ -131,10 +131,10 @@ model Evaluations_results {
   comment String
 }
 
-model Educational_level {
+model Educational_levels {
   level_id String @id @default(cuid())
   name String
   description String
   student Students?
-  professor Professor[]
+  professor Professors[]
 }
