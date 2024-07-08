@@ -21,7 +21,7 @@ enum type_user {
 }
 
 model Users {
-  user_id   String   @id @default(cuid())
+  user_id   String    @id @default(cuid())
   name      String
   email     String
   password  String
@@ -38,12 +38,12 @@ model Students {
   state      Boolean
   createdAt  DateTime
   updatedAt  DateTime
-  parentId   String?  @unique// Agregamos el campo parentId para la relación
-  parent     Parents? @relation(fields: [parentId], references: [parent_id])  
+  parentId   String?  @unique // Agregamos el campo parentId para la relación
+  parent     Parents? @relation(fields: [parentId], references: [parent_id])
 }
 
-model Messages{
-  message_id String @id @default(cuid())
+model Messages {
+  message_id String   @id @default(cuid())
   message    String
   state      Boolean
   createdAt  DateTime
@@ -51,18 +51,44 @@ model Messages{
 }
 
 model Parents {
-  parent_id   String   @id @default(cuid())
-  relation    String
-  student     Students?
-  alerts      Alerts[] // Relación uno a muchos con Alerts
-
+  parent_id String    @id @default(cuid())
+  relation  String
+  student   Students?
+  alerts    Alerts[] // Relación uno a muchos con Alerts
 }
 
 model Alerts {
-  parent_id     String   @id @default(cuid())
-  message       String
-  date          DateTime
-  typeAlert     String
-  parentId      String  
-  parent        Parents  @relation(fields: [parentId], references: [parent_id])   
+  parent_id String   @id @default(cuid())
+  message   String
+  date      DateTime
+  typeAlert String
+  parentId  String
+  parent    Parents  @relation(fields: [parentId], references: [parent_id])
+}
+
+model Professor {
+  professor_id       String           @id @default(cuid())
+  area_academica_id  String
+  fecha_contratacion String
+  estado_empleado    String
+  nivel_educativo_id String
+  areas_academicas   Areas_academicas @relation(fields: [area_academica_id], references: [area_academica_id])
+}
+
+model Areas_academicas {
+  area_academica_id String @id @default(cuid())
+  nombre            String
+  descripcion       String
+  nivel_educativo   String
+  cursos    Cursos[]
+  professor Professor[]
+}
+
+model Cursos {
+  cursos_id         String           @id @default(cuid())
+  nombre            String
+  descripcion       String
+  professor_id      String
+  area_academica_id String
+  area_academica    Areas_academicas @relation(fields: [area_academica_id], references: [area_academica_id])
 }
