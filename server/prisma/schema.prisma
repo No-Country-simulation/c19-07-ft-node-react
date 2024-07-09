@@ -13,8 +13,128 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int @id @default(autoincrement())
-  name  String
-  email String
+enum type_user {
+  ADMIN
+  PROFESSOR
+  STUDENT
+  PARENTS
+}
+
+model Users {
+  user_id   String    @id @default(cuid())
+  name      String
+  email     String
+  password  String
+  type_user type_user
+  state     Boolean
+  createdAt DateTime
+  updatedAt DateTime
+}
+
+model Students {
+  student_id String   @id @default(cuid())
+  grade      String
+  section    String
+  state      Boolean
+  createdAt  DateTime
+  updatedAt  DateTime
+  parentId   String?  @unique // Agregamos el campo parentId para la relación
+  parent     Parents? @relation(fields: [parentId], references: [parent_id])
+  historiales_academicos Academic_records[]
+  evaluations_results Evaluation_results[]
+  educational_level_id String? @unique
+  educational_level Educational_levels? @relation(fields:[educational_level_id], references: [level_id])
+}
+
+model Messages {
+  message_id String   @id @default(cuid())
+  message    String
+  state      Boolean
+  createdAt  DateTime
+  updatedAt  DateTime
+}
+
+model Parents {
+  parent_id String    @id @default(cuid())
+  relation  String
+  student   Students?
+  alerts    Alerts[] // Relación uno a muchos con Alerts
+}
+
+model Alerts {
+  parent_id String   @id @default(cuid())
+  message   String
+  date      DateTime
+  typeAlert String
+  parentId  String
+  parent    Parents  @relation(fields: [parentId], references: [parent_id])
+}
+
+model Professors {
+  professor_id       String           @id @default(cuid())
+  area_academica_id  String
+  fecha_contratacion String
+  estado_empleado    String
+  educational_level_id String
+  educational_level Educational_levels @relation(fields: [educational_level_id], references: [level_id])
+  areas_academicas   Academic_areas @relation(fields: [area_academica_id], references: [area_academica_id])
+}
+
+model Academic_areas {
+  area_academica_id String @id @default(cuid())
+  nombre            String
+  descripcion       String
+  nivel_educativo   String
+  cursos    Courses[]
+  professor Professors[]
+}
+
+model Courses {
+  cursos_id         String           @id @default(cuid())
+  nombre            String
+  descripcion       String
+  professor_id      String
+  area_academica_id String
+  area_academica    Academic_areas @relation(fields: [area_academica_id], references: [area_academica_id])
+  academic_record Academic_records[]
+  evaluations Evaluations[]
+}
+
+model Academic_records {
+  historial_id String @id @default(cuid())
+  curso_id String
+  curso Courses @relation(fields: [curso_id], references: [cursos_id])
+  mark Float
+  comment String
+  date DateTime
+  student_id String
+  student Students @relation(fields: [student_id], references:[student_id])
+}
+
+model Evaluations {
+  evaluation_id String @id @default(cuid())
+  curso_id String
+  curso Courses @relation(fields: [curso_id], references: [cursos_id])
+  name String
+  description String
+  date DateTime
+  evaluation_result Evaluation_results[]
+}
+
+model Evaluation_results {
+  result_id String @id @default(cuid())
+  evaluation_id String
+  evaluation Evaluations @relation(fields:[evaluation_id], references: [evaluation_id])
+  student_id String
+  student Students @relation(fields: [student_id], references: [student_id])
+  mark Float
+  comment String
+}
+
+model Educational_levels {
+  level_id String @id @default(cuid())
+  name String
+  description String
+  student Students?
+  professor Professors[]
 }

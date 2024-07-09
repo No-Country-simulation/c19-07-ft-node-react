@@ -14,9 +14,6 @@ npm-debug.log
 # Archivos de compilación de TypeScript
 /dist
 
-# Archivos de configuración de Visual Studio Code
-.vscode
-
 # Archivos de registro
 /logs
 

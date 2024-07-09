@@ -2,6 +2,9 @@ import express,{Request,Response,Application,NextFunction} from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import router from './routes/index';
+import studentRoutes from './students/students.routes';
+import professorRoutes from './professors/professors.routes';
+import parentRoutes from './parents/parents.routes';
 class Server {
     private app: Application;
     constructor() {
@@ -19,6 +22,9 @@ class Server {
 
     routes() {
         this.app.use('/api/v1', router);
+        this.app.use('/api/students', studentRoutes);
+        this.app.use('/api/professors', professorRoutes);
+        this.app.use('/api/parents', parentRoutes);
     }
 
     start() {
