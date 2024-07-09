@@ -12,10 +12,14 @@ const router = createBrowserRouter([
   {
     path: "/auth",
     element: <LoginPage />,
-  },
-  {
-    path: "/dashboard",
-  },
+    children: [
+      {
+        path: "parent",
+        // element: <elementoque tieneparent/>,
+        
+      },
+    ]
+  }
 ]);
 
 function App() {
