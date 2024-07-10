@@ -14,14 +14,15 @@
     "prisma:reset:dev": "dotenv -e ./env/.env.development prisma migrate reset"
   },
   "prisma": {
-  "seed": "dotenv -e ./env/.env.development ts-node prisma/seed/seed.ts"
-},
+    "seed": "dotenv -e ./env/.env.development ts-node prisma/seed/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "@babel/preset-typescript": "^7.24.7",
+    "@faker-js/faker": "^8.4.1",
     "@jest/globals": "^29.7.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
