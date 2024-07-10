@@ -13,8 +13,9 @@ export const getAllProfessors = async (req: Request, res: Response): Promise<voi
 
 export const createProfessor = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { area_academica_id, fecha_contratacion, educational_level_id, estado_empleado } = req.body
-    const professor = await professorService.createProfessor({ area_academica_id, fecha_contratacion, educational_level_id, estado_empleado })
+    const { area_academica_id, fecha_contratacion, educational_level_id, estado_empleado,userId } = req.body
+    const professor = await professorService.createProfessor({user_id: userId,  area_academica_id, fecha_contratacion, educational_level_id, estado_empleado,  createdAt: new Date(),
+      updatedAt: new Date() })
     res.json(professor)
   } catch (err: any) {
     console.error(err) // Log para ver el error

@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { IApiRandomUser, IUserJSON } from './apiRandomUser.type'
 import fs from 'fs'
+import profesorMain  from './seeder.professors'
 
 const prisma = new PrismaClient()
 const APIRANDOMUSER = 'https://randomuser.me/api/?inc=name,login,picture,email&password=upper,lower,number,8&nat=es&results=5'
@@ -56,6 +57,11 @@ const saveUsersToJsonFile = async (users: IUserDb[]): Promise<void> => {
   fs.writeFileSync('./prisma/seed/users.json', JSON.stringify(users))
 }
 const main = async (): Promise<void> => {
+      // Load and insert academic areas
+    const academicAreas = JSON.parse(fs.readFileSync('./prisma/seed/academicArea.json', 'utf8'))
+    await prisma.academic_areas.createMany({ data: academicAreas })
+
+
   // const usersRandom = await getApiRandomUser()
   // await transformUser(usersRandom)
   const users: IUserJSON[] = JSON.parse(fs.readFileSync('./prisma/seed/users.json', 'utf8'))
@@ -95,21 +101,14 @@ const main = async (): Promise<void> => {
       })
     }
 
-    /*    if (newUser.type_user === 'STUDENT' && ((user.studen_data) != null) && data != null) {
-         const parentsId = await prisma.parents.findMany({ select: { parent_id: true } })
-         console.log('-->', parentsId)
-         await prisma.students.create({
-           data: {
-             grade: user.studen_data.grade,
-             section: user.studen_data.section,
-             user_id: newUser.user_id,
-             educational_level_id: data.level_id,
-             parentId: parentsId[0].parent_id
-           }
-         })
-       } */
+
   })
+ 
+  const seedProfessor = await profesorMain();
 }
+
+
+
 main().then(async () => {
   await prisma.$disconnect()
 })
