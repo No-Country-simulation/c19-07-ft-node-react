@@ -133,9 +133,20 @@ export function HomePage() {
         </AppBar>
       </Box>
 
-      <div>
+      <Box 
+        position="static"
+        sx={{
+          flexGrow: 1,
+          padding: "10px",
+          marginLeft: 0,
+          backgroundColor: "purple",
+        }}
+      > {/*COMO HAGO PARA QUE ESTO SE PONGA EN PARALELO AL SIDEBAR Y NO POR DEBAJO DE EL*/}
+        <p>
+          SOL1 SOL2 SOL3 SOL4 SOL5 SOL6 SOL7 SOL8 SOL9 SOL10
+        </p>
         <Outlet />
-      </div>
+      </Box>
     </>
   );
 }
