@@ -1,11 +1,25 @@
-import {ProfesorColumnChart} from"../../components"
+import {
+  Box,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from "@mui/material";
 
-export default function PrincipalParentPage() {
+import { ParentAreaChart, StudientGradesAccordion } from "../../components";
+
+export default function YourComponent() {
   return (
-    <div >
-      <ProfesorColumnChart/>
-    </div>
+    <Box
+      sx={{
+        maxWidth: "100%",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "red",
+      }}
+    >
+      <StudientGradesAccordion/>
+      <ParentAreaChart />
+      
+    </Box>
   );
 }
-
-

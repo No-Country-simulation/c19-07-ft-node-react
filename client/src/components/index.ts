@@ -1,3 +1,5 @@
 import ProfesorColumnChart from "./ProfesorColumnChart"
+import ParentAreaChart from "./ParentAreaChart"
+import StudientGradesAccordion from "./StudientGradesAccordion"
 
-export {ProfesorColumnChart}
+export {ProfesorColumnChart, ParentAreaChart, StudientGradesAccordion}
