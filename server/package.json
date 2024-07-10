@@ -11,7 +11,7 @@
     "prisma:migrate:dev": "dotenv -e ./env/.env.development prisma migrate dev --skip-seed",
     "prisma:migrate:prod": "dotenv -e ./env/.env.production prisma migrate dev",
     "prisma:studio:prod": "dotenv -e ./env/.env.production prisma studio",
-    "prisma:reset:dev": "dotenv -e ./env/.env.development prisma migrate reset "
+    "prisma:reset:dev": "dotenv -e ./env/.env.development prisma migrate reset"
   },
   "prisma": {
   "seed": "dotenv -e ./env/.env.development ts-node prisma/seed/seed.ts"
