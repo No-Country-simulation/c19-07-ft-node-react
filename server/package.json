@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.16.1",
+    "bcrypt-ts": "^5.0.2",
     "cors": "^2.8.5",
     "dotenv-cli": "^7.4.2",
     "express": "^4.19.2",
@@ -43,9 +44,14 @@
     "nodemon": "^3.1.4"
   },
   "eslintConfig": {
-    "extends": ["./node_modules/ts-standard/eslintrc.json"],
+    "extends": [
+      "./node_modules/ts-standard/eslintrc.json"
+    ],
     "parserOptions": {
       "project": "./tsconfig.json"
+    },
+    "env": {
+      "jest": true
     }
   }
 }
