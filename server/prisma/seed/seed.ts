@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { IApiRandomUser, IUserJSON } from './apiRandomUser.type'
+import bcrypt from 'bcrypt-ts'
 import fs from 'fs'
 
 const prisma = new PrismaClient()
@@ -63,10 +64,10 @@ const main = async (): Promise<void> => {
   const educationLevel = JSON.parse(fs.readFileSync('./prisma/seed/educationLevel.json', 'utf8'))
 
   await prisma.educational_levels.createMany({ data: educationLevel })
-  const data = await prisma.educational_levels.findFirst({ where: { name: 'PRIMARY' } })
+
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   users.forEach(async (user): Promise<void> => {
-    const newUser = await prisma.users.create({
+    await prisma.users.create({
       data: {
         name: user.name,
         password: user.password,
@@ -75,40 +76,37 @@ const main = async (): Promise<void> => {
         type_user: user.type_user
       }
     })
-
-    if (newUser.type_user === 'PARENTS' && ((user.parents_data?.relation) != null) && data != null) {
-      const newParents = await prisma.parents.create({
-        data: {
-          relation: user.parents_data.relation,
-          user_id: newUser.user_id
-        }
-      })
-
-      await prisma.students.create({
-        data: {
-          grade: '1',
-          section: 'A',
-          user_id: newUser.user_id,
-          educational_level_id: data.level_id,
-          parentId: newParents.parent_id
-        }
-      })
-    }
-
-    /*    if (newUser.type_user === 'STUDENT' && ((user.studen_data) != null) && data != null) {
-         const parentsId = await prisma.parents.findMany({ select: { parent_id: true } })
-         console.log('-->', parentsId)
-         await prisma.students.create({
-           data: {
-             grade: user.studen_data.grade,
-             section: user.studen_data.section,
-             user_id: newUser.user_id,
-             educational_level_id: data.level_id,
-             parentId: parentsId[0].parent_id
-           }
-         })
-       } */
   })
+
+  const userTypeParents = await prisma.users.findMany({ where: { type_user: 'PARENTS' } })
+  const userTypeStudents = await prisma.users.findMany({ where: { type_user: 'STUDENT' } })
+  const educationalLevels = await prisma.educational_levels.findMany({})
+  const parents = userTypeParents.map((user) => {
+    return {
+      relation: 'FATHER',
+      user_id: user.user_id
+    }
+  })
+  fs.writeFileSync('./prisma/seed/parents.json', JSON.stringify(parents))
+  const parentsDb = JSON.parse(fs.readFileSync('./prisma/seed/parents.json', 'utf8'))
+  await prisma.parents.createMany({ data: parentsDb })
+  const parentsId = await prisma.parents.findMany({ select: { parent_id: true } })
+  const students = userTypeStudents.map((user, i) => {
+    return {
+      grade: '1',
+      section: 'A',
+      user_id: user.user_id,
+      educational_level_id: educationalLevels[0].level_id,
+      parentId: parentsId[i].parent_id
+    }
+  })
+
+  fs.writeFileSync('./prisma/seed/students.json', JSON.stringify(students))
+
+  const studentsDb = JSON.parse(fs.readFileSync('./prisma/seed/students.json', 'utf8'))
+
+  await prisma.students.createMany({ data: studentsDb })
+  console.log('-->', { userTypeParents, userTypeStudents })
 }
 main().then(async () => {
   await prisma.$disconnect()
