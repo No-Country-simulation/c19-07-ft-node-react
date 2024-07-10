@@ -1,0 +1,51 @@
+[
+    {
+        "name": "Manuel Rodríguez",
+        "password": "Cl7h0He4",
+        "email": "manuel.rodriguez@example.com",
+        "state": "ACTIVE",
+        "type_user": "PARENTS",
+        "parents_data": {
+            "relation": "FATHER"
+        }
+    },
+    {
+        "name": "Oscar Ibáñez",
+        "password": "1qJSL1Yt",
+        "email": "oscar.ibanez@example.com",
+        "state": "ACTIVE",
+        "type_user": "PARENTS",
+        "parents_data": {
+            "relation": "FATHER"
+        }
+    },
+    {
+        "name": "Virginia Ibáñez",
+        "password": "SWF7lLjc",
+        "email": "virginia.ibanez@example.com",
+        "state": "ACTIVE",
+        "type_user": "STUDENT",
+        "studen_data": {
+            "grade": "5",
+            "section": "A"
+        }
+    },
+    {
+        "name": "Carlos García",
+        "password": "ilUMQtCI",
+        "email": "carlos.garcia@example.com",
+        "state": "ACTIVE",
+        "type_user": "STUDENT",
+        "studen_data": {
+            "grade": "5",
+            "section": "A"
+        }
+    },
+    {
+        "name": "Nicolas Lozano",
+        "password": "Fh4YSlKf",
+        "email": "nicolas.lozano@example.com",
+        "state": "ACTIVE",
+        "type_user": "PROFESSOR"
+    }
+]
