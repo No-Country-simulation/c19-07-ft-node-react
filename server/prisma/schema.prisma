@@ -48,7 +48,7 @@ model Students {
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
   user                   Users                @relation(fields: [user_id], references: [user_id])
-  parentId               String?              @unique // Agregamos el campo parentId para la relación
+  parentId               String              @unique // Agregamos el campo parentId para la relación
   parent                 Parents?             @relation(fields: [parentId], references: [parent_id])
   historiales_academicos Academic_records[]
   evaluations_results    Evaluation_results[]
