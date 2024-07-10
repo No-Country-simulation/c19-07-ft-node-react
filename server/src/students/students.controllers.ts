@@ -13,8 +13,8 @@ export const getAllStudents = async (req: Request, res: Response): Promise<void>
 
 export const createStudent = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { grade, section, state, parentId, educationalLevelId } = req.body
-    const student = await studentService.createStudent({ grade, section, state, parentId, createdAt: new Date(), updatedAt: new Date(), educational_level_id: educationalLevelId })
+    const { grade, section, state, parentId, educational_level_id } = req.body
+    const student = await studentService.createStudent({ grade, section, state, parentId, createdAt: new Date(), updatedAt: new Date(), educational_level_id })
     res.json(student)
   } catch (err) {
     res.status(500).send('Server Error')
