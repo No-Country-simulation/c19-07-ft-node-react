@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 import { IApiRandomUser, IUserJSON } from './apiRandomUser.type'
+import { ICourses, IEvaluations, IStudents } from './academicRecords.type'
 import fs from 'fs'
+import * as faker from 'faker'
 
 const prisma = new PrismaClient()
 const APIRANDOMUSER = 'https://randomuser.me/api/?inc=name,login,picture,email&password=upper,lower,number,8&nat=es&results=5'
@@ -55,6 +57,55 @@ const insertTypeUser = async (users: Array<Omit<IUserDb, 'type_user'>>): Promise
 const saveUsersToJsonFile = async (users: IUserDb[]): Promise<void> => {
   fs.writeFileSync('./prisma/seed/users.json', JSON.stringify(users))
 }
+
+const seedAcademicRecords = async () => {
+  const students: IStudents[] = await prisma.students.findMany()
+  const courses: ICourses[] = await prisma.courses.findMany()
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  students.forEach(async (student: IStudents, i: number) => {
+    await prisma.academic_records.create({
+      data: {
+        student_id: student.student_id,
+        curso_id: courses[i].cursos_id,
+        mark: faker.number.float({ min: 0, max: 100, fractionDigits: 1 }),
+        comment: faker.lorem.words({ min: 4, max: 10 }),
+        date: faker.date.anytime()
+      }
+    })
+  })
+}
+
+const seedEvaluations = async () => {
+  const courses: ICourses[] = await prisma.courses.findMany()
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  courses.forEach(async (c: ICourses) => {
+    await prisma.evaluations.create({
+      data: {
+        curso_id: c.cursos_id,
+        name: faker.person.jobType(),
+        description: faker.lorem.words({ min: 4, max: 10 }),
+        date: faker.date.anytime()
+      }
+    })
+  })
+}
+
+const seedEvaluationsResult = async () => {
+  const evaluations: IEvaluations[] = await prisma.evaluations.findMany()
+  const students: IStudents[] = await prisma.students.findMany()
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  evaluations.forEach(async (e: IEvaluations, i: number) => {
+    await prisma.evaluation_results.create({
+      data: {
+        evaluation_id: e.evaluation_id,
+        student_id: students[i].student_id,
+        mark: faker.number.float({ min: 0, max: 100, fractionDigits: 1 }),
+        comment: faker.lorem.words({ min: 4, max: 10 })
+      }
+    })
+  })
+}
+
 const main = async (): Promise<void> => {
   // const usersRandom = await getApiRandomUser()
   // await transformUser(usersRandom)
