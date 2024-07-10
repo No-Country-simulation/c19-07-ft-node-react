@@ -45,7 +45,6 @@ model Students {
   user_id                String
   grade                  String
   section                String
-  state                  type_state
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
   user                   Users                @relation(fields: [user_id], references: [user_id])
