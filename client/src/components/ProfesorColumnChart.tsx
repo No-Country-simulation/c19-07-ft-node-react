@@ -1,5 +1,6 @@
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
+
 const fakeData = [
   {
     name: 'Juan',
@@ -61,11 +62,12 @@ export default function ProfesorColumnChart () {
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="4" />
-        <XAxis dataKey="name" /> {/*esto es lo que va a mostrarse en la linea inferior. Aca deberian ir los nombres de las materias*/}
+        <XAxis dataKey="name" /> {/*esto es lo que va a mostrarse en la linea inferior.*/}
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="english" fill="#e16162" /> {/*aca se deberia llamar al valor que guardan las notas*/}
+        <Bar dataKey="english" fill="#e16162" />
+        <Bar dataKey="arts" fill="#f9bc60" />
       </BarChart>
     </ResponsiveContainer>
   );
