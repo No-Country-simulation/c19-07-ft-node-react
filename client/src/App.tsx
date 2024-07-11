@@ -9,7 +9,7 @@ import { HomePage, NotFoundPage, ParentStudientPrincipalPage } from "./pages";
 
 import { LoginPage, AuthLayout } from "./modules/auth/";
 import {TeacherCalendar, TeacherClass, TeacherClassChosen, TeacherClassStudents, TeacherPage} from './modules/teacher/pages/index.tsx'
-
+import { PrincipalParentPage } from "./modules/parents/pages/index.ts";
 import { Classmates } from "./modules/parents/pages/Classmates.tsx";
 
 const router = createBrowserRouter([
