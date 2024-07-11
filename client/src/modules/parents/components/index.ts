@@ -1,3 +1,2 @@
-import Classmate from "./Classmate";
+export { Classmate } from "./Classmate";
 
-export {Classmate}

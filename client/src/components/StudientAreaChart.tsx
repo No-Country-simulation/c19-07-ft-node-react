@@ -51,7 +51,7 @@ const StudientFakeGrades = [
   },
 ];
 
-export default function StudientAreaChart() {
+export const StudientAreaChart = () => {
   return (
     
     <ResponsiveContainer width="95%" height={400}>

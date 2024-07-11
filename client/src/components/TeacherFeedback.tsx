@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 
-export default function TeacherFeedback() {
+export const TeacherFeedback = () => {
   return (
     <Box textAlign="center">
       <p style={{ fontSize: "3rem", color: "#ABD1C6" }}>Feedback</p>
