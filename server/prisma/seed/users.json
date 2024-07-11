@@ -4,42 +4,28 @@
         "password": "Cl7h0He4",
         "email": "manuel.rodriguez@example.com",
         "state": "ACTIVE",
-        "type_user": "PARENTS",
-        "parents_data": {
-            "relation": "FATHER"
-        }
+        "type_user": "PARENTS"
     },
     {
         "name": "Oscar Ibáñez",
         "password": "1qJSL1Yt",
         "email": "oscar.ibanez@example.com",
         "state": "ACTIVE",
-        "type_user": "PARENTS",
-        "parents_data": {
-            "relation": "FATHER"
-        }
+        "type_user": "PARENTS"
     },
     {
         "name": "Virginia Ibáñez",
         "password": "SWF7lLjc",
         "email": "virginia.ibanez@example.com",
         "state": "ACTIVE",
-        "type_user": "STUDENT",
-        "studen_data": {
-            "grade": "5",
-            "section": "A"
-        }
+        "type_user": "STUDENT"
     },
     {
         "name": "Carlos García",
         "password": "ilUMQtCI",
         "email": "carlos.garcia@example.com",
         "state": "ACTIVE",
-        "type_user": "STUDENT",
-        "studen_data": {
-            "grade": "5",
-            "section": "A"
-        }
+        "type_user": "STUDENT"
     },
     {
         "name": "Nicolas Lozano",
@@ -48,4 +34,5 @@
         "state": "ACTIVE",
         "type_user": "PROFESSOR"
     }
+    
 ]

@@ -1,10 +1,12 @@
-import { Drawer, Button, Box, AppBar } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { Drawer, Button, Box, AppBar, Typography } from "@mui/material";
+import { Outlet, useNavigate } from "react-router-dom";
 
 export function HomePage() {
+  const navigate = useNavigate();
+
   return (
     <>
-      <Box sx={{ display: "flex", flexDirection: "row", heigth:"100%"}}>
+      <Box sx={{ display: "flex", flexDirection: "row", heigth: "100%" }}>
         <Drawer
           sx={{
             flexShrink: 0,
@@ -23,7 +25,7 @@ export function HomePage() {
               },
               backgroundColor: "#abd1c6",
               alignItems: "center",
-              gap:4
+              gap: 4,
             },
           }}
           variant="permanent"
@@ -59,8 +61,23 @@ export function HomePage() {
                 color: "#abd1c6",
               },
             }}
+            onClick={() => navigate(`/parent`)}
           >
-            <p>Announcement</p>
+            <p style={{ fontWeight: "bold" }}>Performance</p>
+          </Button>
+          <Button
+            sx={{
+              backgroundColor: "#D9D9D9",
+              color: "black",
+              width: "100%",
+              "&:hover": {
+                backgroundColor: "#004643",
+                color: "#abd1c6",
+              },
+            }}
+            onClick={() => navigate(`parent/classmates`)}
+          >
+            <p style={{ fontWeight: "bold" }}>Classmates</p>
           </Button>
           <Button
             sx={{
@@ -73,47 +90,53 @@ export function HomePage() {
               },
             }}
           >
-            <p>Classmates</p>
-          </Button>
-          <Button
-            sx={{
-              backgroundColor: "#D9D9D9",
-              color: "black",
-              width: "100%",
-              "&:hover": {
-                backgroundColor: "#004643",
-                color: "#abd1c6",
-              },
-            }}
-          >
-            <p>Chat</p>
+            <p style={{ fontWeight: "bold" }}>Chat</p>
           </Button>
         </Drawer>
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "purple",
             width: "100%",
           }}
         >
           <AppBar
-            position="static"
+            position="fixed"
             sx={{
               flexGrow: 1,
               padding: "20px",
               marginLeft: 0,
               backgroundColor: "#abd1c6",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            NAVBAR
+            <Typography
+              variant="h4"
+              component="div"
+              style={{ fontWeight: "bold" }}
+            >
+              School Name
+            </Typography>
+            <Typography
+              variant="h6"
+              component="div"
+              style={{ fontWeight: "bold" }}
+            >
+              Name: teacher/studient
+            </Typography>
           </AppBar>
-          <Box sx={{
-            flexGrow: 1,
-            minHeight: 0, 
-            backgroundColor: "#004643",
-            padding: 3,
-            }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              minHeight: 0,
+              backgroundColor: "#004643",
+              padding: 3,
+              marginTop: "18vh", 
+            }}
+          >
             <Outlet />
           </Box>
         </Box>

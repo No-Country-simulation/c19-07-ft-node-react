@@ -12,7 +12,7 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
-  status: "checking",
+  status: "authenticated",
   uid: null,
   email: null,
   displayName: null,
