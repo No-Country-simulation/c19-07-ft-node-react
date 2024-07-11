@@ -33,6 +33,13 @@
         "email": "nicolas.lozano@example.com",
         "state": "ACTIVE",
         "type_user": "PROFESSOR"
+    },
+    {
+        "name": "Darvin Alania",
+        "password": "123456789",
+        "email": "darvin.alania@gmail.com",
+        "state": "ACTIVE",
+        "type_user": "PROFESSOR"
     }
     
 ]
