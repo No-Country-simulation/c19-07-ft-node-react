@@ -35,15 +35,16 @@ const seedAcademicRecords = async (): Promise<void> => {
   const courses: ICourses[] = await prisma.courses.findMany()
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   students.forEach(async (student: IStudents, i: number) => {
-    await prisma.academic_records.create({
+    const newData = await prisma.academic_records.create({
       data: {
         student_id: student.student_id,
         curso_id: courses[faker.number.int({ min: 0, max: courses.length - 1 })].cursos_id,
-        mark: faker.number.float({ max: 100, min: 100, fractionDigits: 1 }),
+        mark: faker.number.float({ max: 100, min: 0, fractionDigits: 1 }),
         comment: faker.lorem.words({ min: 4, max: 10 }),
         date: new Date()
       }
     })
+    console.log(newData)
   })
 }
 
