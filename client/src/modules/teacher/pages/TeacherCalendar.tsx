@@ -1,10 +1,7 @@
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import dayjs from "dayjs";
-import { Box, IconButton } from "@mui/material";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Box } from "@mui/material";
 
 export const TeacherCalendar = () => {
   const localizer = dayjsLocalizer(dayjs);
