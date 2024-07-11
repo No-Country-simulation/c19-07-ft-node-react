@@ -4,9 +4,9 @@ import {
   StudientAreaChart,
   GradesAccordion,
   TeacherFeedback,
-} from "../../components";
+} from "../components";
 
-export default function YourComponent() {
+export const ParentStudientPrincipalPage = () => {
   return (
     <Box
       sx={{

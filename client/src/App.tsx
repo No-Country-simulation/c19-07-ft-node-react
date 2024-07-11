@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 
 import { ProtectedRoute } from "./components";
-import { HomePage, NotFoundPage } from "./pages";
+import { HomePage, NotFoundPage, ParentStudientPrincipalPage } from "./pages";
 
 import { LoginPage, AuthLayout } from "./modules/auth/";
 import TeacherPage from "./modules/teacher/pages/TeacherPage.tsx";
@@ -13,7 +13,7 @@ import TeacherClass from "./modules/teacher/pages/TeacherClass.tsx";
 import TeacherClassChosen from "./modules/teacher/pages/TeacherClassChosen.tsx";
 import TeacherClassStudents from "./modules/teacher/pages/TeacherClassStudents.tsx";
 
-import { PrincipalParentPage, Classmates } from "./modules/parents/pages/index.ts";
+import { Classmates } from "./modules/parents/pages/Classmates.tsx";
 
 const router = createBrowserRouter([
   {
@@ -43,11 +43,15 @@ const router = createBrowserRouter([
       },
       {
         path: "parent",
-        element: <PrincipalParentPage />,
+        element: <ParentStudientPrincipalPage />,
       },
       {
         path: "parent/classmates",
         element: <Classmates />,
+      },
+      {
+        path: "studient",
+        element: <ParentStudientPrincipalPage />,
       },
     ],
   },

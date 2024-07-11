@@ -1,6 +1,6 @@
 // import { Divider, Grid, Paper } from "@mui/material";
 
-export default function Classmate() {
+export const  Classmate = () => {
   return (
     <></>
     // <Grid container item xs={12} key={index}>
