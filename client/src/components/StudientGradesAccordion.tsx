@@ -1,16 +1,17 @@
-import {Box, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import {Box, Accordion, AccordionSummary, AccordionDetails, Divider } from "@mui/material";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function StudientGradesAccordion() {
   return (
     <>
-    <Accordion sx={{backgroundColor: "#ABD1C6"}}>
+    <Accordion sx={{backgroundColor: "#ABD1C6", color:"black"}}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1-content"
           id="panel1-header"
         >
-          Grades
+          <span style={{ fontWeight: "bold" }}>Grades</span>
         </AccordionSummary>
         <AccordionDetails>
           <Box
@@ -23,6 +24,7 @@ export default function StudientGradesAccordion() {
             <Box>Matemáticas</Box>
             <Box>2</Box>
           </Box>
+          <Divider />
           <Box
             sx={{
               display: "flex",
@@ -33,6 +35,7 @@ export default function StudientGradesAccordion() {
             <Box>Matemáticas</Box>
             <Box>2</Box>
           </Box>
+          <Divider />
           <Box
             sx={{
               display: "flex",
@@ -43,6 +46,7 @@ export default function StudientGradesAccordion() {
             <Box>Matemáticas</Box>
             <Box>2</Box>
           </Box>
+          <Divider />
           <Box
             sx={{
               display: "flex",
@@ -53,6 +57,7 @@ export default function StudientGradesAccordion() {
             <Box>Matemáticas</Box>
             <Box>2</Box>
           </Box>
+          <Divider />
           <Box
             sx={{
               display: "flex",
@@ -63,6 +68,7 @@ export default function StudientGradesAccordion() {
             <Box>Matemáticas</Box>
             <Box>2</Box>
           </Box>
+          <Divider />
           <Box
             sx={{
               display: "flex",
@@ -73,26 +79,7 @@ export default function StudientGradesAccordion() {
             <Box>Matemáticas</Box>
             <Box>2</Box>
           </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Box>Matemáticas</Box>
-            <Box>2</Box>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Box>Matemáticas</Box>
-            <Box>2</Box>
-          </Box>
+          <Divider />
         </AccordionDetails>
       </Accordion>
     </>
