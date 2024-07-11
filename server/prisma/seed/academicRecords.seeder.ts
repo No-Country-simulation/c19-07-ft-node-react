@@ -94,7 +94,7 @@ const seedEvaluationsResult = async (): Promise<void> => {
   })
 }
 
-const seedCourses = async () => {
+const seedCourses = async (): Promise<void> => {
   const professors: IProfessors[] = await prisma.professors.findMany()
   const academicAreas: IAcademicAreas[] = await prisma.academic_areas.findMany()
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
