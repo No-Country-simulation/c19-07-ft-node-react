@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { IApiRandomUser, IUserJSON } from './apiRandomUser.type'
 import fs from 'fs'
+import { mainAcademicRecords } from './academicRecords.seeder'
 
 const prisma = new PrismaClient()
 const APIRANDOMUSER = 'https://randomuser.me/api/?inc=name,login,picture,email&password=upper,lower,number,8&nat=es&results=5'
@@ -110,6 +111,7 @@ const main = async (): Promise<void> => {
          })
        } */
   })
+  await mainAcademicRecords()
 }
 main().then(async () => {
   await prisma.$disconnect()

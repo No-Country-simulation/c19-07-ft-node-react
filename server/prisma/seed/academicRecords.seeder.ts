@@ -30,7 +30,7 @@ interface IEvaluations {
 
 const prisma = new PrismaClient()
 
-const seedAcademicRecords = async () => {
+const seedAcademicRecords = async (): Promise<void> => {
   const students: IStudents[] = await prisma.students.findMany()
   const courses: ICourses[] = await prisma.courses.findMany()
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -47,7 +47,7 @@ const seedAcademicRecords = async () => {
   })
 }
 
-const seedEvaluations = async () => {
+const seedEvaluations = async (): Promise<void> => {
   const courses: ICourses[] = await prisma.courses.findMany()
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   courses.forEach(async (c: ICourses) => {
@@ -62,7 +62,7 @@ const seedEvaluations = async () => {
   })
 }
 
-const seedEvaluationsResult = async () => {
+const seedEvaluationsResult = async (): Promise<void> => {
   const evaluations: IEvaluations[] = await prisma.evaluations.findMany()
   const students: IStudents[] = await prisma.students.findMany()
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -76,4 +76,10 @@ const seedEvaluationsResult = async () => {
       }
     })
   })
+}
+
+export const mainAcademicRecords = async (): Promise<void> => {
+  await seedAcademicRecords()
+  await seedEvaluations()
+  await seedEvaluationsResult()
 }
