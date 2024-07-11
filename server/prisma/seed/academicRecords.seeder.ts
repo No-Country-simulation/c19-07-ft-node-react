@@ -28,22 +28,6 @@ interface IEvaluations {
   date: Date
 }
 
-interface IProfessors {
-  professor_id: string
-  user_id: string
-  area_academica_id: string
-  fecha_contratacion: string
-  estado_empleado: string
-  educational_level_id: string
-  createdAt: Date
-  updatedAt: Date
-}
-interface IAcademicAreas {
-  area_academica_id: string
-  nombre: string
-  descripcion: string
-  nivel_educativo: string
-}
 const prisma = new PrismaClient()
 
 const seedAcademicRecords = async (): Promise<void> => {
@@ -94,24 +78,23 @@ const seedEvaluationsResult = async (): Promise<void> => {
   })
 }
 
-const seedCourses = async (): Promise<void> => {
-  const professors: IProfessors[] = await prisma.professors.findMany()
-  const academicAreas: IAcademicAreas[] = await prisma.academic_areas.findMany()
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  professors.forEach(async (profesor: IProfessors) => {
-    await prisma.courses.create({
-      data: {
-        nombre: faker.person.jobArea(),
-        descripcion: faker.lorem.words({ min: 4, max: 10 }),
-        professor_id: profesor.professor_id,
-        area_academica_id: academicAreas[faker.number.int({ min: 0, max: academicAreas.length - 1 })].area_academica_id
-      }
-    })
-  })
-}
+// const seedCourses = async (): Promise<void> => {
+//   const professors: IProfessors[] = await prisma.professors.findMany()
+//   const academicAreas: IAcademicAreas[] = await prisma.academic_areas.findMany()
+//   // eslint-disable-next-line @typescript-eslint/no-misused-promises
+//   professors.forEach(async (profesor: IProfessors) => {
+//     await prisma.courses.create({
+//       data: {
+//         nombre: faker.person.jobArea(),
+//         descripcion: faker.lorem.words({ min: 4, max: 10 }),
+//         professor_id: profesor.professor_id,
+//         area_academica_id: academicAreas[faker.number.int({ min: 0, max: academicAreas.length - 1 })].area_academica_id
+//       }
+//     })
+//   })
+// }
 
 export const mainAcademicRecords = async (): Promise<void> => {
-  await seedCourses()
   await seedAcademicRecords()
   await seedEvaluations()
   await seedEvaluationsResult()
