@@ -7,6 +7,8 @@ import TeacherClass from "./modules/teacher/pages/TeacherClass.tsx";
 import TeacherClassChosen from "./modules/teacher/pages/TeacherClassChosen.tsx";
 import TeacherClassStudents from "./modules/teacher/pages/TeacherClassStudents.tsx";
 
+import { PrincipalParentPage } from "./modules/parents/pages/index.ts"
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -14,6 +16,7 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
     children: [
       {
+
         path: "teacher",
         element: <TeacherPage />,
       },
@@ -29,15 +32,16 @@ const router = createBrowserRouter([
         path: "classStudents",
         element: <TeacherClassStudents />,
       },
+      {
+      path: "parent",
+        element: <PrincipalParentPage/>,
+      }
     ],
   },
   {
     path: "/auth",
     element: <LoginPage />,
-  },
-  {
-    path: "/dashboard",
-  },
+  }
 ]);
 
 function App() {
