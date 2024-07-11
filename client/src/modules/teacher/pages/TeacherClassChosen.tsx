@@ -1,6 +1,6 @@
 import { ClassRoomChosen } from "../components";
 
-export default function TeacherClassChosen() {
+export const TeacherClassChosen = () => {
   return (
     <div>
       <ClassRoomChosen/>

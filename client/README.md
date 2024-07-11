@@ -30,4 +30,5 @@ export default {
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
 
-Frontend used rechart library for the charts 
+Frontend used rechart library for the charts & react-big-calendar for the teacher calendar (npm install --save-dev @types/react-big-calendar  y   npm i react-big-calendar) y npm i dayjs 
+

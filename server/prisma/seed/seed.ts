@@ -3,6 +3,9 @@ import { IApiRandomUser, IUserJSON } from './apiRandomUser.type'
 import bcrypt from 'bcrypt-ts'
 import fs from 'fs'
 import seederProfessors from './seeder.professors'
+import seederCourses from './seeder.courses'
+
+import { mainAcademicRecords } from './academicRecords.seeder'
 
 const prisma = new PrismaClient()
 const APIRANDOMUSER = 'https://randomuser.me/api/?inc=name,login,picture,email&password=upper,lower,number,8&nat=es&results=5'
@@ -57,6 +60,7 @@ const insertTypeUser = async (users: Array<Omit<IUserDb, 'type_user'>>): Promise
 const saveUsersToJsonFile = async (users: IUserDb[]): Promise<void> => {
   fs.writeFileSync('./prisma/seed/users.json', JSON.stringify(users))
 }
+
 const main = async (): Promise<void> => {
   // const usersRandom = await getApiRandomUser()
   // await transformUser(usersRandom)
@@ -68,8 +72,8 @@ const main = async (): Promise<void> => {
 
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
 
-  for(let i = 0 ; i < users.length; i++) {
-      await prisma.users.create({
+  for (let i = 0; i < users.length; i++) {
+    await prisma.users.create({
       data: {
         name: users[i].name,
         password: users[i].password,
@@ -78,9 +82,7 @@ const main = async (): Promise<void> => {
         type_user: users[i].type_user
       }
     })
-
   }
- 
 
   const userTypeParents = await prisma.users.findMany({ where: { type_user: 'PARENTS' } })
   const userTypeStudents = await prisma.users.findMany({ where: { type_user: 'STUDENT' } })
@@ -111,12 +113,21 @@ const main = async (): Promise<void> => {
 
   await prisma.students.createMany({ data: studentsDb })
   console.log('-->', { userTypeParents, userTypeStudents })
-  const professorsdb =   await seederProfessors();
+  const professorsdb = await seederProfessors()
 
   fs.writeFileSync('./prisma/seed/professors.json', JSON.stringify(professorsdb))
 
   const PROFESSOR = JSON.parse(fs.readFileSync('./prisma/seed/professors.json', 'utf8'))
   await prisma.professors.createMany({ data: PROFESSOR })
+
+  const coursesDb = await seederCourses()
+  fs.writeFileSync('./prisma/seed/courses.json', JSON.stringify(coursesDb))
+
+  const COURSES = JSON.parse(fs.readFileSync('./prisma/seed/courses.json', 'utf8'))
+  await prisma.courses.createMany({ data: COURSES })
+
+
+  await mainAcademicRecords()
 }
 main().then(async () => {
   await prisma.$disconnect()

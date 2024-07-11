@@ -5,16 +5,12 @@ import {
 } from "react-router-dom";
 
 import { ProtectedRoute } from "./components";
-import { HomePage, NotFoundPage } from "./pages";
+import { HomePage, NotFoundPage, ParentStudientPrincipalPage } from "./pages";
 
 import { LoginPage, AuthLayout } from "./modules/auth/";
-
-import TeacherPage from "./modules/teacher/pages/TeacherPage.tsx";
-import TeacherClass from "./modules/teacher/pages/TeacherClass.tsx";
-import TeacherClassChosen from "./modules/teacher/pages/TeacherClassChosen.tsx";
-import TeacherClassStudents from "./modules/teacher/pages/TeacherClassStudents.tsx";
-
+import {TeacherCalendar, TeacherClass, TeacherClassChosen, TeacherClassStudents, TeacherPage} from './modules/teacher/pages/index.tsx'
 import { PrincipalParentPage } from "./modules/parents/pages/index.ts";
+import { Classmates } from "./modules/parents/pages/Classmates.tsx";
 
 const router = createBrowserRouter([
   {
@@ -27,7 +23,6 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
     children: [
       {
-
         path: "teacher",
         element: <TeacherPage />,
       },
@@ -44,9 +39,21 @@ const router = createBrowserRouter([
         element: <TeacherClassStudents />,
       },
       {
-      path: "parent",
-        element: <PrincipalParentPage/>,
-      }
+        path: "teacher/calendar",
+        element: <TeacherCalendar />,
+      },
+      {
+        path: "parent",
+        element: <ParentStudientPrincipalPage />,
+      },
+      {
+        path: "parent/classmates",
+        element: <Classmates />,
+      },
+      {
+        path: "studient",
+        element: <ParentStudientPrincipalPage />,
+      },
     ],
   },
   {

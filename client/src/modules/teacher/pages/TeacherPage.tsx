@@ -1,7 +1,7 @@
 import { ClassRoom } from "../components";
 
 //pages
-export default function TeacherPage() {
+export const TeacherPage = () => {
   return (
     <div>
         <ClassRoom/>

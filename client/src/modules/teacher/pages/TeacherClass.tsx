@@ -1,6 +1,6 @@
 import { ClassRoomClass } from "../components";
 
-export default function TeacherClass() {
+export const TeacherClass = () => {
   return (
     <div>
       <ClassRoomClass />

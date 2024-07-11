@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
 
 import {
-  ParentAreaChart,
-  StudientGradesAccordion,
+  StudientAreaChart,
+  GradesAccordion,
   TeacherFeedback,
-} from "../../components";
+} from "../components";
 
-export default function YourComponent() {
+export const ParentStudientPrincipalPage = () => {
   return (
     <Box
       sx={{
@@ -16,8 +16,8 @@ export default function YourComponent() {
         gap: 5,
       }}
     >
-      <StudientGradesAccordion />
-      <ParentAreaChart />
+      <GradesAccordion />
+      <StudientAreaChart />
       <TeacherFeedback />
     </Box>
   );

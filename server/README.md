@@ -11,7 +11,7 @@ fe=fronted
 1. Create branch : git checkout -b darvin-be-init-backend-Postgre
 2. Delete branch : git branch -d nombre-de-la-rama
 3. Delete forced branch: git branch -D nombre-de-la-rama
-4. Change branch : git switch nueva-rama
+4. Change branch: git switch nueva-rama
 
 
 ```
