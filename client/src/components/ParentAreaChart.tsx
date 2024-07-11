@@ -62,13 +62,55 @@ export default function ParentAreaChart() {
         <XAxis dataKey="month" />
         <YAxis domain={[0, 10]} ticks={[0]} />
         <Tooltip />
-        <Area type="monotone" dataKey="math" stackId="1" stroke="blue" fill="blue" />
-        <Area type="monotone" dataKey="english" stackId="1" stroke="green" fill="green" />
-        <Area type="monotone" dataKey="science" stackId="1" stroke="purple" fill="purple" />
-        <Area type="monotone" dataKey="arts" stackId="1" stroke="yellow" fill="yellow" />
-        <Area type="monotone" dataKey="sports" stackId="1" stroke="red" fill="red" />
-        <Area type="monotone" dataKey="history" stackId="1" stroke="brown" fill="brown" />
-        <Area type="monotone" dataKey="chemistry" stackId="1" stroke="pink" fill="pink" />
+        <Area
+          type="monotone"
+          dataKey="math"
+          stackId="1"
+          stroke="blue"
+          fill="blue"
+        />
+        <Area
+          type="monotone"
+          dataKey="english"
+          stackId="1"
+          stroke="green"
+          fill="green"
+        />
+        <Area
+          type="monotone"
+          dataKey="science"
+          stackId="1"
+          stroke="purple"
+          fill="purple"
+        />
+        <Area
+          type="monotone"
+          dataKey="arts"
+          stackId="1"
+          stroke="yellow"
+          fill="yellow"
+        />
+        <Area
+          type="monotone"
+          dataKey="sports"
+          stackId="1"
+          stroke="red"
+          fill="red"
+        />
+        <Area
+          type="monotone"
+          dataKey="history"
+          stackId="1"
+          stroke="brown"
+          fill="brown"
+        />
+        <Area
+          type="monotone"
+          dataKey="chemistry"
+          stackId="1"
+          stroke="pink"
+          fill="pink"
+        />
       </AreaChart>
     </ResponsiveContainer>
   );
