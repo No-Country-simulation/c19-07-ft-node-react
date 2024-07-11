@@ -3,6 +3,8 @@ import { IApiRandomUser, IUserJSON } from './apiRandomUser.type'
 import bcrypt from 'bcrypt-ts'
 import fs from 'fs'
 import seederProfessors from './seeder.professors'
+import seederCourses from './seeder.courses'
+
 
 const prisma = new PrismaClient()
 const APIRANDOMUSER = 'https://randomuser.me/api/?inc=name,login,picture,email&password=upper,lower,number,8&nat=es&results=5'
@@ -117,6 +119,14 @@ const main = async (): Promise<void> => {
 
   const PROFESSOR = JSON.parse(fs.readFileSync('./prisma/seed/professors.json', 'utf8'))
   await prisma.professors.createMany({ data: PROFESSOR })
+
+
+  const coursesDb = await seederCourses()
+  fs.writeFileSync('./prisma/seed/courses.json', JSON.stringify(coursesDb))
+
+  const COURSES = JSON.parse(fs.readFileSync('./prisma/seed/courses.json', 'utf8'))
+  await prisma.courses.createMany({ data: COURSES })
+
 }
 main().then(async () => {
   await prisma.$disconnect()
