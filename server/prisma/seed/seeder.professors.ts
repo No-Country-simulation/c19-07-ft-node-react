@@ -5,7 +5,10 @@ const prisma = new PrismaClient()
 
 //poblar area academica
 const getUserAcademic = async () => {
+    const academicArea = JSON.parse(fs.readFileSync('./prisma/seed/academicArea.json', 'utf8'))
+    await prisma.academic_areas.createMany({ data: academicArea })
     const resolveAcademic = await prisma.academic_areas.findMany({})
+
     return resolveAcademic;
 }
 
@@ -28,15 +31,17 @@ const main = async () => {
     const resolveMain = await getUserProfessor()
 
     const resolveAcademic = await getUserAcademic()
+    console.log("000--->",resolveAcademic)
+
     const resolveEducationLevels = await getEducationLevels()
     
-    console.log("--->",resolveMain)
+    console.log("111--->",resolveMain)
 
     const forMac = resolveMain.map((professor, index) => {
 
         
-        const dataa = {
-            name: professor.name,
+        return {
+            // name: professor.name,
             user_id: professor.user_id,
             fecha_contratacion: new Date(),
             estado_empleado: 'ACTIVE',
@@ -44,15 +49,12 @@ const main = async () => {
             area_academica_id: resolveAcademic[index].area_academica_id,
             
         }
-        return dataa
+        // return dataa
 
     })
-    console.log("---formac>",forMac)
+    console.log("222---formac>",forMac)
     return forMac
-    // fs.writeFileSync('./prisma/seed/professors.json', JSON.stringify(forMac))
-
-    // const PROFESSOR = JSON.parse(fs.readFileSync('./prisma/seed/professors.json', 'utf8'))
-    // await prisma.professors.createMany({ data: PROFESSOR })
+ 
 
 
 }
