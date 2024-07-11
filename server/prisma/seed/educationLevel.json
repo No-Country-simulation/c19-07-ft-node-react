@@ -1,0 +1,10 @@
+[
+    {
+        "name": "PRIMARY",
+        "description":"education primary"
+    },
+    {
+        "name": "SECONDARY",
+        "description":"education secondary"
+    }
+]

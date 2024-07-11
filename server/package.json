@@ -8,10 +8,14 @@
     "start": "dotenv -e ./env/.env.production nodemon src/index.ts",
     "test": "dotenv -e ./env/.env.development jest --config ./jest.config.js",
     "test:production": "dotenv -e ./env/.env.production jest --config ./jest.config.js",
-    "prisma:migrate:dev": "dotenv -e ./env/.env.development prisma migrate dev",
+    "prisma:migrate:dev": "dotenv -e ./env/.env.development prisma migrate dev --skip-seed",
     "prisma:migrate:prod": "dotenv -e ./env/.env.production prisma migrate dev",
-    "prisma:studio:prod": "dotenv -e ./env/.env.production prisma studio"
+    "prisma:studio:prod": "dotenv -e ./env/.env.production prisma studio",
+    "prisma:reset:dev": "dotenv -e ./env/.env.development prisma migrate reset"
   },
+  "prisma": {
+  "seed": "dotenv -e ./env/.env.development ts-node prisma/seed/seed.ts"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -32,6 +36,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.16.1",
+    "bcrypt-ts": "^5.0.2",
     "cors": "^2.8.5",
     "dotenv-cli": "^7.4.2",
     "express": "^4.19.2",
@@ -39,9 +44,14 @@
     "nodemon": "^3.1.4"
   },
   "eslintConfig": {
-    "extends": ["./node_modules/ts-standard/eslintrc.json"],
+    "extends": [
+      "./node_modules/ts-standard/eslintrc.json"
+    ],
     "parserOptions": {
       "project": "./tsconfig.json"
+    },
+    "env": {
+      "jest": true
     }
   }
 }

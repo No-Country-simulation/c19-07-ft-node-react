@@ -6,8 +6,16 @@ import {
 
 import { ProtectedRoute } from "./components";
 import { HomePage, NotFoundPage } from "./pages";
+
 import { LoginPage, AuthLayout } from "./modules/auth/";
 
+import LoginPage from "./modules/auth/pages/LoginPage.tsx";
+import TeacherPage from "./modules/teacher/pages/TeacherPage.tsx";
+import TeacherClass from "./modules/teacher/pages/TeacherClass.tsx";
+import TeacherClassChosen from "./modules/teacher/pages/TeacherClassChosen.tsx";
+import TeacherClassStudents from "./modules/teacher/pages/TeacherClassStudents.tsx";
+
+import { PrincipalParentPage } from "./modules/parents/pages/index.ts";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +26,29 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     errorElement: <NotFoundPage />,
+    children: [
+      {
+
+        path: "teacher",
+        element: <TeacherPage />,
+      },
+      {
+        path: "class",
+        element: <TeacherClass />,
+      },
+      {
+        path: "classChosen",
+        element: <TeacherClassChosen />,
+      },
+      {
+        path: "classStudents",
+        element: <TeacherClassStudents />,
+      },
+      {
+      path: "parent",
+        element: <PrincipalParentPage/>,
+      }
+    ],
   },
   {
     path: "/auth/*",
