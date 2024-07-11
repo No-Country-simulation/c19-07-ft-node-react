@@ -97,12 +97,11 @@ export function HomePage() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "purple",
             width: "100%",
           }}
         >
           <AppBar
-            position="static"
+            position="fixed"
             sx={{
               flexGrow: 1,
               padding: "20px",
@@ -135,6 +134,7 @@ export function HomePage() {
               minHeight: 0,
               backgroundColor: "#004643",
               padding: 3,
+              marginTop: "18vh", 
             }}
           >
             <Outlet />

@@ -8,10 +8,7 @@ import { ProtectedRoute } from "./components";
 import { HomePage, NotFoundPage, ParentStudientPrincipalPage } from "./pages";
 
 import { LoginPage, AuthLayout } from "./modules/auth/";
-import TeacherPage from "./modules/teacher/pages/TeacherPage.tsx";
-import TeacherClass from "./modules/teacher/pages/TeacherClass.tsx";
-import TeacherClassChosen from "./modules/teacher/pages/TeacherClassChosen.tsx";
-import TeacherClassStudents from "./modules/teacher/pages/TeacherClassStudents.tsx";
+import {TeacherCalendar, TeacherClass, TeacherClassChosen, TeacherClassStudents, TeacherPage} from './modules/teacher/pages/index.tsx'
 
 import { Classmates } from "./modules/parents/pages/Classmates.tsx";
 
@@ -40,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "classStudents",
         element: <TeacherClassStudents />,
+      },
+      {
+        path: "teacher/calendar",
+        element: <TeacherCalendar />,
       },
       {
         path: "parent",
