@@ -1,5 +1,5 @@
-import { Grid, Paper, Divider, Box } from "@mui/material";
-// import { Classmate } from "../components";
+import { Grid, Paper, Divider } from "@mui/material";
+// import { Classmates } from ".";
 
 const fakeStudients = [
   {
@@ -53,7 +53,7 @@ const fakeStudients = [
   },
 ];
 
-export default function Classmates() {
+export const Classmates = () => {
   return (
 
       <Grid container spacing={2}>
