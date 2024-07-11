@@ -1,11 +1,10 @@
-import {
-  Box,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from "@mui/material";
+import { Box } from "@mui/material";
 
-import { ParentAreaChart, StudientGradesAccordion } from "../../components";
+import {
+  ParentAreaChart,
+  StudientGradesAccordion,
+  TeacherFeedback,
+} from "../../components";
 
 export default function YourComponent() {
   return (
@@ -14,12 +13,12 @@ export default function YourComponent() {
         maxWidth: "100%",
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "red",
+        gap: 5,
       }}
     >
-      <StudientGradesAccordion/>
+      <StudientGradesAccordion />
       <ParentAreaChart />
-      
+      <TeacherFeedback />
     </Box>
   );
 }
