@@ -13,6 +13,9 @@ export const getAllProfessors = async (req: Request, res: Response): Promise<voi
 
 export const createProfessor = async (req: Request, res: Response): Promise<void> => {
   try {
+    const isValid: boolean = professorService.validateCreateProfessor(req.body)
+    if (isValid) res.status(400).send({ data: 'Invalid body request' })
+
     const { academicAreaId, hireDate, educationalLevelId, employeeState, userId } = req.body
     const professor = await professorService.createProfessor({
       user_id: userId,
@@ -46,6 +49,9 @@ export const getProfessorById = async (req: Request, res: Response): Promise<voi
 
 export const updateProfessor = async (req: Request, res: Response): Promise<void> => {
   try {
+    const isValid: boolean = professorService.validateUpdateProfessor(req.body)
+    if (isValid) res.status(400).send({ data: 'Invalid body request' })
+
     const professor = await professorService.updateProfessor(req.params.id, req.body)
     res.json(professor)
   } catch (err: any) {
