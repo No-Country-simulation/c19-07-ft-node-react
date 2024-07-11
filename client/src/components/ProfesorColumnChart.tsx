@@ -54,7 +54,8 @@ const fakeData = [
   },
 ];
 
-export default function ProfesorColumnChart () {
+
+export const ProfesorColumnChart = () => {
   return (
     <ResponsiveContainer width="100%" aspect={2}>
       <BarChart
