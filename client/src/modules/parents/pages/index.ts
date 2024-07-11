@@ -1,4 +1,4 @@
 import PrincipalParentPage from "../PrincipalParentPage"
+import Classmates from "./Classmates"
 
-
-export { PrincipalParentPage }
+export { PrincipalParentPage, Classmates }
