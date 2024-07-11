@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 
 import {
-  ParentAreaChart,
-  StudientGradesAccordion,
+  StudientAreaChart,
+  GradesAccordion,
   TeacherFeedback,
 } from "../../components";
 
@@ -16,8 +16,8 @@ export default function YourComponent() {
         gap: 5,
       }}
     >
-      <StudientGradesAccordion />
-      <ParentAreaChart />
+      <GradesAccordion />
+      <StudientAreaChart />
       <TeacherFeedback />
     </Box>
   );
