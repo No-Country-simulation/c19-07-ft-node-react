@@ -14,7 +14,7 @@ fe=fronted
 4. Change branch: git switch nueva-rama
 
 
-```s
+```
 
 
 
