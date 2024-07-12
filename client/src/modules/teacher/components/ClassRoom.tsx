@@ -1,7 +1,6 @@
 //Primer vista maestro
 import { Box, Container, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
-import Slice from "./Slice";
 
 const ClassRoom = () => {
   return (
@@ -10,15 +9,10 @@ const ClassRoom = () => {
         {/* Contenedor principal */}
         <Grid item xs={12}>
           <Grid container spacing={3}>
-            {/* Columna izquierda (25%) */}
-            <Grid item xs={3}>
-              <Slice />
-            </Grid>
-
             {/* Columna derecha (75%) */}
             <Grid
               item
-              xs={9}
+              xs={12}
               sx={{
                 backgroundColor: "#004643",
                 padding: "4vh",
@@ -33,6 +27,9 @@ const ClassRoom = () => {
                       sx={{
                         backgroundColor: "#f9bc60",
                         borderRadius: "30px",
+                        "&:hover": {
+                                backgroundColor: "#e16162",
+                              },
                         height: {
                           xs: "20vh",
                           sm: "40vh",
@@ -64,6 +61,9 @@ const ClassRoom = () => {
                     sx={{
                       backgroundColor: "#f9bc60",
                       borderRadius: "20px",
+                      "&:hover": {
+                                backgroundColor: "#e16162",
+                              },
                       height: {
                         xs: "20vh",
                         sm: "40vh",

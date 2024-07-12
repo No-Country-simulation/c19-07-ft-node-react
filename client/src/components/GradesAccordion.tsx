@@ -2,7 +2,7 @@ import {Box, Accordion, AccordionSummary, AccordionDetails, Divider } from "@mui
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-export default function StudientGradesAccordion() {
+export const GradesAccordion = () => {
   return (
     <>
     <Accordion sx={{backgroundColor: "#ABD1C6", color:"black"}}>

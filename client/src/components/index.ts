@@ -1,11 +1,6 @@
 
 export { ProtectedRoute } from "./ProtectedRoute";
-
-import ProfesorColumnChart from "./ProfesorColumnChart"
-import ParentAreaChart from "./ParentAreaChart"
-import StudientGradesAccordion from "./StudientGradesAccordion"
-import TeacherFeedback from "./TeacherFeedback"
-
-
-
-export {ProfesorColumnChart, ParentAreaChart, StudientGradesAccordion, TeacherFeedback}
+export { ProfesorColumnChart } from "./ProfesorColumnChart";
+export { GradesAccordion } from "./GradesAccordion";
+export { TeacherFeedback } from "./TeacherFeedback";
+export { StudientAreaChart } from "./StudientAreaChart";

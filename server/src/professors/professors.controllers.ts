@@ -16,9 +16,23 @@ export const getAllProfessors = async (req: Request, res: Response): Promise<voi
 
 export const createProfessor = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { area_academica_id, fecha_contratacion, educational_level_id, user_id } = req.body
-    const professor = await professorService.createProfessor({area_academica_id, fecha_contratacion, educational_level_id,user_id})
-    res.status(201).json(professor);
+
+    const isValid: boolean = professorService.validateCreateProfessor(req.body)
+    if (isValid) res.status(400).send({ data: 'Invalid body request' })
+
+    const { academicAreaId, hireDate, educationalLevelId, employeeState, userId } = req.body
+    const professor = await professorService.createProfessor({
+      user_id: userId,
+      area_academica_id: academicAreaId,
+      fecha_contratacion: hireDate,
+      educational_level_id: educationalLevelId,
+      estado_empleado: employeeState,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    })
+    res.json(professor)
+
+    
   } catch (err: any) {
     console.error(err) // Log para ver el error
     res.status(500).send({ error: 'Server Error', details: err.message })
@@ -57,6 +71,9 @@ export const getProfessorByIdController = async (req: Request, res: Response):Pr
 
 export const updateProfessor = async (req: Request, res: Response): Promise<void> => {
   try {
+    const isValid: boolean = professorService.validateUpdateProfessor(req.body)
+    if (isValid) res.status(400).send({ data: 'Invalid body request' })
+
     const professor = await professorService.updateProfessor(req.params.id, req.body)
     res.json(professor)
   } catch (err: any) {

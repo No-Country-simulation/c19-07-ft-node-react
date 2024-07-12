@@ -1,7 +1,9 @@
 import { Drawer, Button, Box, AppBar, Typography } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 export function HomePage() {
+  const navigate = useNavigate();
+
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "row", heigth: "100%" }}>
@@ -59,8 +61,9 @@ export function HomePage() {
                 color: "#abd1c6",
               },
             }}
+            onClick={() => navigate(`/parent`)}
           >
-            <p style={{ fontWeight: "bold" }}>Announcement</p>
+            <p style={{ fontWeight: "bold" }}>Performance</p>
           </Button>
           <Button
             sx={{
@@ -72,6 +75,7 @@ export function HomePage() {
                 color: "#abd1c6",
               },
             }}
+            onClick={() => navigate(`parent/classmates`)}
           >
             <p style={{ fontWeight: "bold" }}>Classmates</p>
           </Button>
@@ -93,12 +97,11 @@ export function HomePage() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "purple",
             width: "100%",
           }}
         >
           <AppBar
-            position="static"
+            position="fixed"
             sx={{
               flexGrow: 1,
               padding: "20px",
@@ -131,6 +134,7 @@ export function HomePage() {
               minHeight: 0,
               backgroundColor: "#004643",
               padding: 3,
+              marginTop: "18vh", 
             }}
           >
             <Outlet />

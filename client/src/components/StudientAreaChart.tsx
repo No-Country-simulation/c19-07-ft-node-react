@@ -51,12 +51,12 @@ const StudientFakeGrades = [
   },
 ];
 
-export default function ParentAreaChart() {
+export const StudientAreaChart = () => {
   return (
-    <ResponsiveContainer width="90%" height={400}>
+    
+    <ResponsiveContainer width="95%" height={400}>
       <AreaChart
         data={StudientFakeGrades}
-        margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" />
