@@ -14,7 +14,7 @@ export const getAllParents = async (req: Request, res: Response): Promise<void> 
 export const createParents = async (req: Request, res: Response): Promise<void> => {
   try {
     const { relation } = req.body
-    const parents = await parentsService.createParents({user_id: 'some_user_id',relation,createdAt: new Date(),updatedAt: new Date(), })
+    const parents = await parentsService.createParents({ user_id: 'some_user_id', relation, createdAt: new Date(), updatedAt: new Date() })
     res.json(parents)
   } catch (err: any) {
     console.error(err) // Log para ver el error
