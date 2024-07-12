@@ -8,6 +8,8 @@ import professorRoutes from './professors/professors.routes'
 import parentRoutes from './parents/parents.routes'
 import authRoutes from './auth/auth.route'
 import cookieParser from 'cookie-parser'
+import swaggerUi from 'swagger-ui-express'
+import swaggerFile from '../openapi.json'
 class Server {
   private readonly app: Application
 
@@ -19,7 +21,7 @@ class Server {
   }
 
   config () {
-    this.app.set('port', process.env.PORT_SERVER || 3000)
+    this.app.set('port', (process.env.PORT_SERVER != null) || 3000)
     this.app.use(morgan('dev'))
     this.app.use(express.json())
     this.app.use(cookieParser())
@@ -34,6 +36,7 @@ class Server {
     this.app.use('/api/students', studentRoutes)
     this.app.use('/api/professors', professorRoutes)
     this.app.use('/api/parents', parentRoutes)
+    this.app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
     this.app.use('/api/v1/auth', authRoutes)
   }
 

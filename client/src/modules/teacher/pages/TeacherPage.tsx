@@ -5,8 +5,6 @@ export const TeacherPage = () => {
   return (
     <div>
         <ClassRoom/>
-      <h1>Primer vista maestro</h1>
-
     </div>
   );
 }

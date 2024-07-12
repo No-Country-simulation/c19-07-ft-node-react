@@ -1,7 +1,6 @@
 //tercera vista maestros-clases-clase elegida
 import { Box, Container, Grid, IconButton } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
-import Slice from "./Slice";
 import { useNavigate, Link } from "react-router-dom";
 
 const ClassRoomChosen = () => {
@@ -17,15 +16,10 @@ const ClassRoomChosen = () => {
         {/* Contenedor principal */}
         <Grid item xs={12}>
           <Grid container spacing={3}>
-            {/* Columna izquierda (25%) */}
-            <Grid item xs={3}>
-              <Slice />
-            </Grid>
-
             {/* Columna derecha (75%) */}
             <Grid
               item
-              xs={9}
+              xs={12}
               sx={{
                 backgroundColor: "#004643",
                 padding: "4vh",
@@ -40,11 +34,15 @@ const ClassRoomChosen = () => {
                   onClick={handleBackButtonClick}
                   sx={{
                     color: "black",
+                    fontWeight: "bold",
                     top: "-15px",
-                    backgroundColor: "#f9bc60",
+                    //backgroundColor: "#f9bc60",
                     height: "5vh",
                     width: "50px",
                     borderRadius: "0px",
+                    "&:hover": {
+                      backgroundColor: "#f9bc60",
+                    },
                   }}
                 >
                   <ArrowBack />
@@ -53,12 +51,18 @@ const ClassRoomChosen = () => {
                 {/* Contenedor Students y Schedule */}
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={12} md={12} lg={12}>
-                    <Link to="/classStudents" style={{ textDecoration: "none" }}>
+                    <Link
+                      to="/classStudents"
+                      style={{ textDecoration: "none" }}
+                    >
                       <Box
                         component="div"
                         sx={{
                           backgroundColor: "#f9bc60",
                           borderRadius: "20px",
+                          "&:hover": {
+                            backgroundColor: "#e16162",
+                          },
                           height: {
                             xs: "15vh",
                             sm: "30vh",
@@ -90,6 +94,9 @@ const ClassRoomChosen = () => {
                       sx={{
                         backgroundColor: "#f9bc60",
                         borderRadius: "20px",
+                        "&:hover": {
+                          backgroundColor: "#e16162",
+                        },
                         height: {
                           xs: "15vh",
                           sm: "30vh",
