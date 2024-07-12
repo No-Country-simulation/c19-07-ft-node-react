@@ -6,7 +6,8 @@ import { ResponseHandler } from './libs/response.lib'
 import studentRoutes from './students/students.routes'
 import professorRoutes from './professors/professors.routes'
 import parentRoutes from './parents/parents.routes'
-import authRoutes from './auth/routes/auth.route'
+import authRoutes from './auth/auth.route'
+import cookieParser from 'cookie-parser'
 class Server {
   private readonly app: Application
 
@@ -18,10 +19,14 @@ class Server {
   }
 
   config () {
-    this.app.set('port', (process.env.PORT_SERVER != null) || 3000)
+    this.app.set('port', process.env.PORT_SERVER || 3000)
     this.app.use(morgan('dev'))
-    this.app.use(cors())
     this.app.use(express.json())
+    this.app.use(cookieParser())
+    this.app.use(cors({
+      origin: '*',
+      credentials: true
+    }))
   }
 
   routes () {
@@ -36,7 +41,8 @@ class Server {
     // Manejo de errores
     this.app.use((err: any, req: Request, res: Response, next: NextFunction) => {
       const responseHandler = new ResponseHandler(res)
-      responseHandler.sendError(500, err.message || 'Internal Server Error')
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      responseHandler.sendError(err.statusCode || 500, err.message || 'Internal Server Error', err.errors || {})
     })
   }
 
