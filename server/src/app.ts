@@ -5,6 +5,8 @@ import router from './routes/index'
 import studentRoutes from './students/students.routes'
 import professorRoutes from './professors/professors.routes'
 import parentRoutes from './parents/parents.routes'
+import swaggerUi from 'swagger-ui-express'
+import swaggerFile from '../openapi.json'
 class Server {
   private readonly app: Application
   constructor () {
@@ -25,6 +27,7 @@ class Server {
     this.app.use('/api/students', studentRoutes)
     this.app.use('/api/professors', professorRoutes)
     this.app.use('/api/parents', parentRoutes)
+    this.app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
   }
 
   start () {
