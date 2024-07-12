@@ -1,0 +1,745 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Swagger Petstore - OpenAPI 3.0",
+    "description": "Documentation of Schools Metris API",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://hostingName/api/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "professors",
+      "description": "Everything about professors"
+    },
+    {
+      "name": "students",
+      "description": "Access to Petstore orders",
+      "externalDocs": {
+        "description": "Find out more about our store",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "parents",
+      "description": "Operations about parents"
+    }
+  ],
+  "paths": {
+    "/professors": {
+      "get": {
+        "tags": [
+          "professors"
+        ],
+        "summary": "Get all professors",
+        "description": "Get all the professors in the DB",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Professors_response"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "professors"
+        ],
+        "summary": "Add a new professor to the db",
+        "operationId": "addPet",
+        "requestBody": {
+          "description": "Create a new professor in the the db",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Professors"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Professors_response"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Professors"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/professors/{id}": {
+      "get": {
+        "tags": [
+          "professors"
+        ],
+        "summary": "Find the professor with the given Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the professor",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "jajjwqo21wk92"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Professors_response"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Professors"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "professors"
+        ],
+        "summary": "Update Professor by Id",
+        "description": "Update the professor with the given id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the professor to update",
+            "schema": {
+              "type": "string",
+              "example": "oqon1n2bd822v3"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Body with the properties of the professor to change",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Professors"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Professors_response"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Professors"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body value"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "professors"
+        ],
+        "summary": "Delete Professor",
+        "description": "Delete the professor with the given Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of pet to return",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "kas9q121ud8"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "successful operation"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          },
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/students": {
+      "get": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Get all the students",
+        "description": "Returns an array of students",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Student_response"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Add a new student to the database",
+        "description": "Place a new order in the store",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Student"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Student_response"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/students/{id}": {
+      "get": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Find student with the given Id",
+        "description": "Find only one student with the given id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the student",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student_response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Delete the student with the given Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the student that needs to be deleted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesful operation"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Update the student with the given Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the student that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student_response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/parents": {
+      "get": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Get all parents",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Parent_response"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Create new a parent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Parent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Parent_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parents/{id}": {
+      "patch": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Update the student with the given Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the parent that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Parent_response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Get the parent with the given Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the parent that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Parent_response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Update the student with the given Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the parent that needs to be deleted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Succesful operation"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Professors": {
+        "type": "object",
+        "properties": {
+          "academicAreaId": {
+            "type": "string",
+            "example": "kaksdjiqw12klqj"
+          },
+          "hireDate": {
+            "type": "string",
+            "example": "02/07/22"
+          },
+          "educationalLevelId": {
+            "type": "string",
+            "example": "tirpeixncb3kk1"
+          },
+          "employeeState": {
+            "type": "string",
+            "example": "ACTIVE"
+          },
+          "userId": {
+            "type": "string",
+            "example": "lloklpkk5l123l5"
+          }
+        },
+        "xml": {
+          "name": "pet"
+        }
+      },
+      "Professors_response": {
+        "type": "object",
+        "properties": {
+          "academic_area_id": {
+            "type": "string",
+            "example": "kaksdjiqw12klqj"
+          },
+          "hire_date": {
+            "type": "string",
+            "example": "02/07/22"
+          },
+          "educational_level_id": {
+            "type": "string",
+            "example": "tirpeixncb3kk1"
+          },
+          "employee_state": {
+            "type": "string",
+            "example": "ACTIVE"
+          },
+          "user_id": {
+            "type": "string",
+            "example": "lloklpkk5l123l5"
+          }
+        }
+      },
+      "Student": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": "j1i2ndnsii192nd"
+          },
+          "grade": {
+            "type": "string",
+            "example": "1"
+          },
+          "section": {
+            "type": "string",
+            "example": "A"
+          },
+          "educationalLevelId": {
+            "type": "string",
+            "example": "clygq66gf000013yl8umcsdaf"
+          },
+          "parentId": {
+            "type": "string",
+            "example": "clygq66hx000713yl0b6ckn9k"
+          }
+        }
+      },
+      "Student_response": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "example": "j1i2ndnsii192nd"
+          },
+          "grade": {
+            "type": "string",
+            "example": "1"
+          },
+          "section": {
+            "type": "string",
+            "example": "A"
+          },
+          "educational_level_id": {
+            "type": "string",
+            "example": "clygq66gf000013yl8umcsdaf"
+          },
+          "parent_id": {
+            "type": "string",
+            "example": "clygq66hx000713yl0b6ckn9k"
+          }
+        }
+      },
+      "Parent": {
+        "type": "object",
+        "properties": {
+          "parentId": {
+            "type": "string",
+            "example": "j1i2ndnsii192nd"
+          },
+          "userId": {
+            "type": "string",
+            "example": "j1i2ndnsii192nd"
+          },
+          "relation": {
+            "type": "string",
+            "example": "Father"
+          }
+        }
+      },
+      "Parent_response": {
+        "type": "object",
+        "properties": {
+          "parent_id": {
+            "type": "string",
+            "example": "j1i2ndnsii192nd"
+          },
+          "user_id": {
+            "type": "string",
+            "example": "j1i2ndnsii192nd"
+          },
+          "relation": {
+            "type": "string",
+            "example": "Father"
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "Professors": {
+        "description": "Pet object that needs to be added to the store",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Professors"
+            }
+          },
+          "application/xml": {
+            "schema": {
+              "$ref": "#/components/schemas/Professors"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "petstore_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
+            "scopes": {
+              "write:pets": "modify pets in your account",
+              "read:pets": "read your pets"
+            }
+          }
+        }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    }
+  }
+}
