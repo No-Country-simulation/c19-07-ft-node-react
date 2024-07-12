@@ -13,7 +13,6 @@ fe=fronted
 3. Delete forced branch: git branch -D nombre-de-la-rama
 4. Change branch: git switch nueva-rama
 
-
 ```
 
 

@@ -1,0 +1,529 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "REST API",
+    "description": ""
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/students/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                      "name": "body",
+                      "in": "body",
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "grade": {
+                            "example": "any"
+                          }
+                        }
+                      }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "grade": {
+                  "example": "any"
+                },
+                "section": {
+                  "example": "any"
+                },
+                "parentId": {
+                  "example": "any"
+                },
+                "educational_level_id": {
+                  "example": "any"
+                },
+                "userId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Student_response"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/students/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student_response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student_response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/professors/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Professors_response"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "academicAreaId": {
+                  "example": "any"
+                },
+                "hireDate": {
+                  "example": "any"
+                },
+                "educationalLevelId": {
+                  "example": "any"
+                },
+                "employeeState": {
+                  "example": "any"
+                },
+                "userId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Professors_response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/professors/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Professors_response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Professors_response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/parents/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "relation": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/parents/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Professors": {
+        "type": "object",
+        "properties": {
+          "academicAreaId": {
+            "type": "string",
+            "example": "kaksdjiqw12klqj"
+          },
+          "hireDate": {
+            "type": "string",
+            "example": "02/07/22"
+          },
+          "educationalLevelId": {
+            "type": "string",
+            "example": "tirpeixncb3kk1"
+          },
+          "employeeState": {
+            "type": "string",
+            "example": "ACTIVE"
+          },
+          "userId": {
+            "type": "string",
+            "example": "lloklpkk5l123l5"
+          }
+        },
+        "xml": {
+          "name": "pet"
+        }
+      },
+      "Professors_response": {
+        "type": "object",
+        "properties": {
+          "academic_area_id": {
+            "type": "string",
+            "example": "kaksdjiqw12klqj"
+          },
+          "hire_date": {
+            "type": "string",
+            "example": "02/07/22"
+          },
+          "educational_level_id": {
+            "type": "string",
+            "example": "tirpeixncb3kk1"
+          },
+          "employee_state": {
+            "type": "string",
+            "example": "ACTIVE"
+          },
+          "user_id": {
+            "type": "string",
+            "example": "lloklpkk5l123l5"
+          }
+        }
+      },
+      "Student": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": "j1i2ndnsii192nd"
+          },
+          "grade": {
+            "type": "string",
+            "example": "1"
+          },
+          "section": {
+            "type": "string",
+            "example": "A"
+          },
+          "educationalLevelId": {
+            "type": "string",
+            "example": "clygq66gf000013yl8umcsdaf"
+          },
+          "parentId": {
+            "type": "string",
+            "example": "clygq66hx000713yl0b6ckn9k"
+          }
+        }
+      },
+      "Student_response": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "example": "j1i2ndnsii192nd"
+          },
+          "grade": {
+            "type": "string",
+            "example": "1"
+          },
+          "section": {
+            "type": "string",
+            "example": "A"
+          },
+          "educational_level_id": {
+            "type": "string",
+            "example": "clygq66gf000013yl8umcsdaf"
+          },
+          "parent_id": {
+            "type": "string",
+            "example": "clygq66hx000713yl0b6ckn9k"
+          }
+        }
+      }
+    }
+  }
+}
