@@ -32,7 +32,7 @@ model Users {
   email      String       @unique
   password   String
   type_user  type_user
-  state      type_state
+  state      type_state   @default(ACTIVE)
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   Students   Students[]
