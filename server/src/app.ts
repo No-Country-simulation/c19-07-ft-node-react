@@ -5,8 +5,10 @@ import router from './routes/index'
 import studentRoutes from './students/students.routes'
 import professorRoutes from './professors/professors.routes'
 import parentRoutes from './parents/parents.routes'
+import usersRoutes from './users/users.routes'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../openapi.json'
+
 class Server {
   private readonly app: Application
   constructor () {
@@ -16,7 +18,9 @@ class Server {
   }
 
   config () {
-    this.app.set('port', (process.env.PORT_SERVER != null) || 3000)
+    // this.app.set('port', (process.env.PORT_SERVER != null) || 3000)
+    this.app.set('port', process.env.PORT_SERVER  || 3000)
+
     this.app.use(morgan('dev'))
     this.app.use(cors())
     this.app.use(express.json())
@@ -24,6 +28,7 @@ class Server {
 
   routes () {
     this.app.use('/api/v1', router)
+    this.app.use('/users', usersRoutes)
     this.app.use('/api/students', studentRoutes)
     this.app.use('/api/professors', professorRoutes)
     this.app.use('/api/parents', parentRoutes)
