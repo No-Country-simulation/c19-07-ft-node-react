@@ -9,13 +9,14 @@ import { HomePage, NotFoundPage } from "./pages";
 
 import { LoginPage, AuthLayout } from "./modules/auth/";
 
-import LoginPage from "./modules/auth/pages/LoginPage.tsx";
 import TeacherPage from "./modules/teacher/pages/TeacherPage.tsx";
 import TeacherClass from "./modules/teacher/pages/TeacherClass.tsx";
 import TeacherClassChosen from "./modules/teacher/pages/TeacherClassChosen.tsx";
 import TeacherClassStudents from "./modules/teacher/pages/TeacherClassStudents.tsx";
 
 import { PrincipalParentPage } from "./modules/parents/pages/index.ts";
+
+import { Chat } from "./components/chat/Chat.tsx";
 
 const router = createBrowserRouter([
   {
@@ -27,27 +28,32 @@ const router = createBrowserRouter([
     ),
     errorElement: <NotFoundPage />,
     children: [
+      // Teacher
       {
-
         path: "teacher",
         element: <TeacherPage />,
       },
       {
-        path: "class",
+        path: "teacher/class",
         element: <TeacherClass />,
       },
       {
-        path: "classChosen",
+        path: "teacher/class/:id",
         element: <TeacherClassChosen />,
       },
       {
-        path: "classStudents",
+        path: "/teacher/class/students",
         element: <TeacherClassStudents />,
       },
       {
-      path: "parent",
-        element: <PrincipalParentPage/>,
-      }
+        path: "/teacher/chat",
+        element: <Chat />,
+      },
+      // Parent
+      {
+        path: "parent",
+        element: <PrincipalParentPage />,
+      },
     ],
   },
   {
