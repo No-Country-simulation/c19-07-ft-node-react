@@ -3,7 +3,7 @@ import { PrismaClient, Users } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export const getAllUsersRepository = async (): Promise<Users[]> => {
-  return await prisma.users.findMany({})
+  return await prisma.users.findMany()
 }
 
 export const createUserRepository = async (data: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt'>): Promise<Users> => {
@@ -12,7 +12,6 @@ export const createUserRepository = async (data: Omit<Users, 'user_id' | 'create
       data: {
         ...data,
         state: 'ACTIVE' // Asegurando que el estado siempre se establezca a 'ACTIVE'
-
       }
     })
 
