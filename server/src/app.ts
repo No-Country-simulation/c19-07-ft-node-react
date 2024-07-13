@@ -35,7 +35,7 @@ class Server {
 
   routes () {
     this.app.use('/api/v1', router)
-    this.app.use('/users', usersRoutes)
+    this.app.use('/api/users', usersRoutes)
     this.app.use('/api/students', studentRoutes)
     this.app.use('/api/professors', professorRoutes)
     this.app.use('/api/parents', parentRoutes)
