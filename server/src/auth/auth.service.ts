@@ -1,7 +1,7 @@
 import { UserRepository } from './repositories/user.repository'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { LoginError } from '../errors/loginError'
+import { AuthenticationError } from '../errors/authenticationError'
 import HTTP_STATUS from '../constants/statusCodeServer.const'
 export class AuthService {
   constructor (private readonly userRepository: UserRepository) {}
@@ -9,12 +9,12 @@ export class AuthService {
   async login (email: string, password: string): Promise<{ token: string }> {
     const user = await this.userRepository.findByEmail(email)
     if (user == null) {
-      throw new LoginError('Invalid credentials', HTTP_STATUS.UNAUTHORIZED, { email: 'is email not found' })
+      throw new AuthenticationError('Invalid credentials', HTTP_STATUS.UNAUTHORIZED, { email: 'is email not found' })
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if (!isPasswordValid) {
-      throw new LoginError('Invalid credentials', HTTP_STATUS.UNAUTHORIZED, { password: 'is password not valid' })
+      throw new AuthenticationError('Invalid credentials', HTTP_STATUS.UNAUTHORIZED, { password: 'is password not valid' })
     }
 
     if (process.env.JWT_SECRET != null) {

@@ -1,8 +1,7 @@
 // src/modules/students/services/student.service.ts
 import { Users } from '@prisma/client'
 // import * as getAllUsersRepository from './users.repository'
-import * as getAllUsersRepository from "../users/users.repository"
-
+import * as getAllUsersRepository from '../users/users.repository'
 
 export const getAllUsersServices = async (): Promise<Users[]> => {
   return await getAllUsersRepository.getAllUsersRepository()
@@ -10,14 +9,12 @@ export const getAllUsersServices = async (): Promise<Users[]> => {
 
 export const createUsersServices = async (data: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt'>): Promise<Users> => {
   try {
-    
-    const user = await getAllUsersRepository.createUserRepository(data);
+    const user = await getAllUsersRepository.createUserRepository(data)
 
-    return user;
-  } catch (error:any) {
-    throw new Error(`Error creating user: ${error.message}`);
+    return user
+  } catch (error: any) {
+    throw new Error(`Error creating user: ${error.message}`)
   }
-  
 }
 
 export const getUserByIdServices = async (id: string): Promise<Users | null> => {

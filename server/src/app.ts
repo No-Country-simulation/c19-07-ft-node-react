@@ -28,8 +28,7 @@ class Server {
     this.app.use(express.json())
     this.app.use(cookieParser())
     this.app.use(cors({
-      origin: '*',
-      credentials: true
+      origin: '*'
     }))
   }
 
