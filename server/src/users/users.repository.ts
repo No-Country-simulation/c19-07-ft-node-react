@@ -6,21 +6,20 @@ export const getAllUsersRepository = async (): Promise<Users[]> => {
   return await prisma.users.findMany({})
 }
 
- export const createUserRepository = async (data: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt'>): Promise<Users> => {
+export const createUserRepository = async (data: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt'>): Promise<Users> => {
   try {
     const user = await prisma.users.create({
       data: {
         ...data,
-      state: 'ACTIVE', // Asegurando que el estado siempre se establezca a 'ACTIVE'
+        state: 'ACTIVE' // Asegurando que el estado siempre se establezca a 'ACTIVE'
 
       }
-    });
+    })
 
-    return user;
+    return user
   } catch (error: any) {
-    throw new Error(`Error creating user: ${error.message}`);
+    throw new Error(`Error creating user: ${error.message}`)
   }
-
 }
 
 export const getUserRepository = async (id: string): Promise<Users | null> => {
