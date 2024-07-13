@@ -8,14 +8,14 @@ export const getAllUsersControllers = async (req: Request, res: Response): Promi
   try {
     const users = await getAllUsersServices.getAllUsersServices()
     res.json(users)
-  } catch (err:any) {
+  } catch (err: any) {
     res.status(500).send('Server Error')
   }
 }
 
 export const createUsersControllers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, password, type_user } = req.body;
+    const { name, email, password, type_user } = req.body
 
     // Crear el objeto de datos del usuario con las propiedades requeridas
     const userData: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt'> = {
@@ -24,14 +24,13 @@ export const createUsersControllers = async (req: Request, res: Response): Promi
       password,
       type_user,
       state: 'ACTIVE'
-    };
+    }
 
-    const user = await getAllUsersServices.createUsersServices(userData);
-    res.json(user);
+    const user = await getAllUsersServices.createUsersServices(userData)
+    res.json(user)
   } catch (err: any) {
     res.status(500).send('Server Error')
   }
-  
 }
 
 export const getUsersByIdControllers = async (req: Request, res: Response): Promise<void> => {
@@ -59,7 +58,7 @@ export const updateUsersControllers = async (req: Request, res: Response): Promi
 export const deleteUsersControllers = async (req: Request, res: Response): Promise<void> => {
   try {
     await getAllUsersServices.deleteUsersServices(String(req.params.id))
-    res.status(204).send("User deleted successfully")
+    res.status(204).send('User deleted successfully')
   } catch (err) {
     res.status(500).send('Server Error')
   }
