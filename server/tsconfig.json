@@ -21,18 +21,19 @@
     "outDir": "./dist",
     "module": "commonjs",
     "target": "es6",
-    "rootDir": "./src",
+    "rootDir": "./",
     "moduleResolution": "node",
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
   },
   "include": [
     "src",
     "prisma/seed/**/*.ts"
-  ],
+, "swagger.js"  ],
   "exclude": [
     "node_modules",
     "dist"

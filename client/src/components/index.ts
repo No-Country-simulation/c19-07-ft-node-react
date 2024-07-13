@@ -5,14 +5,7 @@ export { SideBar } from "./ui/SideBar";
 export { Chat } from "./chat/Chat";
 export { ProtectedRoute } from "./ProtectedRoute";
 
-import ParentAreaChart from "./ParentAreaChart";
-import TeacherFeedback from "./TeacherFeedback";
-import ProfesorColumnChart from "./ProfesorColumnChart";
-import StudientGradesAccordion from "./StudientGradesAccordion";
-
-export {
-  ParentAreaChart,
-  TeacherFeedback,
-  ProfesorColumnChart,
-  StudientGradesAccordion,
-};
+export { ProfesorColumnChart } from "./ProfesorColumnChart";
+export { GradesAccordion } from "./GradesAccordion";
+export { TeacherFeedback } from "./TeacherFeedback";
+export { StudientAreaChart } from "./StudientAreaChart";

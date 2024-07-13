@@ -1,9 +1,8 @@
 import { ClassRoomStudents } from "../components";
 
-export default function TeacherClassStudents() {
+export const TeacherClassStudents = () => {
   return (
     <div>
-      <h1>Vista clases estudiantes</h1>
       <ClassRoomStudents/>
     </div>
   );
