@@ -1,11 +1,18 @@
+// UI
+export { NavBar } from "./ui/NavBar";
+export { SideBar } from "./ui/SideBar";
 
+export { Chat } from "./chat/Chat";
 export { ProtectedRoute } from "./ProtectedRoute";
 
-import ProfesorColumnChart from "./ProfesorColumnChart"
-import ParentAreaChart from "./ParentAreaChart"
-import StudientGradesAccordion from "./StudientGradesAccordion"
-import TeacherFeedback from "./TeacherFeedback"
+import ParentAreaChart from "./ParentAreaChart";
+import TeacherFeedback from "./TeacherFeedback";
+import ProfesorColumnChart from "./ProfesorColumnChart";
+import StudientGradesAccordion from "./StudientGradesAccordion";
 
-
-
-export {ProfesorColumnChart, ParentAreaChart, StudientGradesAccordion, TeacherFeedback}
+export {
+  ParentAreaChart,
+  TeacherFeedback,
+  ProfesorColumnChart,
+  StudientGradesAccordion,
+};
