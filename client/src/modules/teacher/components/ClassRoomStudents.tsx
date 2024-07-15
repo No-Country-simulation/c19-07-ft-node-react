@@ -48,7 +48,7 @@ const ClassRoomStudents = () => {
   };
 
   const handleReportButtonClick = () => {
-    navigate(`/classNewStudents/`);
+    navigate(`/parent/`);
   };
 
   const handleCheckboxChange = (id) => {
