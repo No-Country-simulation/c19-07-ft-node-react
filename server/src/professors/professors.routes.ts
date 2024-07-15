@@ -2,7 +2,7 @@
 // src/modules/professors/professor.routes.ts
 import { Router } from 'express'
 import * as professorController from './professors.controllers'
-import { verifyToken } from '../middlewares/verifyToken.mdl'
+import { verifyToken } from '../middlewares/verifyAccesToken.mdl'
 import { checkRole } from '../middlewares/checkRole.mdl'
 import { ROLES } from '../constants/roles.const'
 
