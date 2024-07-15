@@ -6,7 +6,7 @@ export const getAllProfessors = async (): Promise<Professors[]> => {
   return await prisma.professors.findMany()
 }
 
-export const createProfessor = async (data: Omit<Professors, 'professor_id'>): Promise<Professors> => {
+export const createProfessor = async (data: Omit<Professors, ('professor_id' | 'createdAt' | 'updateAt')>): Promise<Professors> => {
   return await prisma.professors.create({ data })
 }
 

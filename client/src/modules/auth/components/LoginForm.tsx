@@ -1,4 +1,4 @@
-import { type MouseEvent, useState } from "react";
+import { useState } from "react";
 
 import { Link as RouterLink } from "react-router-dom";
 
@@ -26,9 +26,6 @@ export const LoginForm = () => {
   // ? Hide or show password
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
 
   // ? Form handling
   const {
@@ -75,7 +72,7 @@ export const LoginForm = () => {
                 <InputAdornment position="end">
                   <IconButton
                     onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
+                    onMouseDown={(e) => e.preventDefault()}
                     edge="end"
                   >
                     {showPassword ? <VisibilityOff /> : <Visibility />}

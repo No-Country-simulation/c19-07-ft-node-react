@@ -14,7 +14,7 @@ export const getAllProfessors = async (req: Request, res: Response): Promise<voi
 export const createProfessor = async (req: Request, res: Response): Promise<void> => {
   try {
     const isValid: boolean = professorService.validateCreateProfessor(req.body)
-    if (isValid) res.status(400).send({ data: 'Invalid body request' })
+    if (!isValid) res.status(400).send({ data: 'Invalid body request' })
 
     const { academicAreaId, hireDate, educationalLevelId, employeeState, userId } = req.body
     const professor = await professorService.createProfessor({
@@ -36,11 +36,8 @@ export const createProfessor = async (req: Request, res: Response): Promise<void
 export const getProfessorById = async (req: Request, res: Response): Promise<void> => {
   try {
     const professor = await professorService.getProfessorById(req.params.id)
-    if (professor != null) {
-      res.json(professor)
-    } else {
-      res.status(404).send('Professor not found')
-    }
+    if (professor == null) res.status(404).send({ error: 'Professor not found' })
+    res.status(200).send({ data: professor })
   } catch (err: any) {
     console.error(err) // Log para ver el error
     res.status(500).send({ error: 'Server Error', details: err.message })
@@ -50,7 +47,7 @@ export const getProfessorById = async (req: Request, res: Response): Promise<voi
 export const updateProfessor = async (req: Request, res: Response): Promise<void> => {
   try {
     const isValid: boolean = professorService.validateUpdateProfessor(req.body)
-    if (isValid) res.status(400).send({ data: 'Invalid body request' })
+    if (!isValid) res.status(400).send({ data: 'Invalid body request' })
 
     const professor = await professorService.updateProfessor(req.params.id, req.body)
     res.json(professor)
