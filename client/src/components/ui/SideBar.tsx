@@ -51,7 +51,7 @@ export const SideBar = () => {
         </Tooltip>
       </Box>
 
-      <Divider />
+      <Divider sx={{ display: { lg: "none" } }} />
 
       <Box
         display="flex"
