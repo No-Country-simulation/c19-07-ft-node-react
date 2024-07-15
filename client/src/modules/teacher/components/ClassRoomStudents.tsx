@@ -1,19 +1,6 @@
 import { useState } from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  IconButton,
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Checkbox,
-} from "@mui/material";
+import {Box,Container,Grid,IconButton,Button,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,
+  Paper,Checkbox,Snackbar,Alert,Dialog,DialogTitle,DialogContent,DialogActions,Typography} from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
@@ -33,18 +20,38 @@ const rows = [
 const ClassRoomStudents = () => {
   const navigate = useNavigate();
   const [selectedRows, setSelectedRows] = useState([]);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const handleBackButtonClick = () => {
     navigate(-1);
   };
 
-  const handleInformeClick = () => {
-    // Navegar a la página de teacher con el id del estudiante seleccionado
-    navigate(`/teacher/`);
+  const handleNewStudentClick = () => {
+    navigate(`/classNewStudents/`);
+  };
+
+  const handleEditButtonClick = () => {
+    if (selectedRows.length === 1) {
+      navigate(`/classNewStudents/`);
+    } else {
+      setOpenSnackbar(true);
+    }
+  };
+
+  const handleDeleteButtonClick = () => {
+    if (selectedRows.length === 1) {
+      setOpenDeleteDialog(true);
+    } else {
+      setOpenSnackbar(true);
+    }
+  };
+
+  const handleReportButtonClick = () => {
+    navigate(`/parent/`);
   };
 
   const handleCheckboxChange = (id) => {
-    // Manejar la selección de la fila
     if (selectedRows.includes(id)) {
       setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
     } else {
@@ -52,13 +59,24 @@ const ClassRoomStudents = () => {
     }
   };
 
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
+  const handleConfirmDelete = () => {
+    console.log(`Eliminar estudiante con ID ${selectedRows[0]}`);
+    setOpenDeleteDialog(false);
+  };
+
   return (
     <Container disableGutters>
       <Grid container spacing={3}>
-        {/* Contenedor principal */}
         <Grid item xs={12}>
           <Grid container spacing={3}>
-            {/* Columna derecha (75%) */}
             <Grid
               item
               xs={12}
@@ -93,6 +111,7 @@ const ClassRoomStudents = () => {
                 <Box>
                   <Button
                     variant="contained"
+                    onClick={handleNewStudentClick}
                     sx={{
                       color: "black",
                       fontWeight: "bold",
@@ -106,6 +125,7 @@ const ClassRoomStudents = () => {
                   </Button>
                   <Button
                     variant="contained"
+                    onClick={handleEditButtonClick}
                     sx={{
                       color: "black",
                       fontWeight: "bold",
@@ -119,6 +139,7 @@ const ClassRoomStudents = () => {
                   </Button>
                   <Button
                     variant="contained"
+                    onClick={handleDeleteButtonClick}
                     sx={{
                       color: "black",
                       fontWeight: "bold",
@@ -132,7 +153,6 @@ const ClassRoomStudents = () => {
                 </Box>
               </Box>
 
-              {/* Contenedor de la tabla */}
               <TableContainer component={Paper}>
                 <Table
                   sx={{ minWidth: 650, backgroundColor: "#f9bc60" }}
@@ -176,6 +196,12 @@ const ClassRoomStudents = () => {
                       >
                         Average
                       </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{ color: "black", fontWeight: "bold" }}
+                      >
+                        Report
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -212,10 +238,10 @@ const ClassRoomStudents = () => {
                         <TableCell align="right">
                           <Button
                             variant="contained"
-                            onClick={() => handleInformeClick(row.id)}
+                            onClick={() => handleReportButtonClick(row.id)}
                             sx={{
                               backgroundColor: "#f9bc60",
-                              color: "black",
+                              color: "white",
                               "&:hover": {
                                 backgroundColor: "#e16162",
                               },
@@ -233,6 +259,43 @@ const ClassRoomStudents = () => {
           </Grid>
         </Grid>
       </Grid>
+
+      {/* Snackbar para mostrar mensaje de selección */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="warning"
+          sx={{ width: "100%" }}
+        >
+          {selectedRows.length === 0
+            ? "Debe seleccionar primero un estudiante antes de realizar esta acción."
+            : "Solo debe haber un estudiante seleccionado para realizar esta acción."}
+        </Alert>
+      </Snackbar>
+
+      {/* Dialog para confirmar eliminación */}
+      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>{"¿Está seguro de eliminar este estudiante?"}</DialogTitle>
+        <DialogContent>
+          <Box sx={{ marginBottom: 2 }}>
+            <Typography variant="body1">
+              Esta acción no se puede deshacer.
+            </Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
