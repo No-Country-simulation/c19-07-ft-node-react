@@ -8,6 +8,7 @@ import { Login, loginSchema } from './schemas/login.schema'
 import { z } from 'zod'
 import HTTP_STATUS from '../constants/statusCodeServer.const'
 import { ICustomRequest } from '../types'
+import { AuthenticationError } from '../errors/authenticationError'
 const refreshTokenRepository = new RefreshTokenRepository(new PrismaClient())
 const userRepository = new UserRepository(new PrismaClient())
 const authService = new AuthService(userRepository, refreshTokenRepository)
@@ -19,8 +20,8 @@ export class AuthCtrl {
       const { email, password } = parseData
       const data = await authService.login(email, password)
       res
-        .cookie('accessToken', data.accessToken, { httpOnly: false, secure: true })
-        .cookie('refreshToken', data.refreshToken, { httpOnly: false, secure: true })
+        .cookie('accessToken', data.accessToken, { httpOnly: true, secure: true, sameSite: 'strict' })
+        .cookie('refreshToken', data.refreshToken, { httpOnly: true, secure: true, sameSite: 'strict' })
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'Login successful', null)
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -37,13 +38,27 @@ export class AuthCtrl {
   async refreshToken (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const { refreshToken } = req.cookies
-      if (!refreshToken) {
-        return res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: 'Refresh token not provided' })
+      if (refreshToken === undefined) {
+        throw new AuthenticationError('Invalid refresh token', HTTP_STATUS.UNAUTHORIZED, { refreshToken: 'is not defined' })
       }
 
-      const data = await this.authService.refreshToken(refreshToken)
-      res.cookie('accessToken', data.accessToken, { httpOnly: true, secure: true })
+      const data = await authService.refreshToken(refreshToken)
+      res.cookie('accessToken', data.accessToken, { httpOnly: true, secure: true, sameSite: 'strict' })
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'Token refreshed', null)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async logout (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { refreshToken } = req.cookies
+      if (refreshToken === undefined) {
+        throw new AuthenticationError('Invalid refresh token', HTTP_STATUS.UNAUTHORIZED, { refreshToken: 'is not defined' })
+      }
+      await authService.logout(refreshToken)
+      res.clearCookie('accessToken').clearCookie('refreshToken')
+      new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'Logout successful', null)
     } catch (error) {
       next(error)
     }

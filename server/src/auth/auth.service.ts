@@ -20,10 +20,23 @@ export class AuthService {
     }
 
     const accessToken = this.generateAccessToken(user)
-    const refreshToken = this.generateRefreshToken(user)
 
-    await this.refreshTokenRepository.create(refreshToken, user.user_id)
+    const refreshToken = await this.refreshTokenRepository.createAndStoreRfreshToken(this.generateRefreshToken, user.user_id)
     return { accessToken, refreshToken }
+  }
+
+  async logout (refreshToken: string): Promise<void> {
+    if (process.env.JWT_REFRESH_SECRET === undefined) {
+      throw new AuthenticationError('JWT refresh secret is not defined', HTTP_STATUS.UNAUTHORIZED)
+    }
+
+    const decodedRefreshToken = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
+
+    if (typeof decodedRefreshToken !== 'object') {
+      throw new AuthenticationError('Invalid refresh token', HTTP_STATUS.UNAUTHORIZED, { refreshToken: 'is not valid' })
+    }
+
+    await this.refreshTokenRepository.deleteRefreshToken(decodedRefreshToken.tokenId)
   }
 
   async refreshToken (refreshToken: string): Promise<{ accessToken: string }> {
@@ -31,15 +44,17 @@ export class AuthService {
       throw new Error('JWT refresh secret is not defined')
     }
     const decodedRefreshToken = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
-
+    if (typeof decodedRefreshToken !== 'object') {
+      throw new AuthenticationError('Invalid refresh token', HTTP_STATUS.UNAUTHORIZED, { refreshToken: 'is not valid' })
+    }
     const refreshTokenFromDB = await this.refreshTokenRepository.findRefreshToken(refreshToken)
     if (refreshTokenFromDB === null || refreshTokenFromDB.user_id !== decodedRefreshToken.userId) {
-      throw new AuthenticationError('Invalid refresh token', HTTP_STATUS.UNAUTHORIZED)
+      throw new AuthenticationError('Invalid refresh token', HTTP_STATUS.UNAUTHORIZED, { refreshToken: 'is not valid' })
     }
 
     const user = await this.userRepository.findById(refreshTokenFromDB.user_id)
     if (user === null) {
-      throw new AuthenticationError('User not found', HTTP_STATUS.UNAUTHORIZED)
+      throw new AuthenticationError('User not found', HTTP_STATUS.UNAUTHORIZED, { userId: 'is not valid' })
     }
 
     const newAccessToken = this.generateAccessToken(user)
@@ -47,11 +62,11 @@ export class AuthService {
   }
 
   private generateAccessToken (user: Users): string {
-    if (process.env.JWT_SECRET != null) {
+    if (process.env.JWT_SECRET !== undefined) {
       const token = jwt.sign(
         { userId: user.user_id, email: user.email, role: user.type_user },
         process.env.JWT_SECRET,
-        { expiresIn: '3h' }
+        { expiresIn: '2m' }
       )
       return token
     } else {
@@ -59,10 +74,10 @@ export class AuthService {
     }
   }
 
-  private generateRefreshToken (user: Users): string {
-    if (process.env.JWT_REFRESH_SECRET != null) {
+  private generateRefreshToken (userId: string, tokenId: string): string {
+    if (process.env.JWT_REFRESH_SECRET !== undefined) {
       const refreshToken = jwt.sign(
-        { userId: user.user_id, email: user.email, role: user.type_user },
+        { userId, tokenId },
         process.env.JWT_REFRESH_SECRET,
         { expiresIn: '7d' }
       )
