@@ -1,26 +1,34 @@
+import { useEffect } from "react";
+
 import {
   Navigate,
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
 
-import { ProtectedRoute } from "./components";
+import { useAuthStore } from "./hooks";
+import { LoginPage, AuthLayout } from "./modules/auth/";
+import { CheckingAuth, PrivateRoute, PublicRoute } from "./components";
 import { HomePage, NotFoundPage, ParentStudientPrincipalPage } from "./pages";
 
-import { LoginPage, AuthLayout } from "./modules/auth/";
-import {TeacherCalendar, TeacherClass, TeacherClassChosen, TeacherClassStudents, TeacherPage} from './modules/teacher/pages/index.tsx'
+import {
+  TeacherPage,
+  TeacherClass,
+  TeacherCalendar,
+  TeacherClassChosen,
+  TeacherClassStudents,
+} from "./modules/teacher/pages/index.tsx";
+
 import { Classmates } from "./modules/parents/pages/Classmates.tsx";
 import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
-
-import { Chat } from "./components/chat/Chat.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <ProtectedRoute>
+      <PrivateRoute>
         <HomePage />
-      </ProtectedRoute>
+      </PrivateRoute>
     ),
     errorElement: <NotFoundPage />,
     children: [
@@ -65,7 +73,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/auth/*",
-    element: <AuthLayout />,
+    element: (
+      <PublicRoute>
+        <AuthLayout />
+      </PublicRoute>
+    ),
     children: [
       {
         path: "login",
@@ -83,6 +95,14 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const { status, startRefreshToken } = useAuthStore();
+
+  useEffect(() => {
+    startRefreshToken();
+  }, []);
+
+  if (status === "checking") return <CheckingAuth />;
+
   return (
     <>
       <RouterProvider

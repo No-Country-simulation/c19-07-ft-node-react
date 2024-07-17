@@ -9,7 +9,7 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
-  status: "authenticated",
+  status: "checking",
   user: null,
   errorMessage: null,
 };
@@ -32,13 +32,12 @@ export const authSlice = createSlice({
 
     checkingCredentials: (state) => {
       state.status = "checking";
+      state.user = null;
+      state.errorMessage = null;
     },
   },
 });
 
 export const { login, logout, checkingCredentials } = authSlice.actions;
-
-// ? Other code such as selectors can use the imported `RootState` type
-// export const status = (state: RootState) => state.auth.status;
 
 export default authSlice.reducer;

@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "./reduxTypedHooks";
 
-import schoolMetricsApi from "../apis/schoolMetricsApi";
-import { login, logout } from "../store/auth/authSlice";
+import axios from "../apis/schoolMetricsApi";
+import { login, logout, checkingCredentials } from "../store/auth/authSlice";
 
 type LoginData = {
   email: string;
@@ -14,14 +14,40 @@ export const useAuthStore = () => {
   const { user, status, errorMessage } = useAppSelector((state) => state.auth);
 
   const startLogin = async ({ email, password }: LoginData) => {
+    dispatch(checkingCredentials());
+
     try {
-      await schoolMetricsApi.post("/auth/login", { email, password });
+      await axios.post("/auth/login", { email, password });
 
-      // TODO set token in local storage or cookie
+      const { data } = await axios.get("/users/profile");
 
-      dispatch(login({ userId: "1", email, role: "ADMIN", state: "active" }));
+      dispatch(login({ ...data }));
+    } catch (error) {
+      console.log(error);
+
+      dispatch(logout(null));
+    }
+  };
+
+  const startLogout = async () => {
+    try {
+      await axios.post("/auth/logout");
+
+      dispatch(logout(null));
     } catch (error) {
       dispatch(logout(null));
+    }
+  };
+
+  const startRefreshToken = async () => {
+    try {
+      await axios.post("/auth/refresh-token");
+
+      const { data } = await axios.get("/users/profile");
+
+      dispatch(login({ ...data }));
+    } catch (error) {
+      await startLogout();
     }
   };
 
@@ -33,5 +59,7 @@ export const useAuthStore = () => {
 
     // * Functions
     startLogin,
+    startLogout,
+    startRefreshToken,
   };
 };

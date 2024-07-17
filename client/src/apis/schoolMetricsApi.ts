@@ -1,20 +1,11 @@
-import axios, { type AxiosRequestHeaders } from "axios";
+import axios from "axios";
 
-const schoolMetricsApi = axios.create({
+export default axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
 });
 
-type CustomAxiosRequestHeaders = AxiosRequestHeaders & {
-  "x-token": string;
-};
-
-schoolMetricsApi.interceptors.request.use((config) => {
-  config.headers = {
-    ...config.headers,
-    "x-token": localStorage.getItem("token"),
-  } as CustomAxiosRequestHeaders;
-
-  return config;
+export const schoolMetricsApi = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
 });
-
-export default schoolMetricsApi;
