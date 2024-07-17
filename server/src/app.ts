@@ -24,6 +24,7 @@ class Server {
 
   config (): void {
     this.app.set('port', process.env.PORT_SERVER !== undefined ? process.env.PORT_SERVER : 3000)
+    console.log(process.env.PORT_SERVER)
     this.app.use(morgan('dev'))
     this.app.use(express.json())
     this.app.use(cookieParser())
