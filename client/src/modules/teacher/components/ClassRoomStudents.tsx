@@ -1,27 +1,65 @@
-import { useState } from "react";
-import {Box,Container,Grid,IconButton,Button,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,
-  Paper,Checkbox,Snackbar,Alert,Dialog,DialogTitle,DialogContent,DialogActions,Typography} from "@mui/material";
+import { useState, useEffect } from "react";
+import axios from 'axios';
+import {
+  Box,
+  Container,
+  Grid,
+  IconButton,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Checkbox,
+  Snackbar,
+  Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Typography,
+} from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
-const createData = (id, name, math, science, english, history) => {
-  const avg = (math + science + english + history) / 4;
-  return { id, name, math, science, english, history, avg };
-};
+const URL_BASE = "http://localhost:3001/api";
 
-const rows = [
-  createData(1, "Patricia Rodriguez", 8.5, 9.2, 8.8, 9),
-  createData(2, "Samuel Velez", 7.8, 8.5, 8.2, 8.9),
-  createData(3, "Sam Luis", 9.5, 9.4, 9.0, 9.3),
-  createData(4, "Lucy Arandu", 7.0, 7.5, 8.0, 7.2),
-  createData(5, "Lorena Bedoya", 8.8, 9.1, 8.5, 8.7),
-];
+type AlignType = 'left' | 'right' | 'center';
+
+const headers: { name: string; align: AlignType }[] = [
+    { name: "Selection", align: "left" },
+    { name: "Student", align: "left" },
+    { name: "Math", align: "right" },
+    { name: "Science", align: "right" },
+    { name: "English", align: "right" },
+    { name: "History", align: "right" },
+    { name: "Average", align: "right" },
+    { name: "Report", align: "right" },
+   ];
 
 const ClassRoomStudents = () => {
   const navigate = useNavigate();
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [students, setStudents] = useState<any[]>([]);
+
+  const fetchStudents = async () => {
+    try {
+      const response = await axios.get(`${URL_BASE}/students`);
+      setStudents(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
 
   const handleBackButtonClick = () => {
     navigate(-1);
@@ -51,7 +89,7 @@ const ClassRoomStudents = () => {
     navigate(`/parent/`);
   };
 
-  const handleCheckboxChange = (id) => {
+  const handleCheckboxChange = (id: string) => {
     if (selectedRows.includes(id)) {
       setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
     } else {
@@ -152,7 +190,6 @@ const ClassRoomStudents = () => {
                   </Button>
                 </Box>
               </Box>
-
               <TableContainer component={Paper}>
                 <Table
                   sx={{ minWidth: 650, backgroundColor: "#f9bc60" }}
@@ -160,57 +197,24 @@ const ClassRoomStudents = () => {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell sx={{ color: "black", fontWeight: "bold" }}>
-                        Selection
-                      </TableCell>
-                      <TableCell sx={{ color: "black", fontWeight: "bold" }}>
-                        Student
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "black", fontWeight: "bold" }}
-                      >
-                        Math
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "black", fontWeight: "bold" }}
-                      >
-                        Science
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "black", fontWeight: "bold" }}
-                      >
-                        English
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "black", fontWeight: "bold" }}
-                      >
-                        History
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "black", fontWeight: "bold" }}
-                      >
-                        Average
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "black", fontWeight: "bold" }}
-                      >
-                        Report
-                      </TableCell>
+                      {headers.map((header) => (
+                        <TableCell
+                          key={header.name}
+                          align={header.align}
+                          sx={{ color: "black", fontWeight: "bold" }}
+                        >
+                          {header.name}
+                        </TableCell>
+                      ))}
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
-                      <TableRow key={row.id}>
+                    {students.map((student) => (
+                      <TableRow key={student.student_id}>
                         <TableCell>
                           <Checkbox
-                            checked={selectedRows.includes(row.id)}
-                            onChange={() => handleCheckboxChange(row.id)}
+                            checked={selectedRows.includes(student.student_id)}
+                            onChange={() => handleCheckboxChange(student.student_id)}
                           />
                         </TableCell>
                         <TableCell
@@ -218,27 +222,32 @@ const ClassRoomStudents = () => {
                           scope="row"
                           sx={{ color: "black", fontWeight: "bold" }}
                         >
-                          {row.name}
+                          {student.user_id}
                         </TableCell>
                         <TableCell align="right" sx={{ color: "black" }}>
-                          {row.math}
+                          {/* Aquí puedes poner las notas de Math si las tienes */}
+                          N/A
                         </TableCell>
                         <TableCell align="right" sx={{ color: "black" }}>
-                          {row.science}
+                          {/* Aquí puedes poner las notas de Science si las tienes */}
+                          N/A
                         </TableCell>
                         <TableCell align="right" sx={{ color: "black" }}>
-                          {row.english}
+                          {/* Aquí puedes poner las notas de English si las tienes */}
+                          N/A
                         </TableCell>
                         <TableCell align="right" sx={{ color: "black" }}>
-                          {row.history}
+                          {/* Aquí puedes poner las notas de History si las tienes */}
+                          N/A
                         </TableCell>
                         <TableCell align="right" sx={{ color: "black" }}>
-                          {row.avg.toFixed(2)}
+                          {/* Aquí puedes calcular el promedio si tienes las notas */}
+                          N/A
                         </TableCell>
                         <TableCell align="right">
                           <Button
                             variant="contained"
-                            onClick={() => handleReportButtonClick(row.id)}
+                            onClick={handleReportButtonClick}
                             sx={{
                               backgroundColor: "#f9bc60",
                               color: "white",
@@ -260,7 +269,6 @@ const ClassRoomStudents = () => {
         </Grid>
       </Grid>
 
-      {/* Snackbar para mostrar mensaje de selección */}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
@@ -277,7 +285,6 @@ const ClassRoomStudents = () => {
         </Alert>
       </Snackbar>
 
-      {/* Dialog para confirmar eliminación */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
         <DialogTitle>{"¿Está seguro de eliminar este estudiante?"}</DialogTitle>
         <DialogContent>

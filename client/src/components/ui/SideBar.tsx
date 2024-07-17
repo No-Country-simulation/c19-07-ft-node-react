@@ -19,20 +19,31 @@ const drawerBackgroundColor = "#abd1c6";
 
 // const parentOptions = [];
 
-const studentOptions = [
+// const studentOptions = [
+//   {
+//     text: "Performance",
+//     path: "/parent",
+//     icon: <AutoGraph></AutoGraph>,
+//   },
+//   {
+//     text: "Classmates",
+//     path: "/parent/classmates",
+//     icon: <People></People>,
+//   },
+// ];
+
+const professorOptions = [
   {
-    text: "Performance",
-    path: "/parent",
+    text: "Class",
+    path: "/teacher",
     icon: <AutoGraph></AutoGraph>,
   },
   {
-    text: "Classmates",
+    text: "Chat",
     path: "/parent/classmates",
     icon: <People></People>,
   },
 ];
-
-// const professorOptions = [];
 
 export const SideBar = () => {
   const { isSideBarOpen, handleCloseSideBar } = useUiStore();
@@ -71,7 +82,7 @@ export const SideBar = () => {
       <Divider />
 
       <List>
-        {studentOptions.map(({ text, path, icon }) => (
+        {professorOptions.map(({ text, path, icon }) => (
           <SideBarItem key={text} text={text} path={path} icon={icon} />
         ))}
       </List>
