@@ -1,7 +1,10 @@
-import { useAppDispatch, useAppSelector } from "./reduxTypedHooks";
+import { ProfileResponse } from "../interfaces";
 
-import axios from "../apis/schoolMetricsApi";
-import { login, logout, checkingCredentials } from "../store/auth/authSlice";
+import { AxiosError } from "axios";
+import axios, { schoolMetricsApi } from "../apis/schoolMetricsApi";
+
+import { useAppDispatch, useAppSelector } from "./reduxTypedHooks";
+import { checkingCredentials, login, logout } from "../store/auth/authSlice";
 
 type LoginData = {
   email: string;
@@ -14,22 +17,30 @@ export const useAuthStore = () => {
   const { user, status, errorMessage } = useAppSelector((state) => state.auth);
 
   const startLogin = async ({ email, password }: LoginData) => {
-    dispatch(checkingCredentials());
-
     try {
       await axios.post("/auth/login", { email, password });
 
-      const { data } = await axios.get("/users/profile");
+      const data = await getUserProfile();
 
       dispatch(login({ ...data }));
     } catch (error) {
-      console.log(error);
-
-      dispatch(logout(null));
+      if (error instanceof AxiosError) {
+        if (!error.response?.data.success) {
+          dispatch(logout("Invalid credentials."));
+        } else {
+          dispatch(logout("Internal server error."));
+        }
+      } else if (error instanceof Error) {
+        dispatch(logout("Error: " + error.message));
+      } else {
+        dispatch(logout("Unknown error:" + error));
+      }
     }
   };
 
   const startLogout = async () => {
+    dispatch(checkingCredentials());
+
     try {
       await axios.post("/auth/logout");
 
@@ -43,11 +54,11 @@ export const useAuthStore = () => {
     try {
       await axios.post("/auth/refresh-token");
 
-      const { data } = await axios.get("/users/profile");
+      const data = await getUserProfile();
 
       dispatch(login({ ...data }));
     } catch (error) {
-      await startLogout();
+      dispatch(logout(null));
     }
   };
 
@@ -62,4 +73,16 @@ export const useAuthStore = () => {
     startLogout,
     startRefreshToken,
   };
+};
+
+const getUserProfile = async () => {
+  try {
+    const response = await schoolMetricsApi.get<ProfileResponse>(
+      "/users/get-profile"
+    );
+
+    return response.data.data;
+  } catch (error) {
+    throw new Error("User profile could not be obtained");
+  }
 };

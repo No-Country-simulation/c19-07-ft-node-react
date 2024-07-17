@@ -7,6 +7,7 @@ import {
   Box,
   Link,
   Stack,
+  Alert,
   Button,
   TextField,
   IconButton,
@@ -26,7 +27,7 @@ const loginFormSchema = z.object({
 });
 
 export const LoginForm = () => {
-  const { startLogin } = useAuthStore();
+  const { errorMessage, startLogin } = useAuthStore();
 
   // ? Hide or show password
   const [showPassword, setShowPassword] = useState(false);
@@ -49,10 +50,6 @@ export const LoginForm = () => {
     data
   ) => {
     await startLogin({ ...data });
-
-    // redirect
-
-    // clear form
   };
 
   return (
@@ -104,6 +101,15 @@ export const LoginForm = () => {
             Forgot your password?
           </Link>
         </Box>
+
+        {errorMessage && (
+          <Alert
+            className="animate__animated animate__headShake"
+            severity="error"
+          >
+            {errorMessage}
+          </Alert>
+        )}
 
         <Button type="submit" variant="contained" disabled={isSubmitting}>
           {isSubmitting && <CircularProgress size={15} sx={{ mr: 1 }} />}

@@ -1,8 +1,9 @@
-type Role = "ADMIN" | "STUDENT" | "PARENT" | "PROFESSOR";
+export type Role = "ADMIN" | "STUDENT" | "PARENTS" | "PROFESSOR";
 
 export interface User {
-  userId: string;
+  user_id: string;
+  name: string;
   email: string;
-  role: Role;
+  type_user: Role;
   state: string;
 }

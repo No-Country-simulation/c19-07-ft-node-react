@@ -8,9 +8,10 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useUiStore } from "../../hooks";
+import { useAuthStore, useUiStore } from "../../hooks";
 
 export const NavBar = () => {
+  const { startLogout } = useAuthStore();
   const { handleOpenSideBar } = useUiStore();
 
   return (
@@ -42,7 +43,7 @@ export const NavBar = () => {
           </Tooltip>
 
           <Tooltip title="Logout">
-            <IconButton color="error">
+            <IconButton color="error" onClick={startLogout}>
               <Logout />
             </IconButton>
           </Tooltip>
