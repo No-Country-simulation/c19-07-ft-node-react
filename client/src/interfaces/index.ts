@@ -1,1 +1,2 @@
-export type { User } from "./user.interface";
+export * from "./user.interface";
+export * from "./profile.interface";
