@@ -21,7 +21,11 @@ export const verifyToken = async (
     }
 
     try {
-      const decodedAccessToken = jwt.verify(accessToken, process.env.JWT_SECRET) as any
+      const decodedAccessToken: jwt.JwtPayload | string = jwt.verify(accessToken, process.env.JWT_SECRET)
+      if (typeof decodedAccessToken === 'string') {
+        throw new AuthenticationError('Failed to authenticate token', HTTP_STATUS.UNAUTHORIZED)
+      }
+
       req.user = decodedAccessToken
       next()
     } catch (accessTokenError) {
