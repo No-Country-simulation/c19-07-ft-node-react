@@ -1,21 +1,23 @@
 // src/modules/students/controllers/student.controller.ts
-import { Request, Response } from 'express'
-import * as getAllUsersServices from './users.services'
-import { string } from 'zod'
 import { Users } from '@prisma/client'
+import { NextFunction, Request, Response } from 'express'
+import HTTP_STATUS from '../constants/statusCodeServer.const'
+import { ResponseHandler } from '../libs/response.lib'
+import { ICustomRequest } from '../types'
+import * as getAllUsersServices from './users.services'
 
 export const getAllUsersControllers = async (req: Request, res: Response): Promise<void> => {
   try {
     const users = await getAllUsersServices.getAllUsersServices()
     res.json(users)
-  } catch (err:any) {
+  } catch (err: any) {
     res.status(500).send('Server Error')
   }
 }
 
 export const createUsersControllers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, password, type_user } = req.body;
+    const { name, email, password, type_user } = req.body
 
     // Crear el objeto de datos del usuario con las propiedades requeridas
     const userData: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt'> = {
@@ -24,14 +26,13 @@ export const createUsersControllers = async (req: Request, res: Response): Promi
       password,
       type_user,
       state: 'ACTIVE'
-    };
+    }
 
-    const user = await getAllUsersServices.createUsersServices(userData);
-    res.json(user);
+    const user = await getAllUsersServices.createUsersServices(userData)
+    res.json(user)
   } catch (err: any) {
     res.status(500).send('Server Error')
   }
-  
 }
 
 export const getUsersByIdControllers = async (req: Request, res: Response): Promise<void> => {
@@ -59,8 +60,28 @@ export const updateUsersControllers = async (req: Request, res: Response): Promi
 export const deleteUsersControllers = async (req: Request, res: Response): Promise<void> => {
   try {
     await getAllUsersServices.deleteUsersServices(String(req.params.id))
-    res.status(204).send("User deleted successfully")
+    res.status(204).send('User deleted successfully')
   } catch (err) {
     res.status(500).send('Server Error')
+  }
+}
+
+export const getProfileControllers = async (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const payload = req.user
+    if (payload === undefined) {
+      throw new Error('User not found')
+    }
+
+    if (typeof payload === 'string') {
+      throw new Error('User not found')
+    }
+    const { userId, role } = payload
+
+    const user = await getAllUsersServices.getUserProfileByTypeUser(userId, role)
+
+    new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'User profile', user)
+  } catch (error) {
+    next(error)
   }
 }

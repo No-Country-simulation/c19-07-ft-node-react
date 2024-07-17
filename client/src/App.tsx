@@ -1,41 +1,57 @@
+import { useEffect } from "react";
+
 import {
   Navigate,
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
 
-import { ProtectedRoute } from "./components";
+import { useAuthStore } from "./hooks";
+import { LoginPage, AuthLayout } from "./modules/auth/";
+import { CheckingAuth, PrivateRoute, PublicRoute } from "./components";
 import { HomePage, NotFoundPage, ParentStudientPrincipalPage } from "./pages";
 
-import { LoginPage, AuthLayout } from "./modules/auth/";
-import {TeacherCalendar, TeacherClass, TeacherClassChosen, TeacherClassStudents, TeacherPage} from './modules/teacher/pages/index.tsx'
+import {
+  TeacherPage,
+  TeacherClass,
+  TeacherCalendar,
+  TeacherClassChosen,
+  TeacherClassStudents,
+} from "./modules/teacher/pages/index.tsx";
+
 import { Classmates } from "./modules/parents/pages/Classmates.tsx";
+import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <ProtectedRoute>
+      <PrivateRoute>
         <HomePage />
-      </ProtectedRoute>
+      </PrivateRoute>
     ),
     errorElement: <NotFoundPage />,
     children: [
+      // Teacher
       {
         path: "teacher",
         element: <TeacherPage />,
       },
       {
-        path: "class",
+        path: "teacher/class",
         element: <TeacherClass />,
       },
       {
-        path: "classChosen",
+        path: "teacher/class/:id",
         element: <TeacherClassChosen />,
       },
       {
-        path: "classStudents",
+        path: "/teacher/class/students",
         element: <TeacherClassStudents />,
+      },
+      {
+        path: "classNewStudents",
+        element: <TeacherClassNewStudents />,
       },
       {
         path: "teacher/calendar",
@@ -57,7 +73,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/auth/*",
-    element: <AuthLayout />,
+    element: (
+      <PublicRoute>
+        <AuthLayout />
+      </PublicRoute>
+    ),
     children: [
       {
         path: "login",
@@ -75,6 +95,14 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const { status, startRefreshToken } = useAuthStore();
+
+  useEffect(() => {
+    startRefreshToken();
+  }, []);
+
+  if (status === "checking") return <CheckingAuth />;
+
   return (
     <>
       <RouterProvider
