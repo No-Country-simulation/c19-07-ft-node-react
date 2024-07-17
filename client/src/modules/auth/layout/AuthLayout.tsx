@@ -25,7 +25,7 @@ export default function AuthLayout() {
       />
 
       <Box
-        width="full"
+        width="350px"
         display="flex"
         bgcolor="white"
         padding={3}
