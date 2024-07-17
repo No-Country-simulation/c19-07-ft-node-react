@@ -6,7 +6,10 @@ import { NavBar, SideBar } from "../components";
 
 export function HomePage() {
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box
+      className="animate__animated animate__fadeIn animate__faster"
+      sx={{ display: "flex", height: "100vh" }}
+    >
       <SideBar />
 
       <Box sx={{ width: "100%", height: "100%" }}>
