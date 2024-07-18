@@ -25,19 +25,18 @@ const prisma = new PrismaClient()
 //     return resolveprofessors;
 // }
 const getProfessors = async () => {
-    // const academicAreas = await prisma.academic_areas.findMany({ select: { area_academica_id: true,nombre: true,descripcion: true } })
-    return      await prisma.professors.findMany({ select: { professor_id: true } })
+  // const academicAreas = await prisma.academic_areas.findMany({ select: { area_academica_id: true,nombre: true,descripcion: true } })
+  return await prisma.professors.findMany({ select: { professor_id: true } })
 
-    //{ 
-        // await prisma.professors.findMany({ select: { professor_id: true } })
-        //  professors
-        //  , academicAreas
-    // }
-  }
-  const getAcademicAreas = async () => {
-    return    await prisma.academic_areas.findMany({ select: { area_academica_id: true,nombre: true,descripcion: true } })
-
-  }
+  // {
+  // await prisma.professors.findMany({ select: { professor_id: true } })
+  //  professors
+  //  , academicAreas
+  // }
+}
+const getAcademicAreas = async () => {
+  return await prisma.academic_areas.findMany({ select: { area_academica_id: true, nombre: true, descripcion: true } })
+}
 
 // const generateCourses = async () => {
 //   const { professors, academicAreas } = await getProfessorsAndAcademicAreas()
@@ -60,32 +59,26 @@ const getProfessors = async () => {
 //   return courses
 // }
 
-
 const main = async () => {
 //    const resolveCourse = await generateCourses()
-   const resolveGetProfessors = await getProfessors()
-   console.log("3333--->",resolveGetProfessors)
+  const resolveGetProfessors = await getProfessors()
+  console.log('3333--->', resolveGetProfessors)
 
-   const resolvegetAcademicAreas = await getAcademicAreas()
-   console.log("4444--->",resolvegetAcademicAreas)
+  const resolvegetAcademicAreas = await getAcademicAreas()
+  console.log('4444--->', resolvegetAcademicAreas)
 
+  const forCourses = await resolveGetProfessors.map((course, index) => {
+    return {
+      nombre: resolvegetAcademicAreas[index].nombre,
+      descripcion: resolvegetAcademicAreas[index].descripcion,
+      professor_id: course.professor_id,
+      area_academica_id: resolvegetAcademicAreas[index].area_academica_id
+    }
+  })
 
+  console.log('5555---formac>', forCourses)
 
-    const forCourses = await resolveGetProfessors.map((course, index) => {
-        return {
-            nombre: resolvegetAcademicAreas[index].nombre,
-            descripcion: resolvegetAcademicAreas[index].descripcion,
-            professor_id: course.professor_id,
-            area_academica_id: resolvegetAcademicAreas[index].area_academica_id
-        }
+  return forCourses
+}
 
-    })
-
-    console.log("5555---formac>",forCourses)
-
-    return forCourses
-  }
-  
-
-export default main ;
-
+export default main
