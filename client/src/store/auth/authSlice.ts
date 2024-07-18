@@ -35,9 +35,14 @@ export const authSlice = createSlice({
       state.user = null;
       state.errorMessage = null;
     },
+
+    clearErrorMessage: (state) => {
+      state.errorMessage = null;
+    },
   },
 });
 
-export const { login, logout, checkingCredentials } = authSlice.actions;
+export const { login, logout, checkingCredentials, clearErrorMessage } =
+  authSlice.actions;
 
 export default authSlice.reducer;

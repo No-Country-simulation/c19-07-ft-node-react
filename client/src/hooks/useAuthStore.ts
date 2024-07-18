@@ -4,7 +4,12 @@ import { AxiosError } from "axios";
 import axios, { schoolMetricsApi } from "../apis/schoolMetricsApi";
 
 import { useAppDispatch, useAppSelector } from "./reduxTypedHooks";
-import { checkingCredentials, login, logout } from "../store/auth/authSlice";
+import {
+  login,
+  logout,
+  clearErrorMessage,
+  checkingCredentials,
+} from "../store/auth/authSlice";
 
 type LoginData = {
   email: string;
@@ -17,6 +22,8 @@ export const useAuthStore = () => {
   const { user, status, errorMessage } = useAppSelector((state) => state.auth);
 
   const startLogin = async ({ email, password }: LoginData) => {
+    dispatch(clearErrorMessage());
+
     try {
       await axios.post("/auth/login", { email, password });
 
@@ -25,7 +32,7 @@ export const useAuthStore = () => {
       dispatch(login({ ...data }));
     } catch (error) {
       if (error instanceof AxiosError) {
-        if (!error.response?.data.success) {
+        if (error.response && !error.response.data.success) {
           dispatch(logout("Invalid credentials."));
         } else {
           dispatch(logout("Internal server error."));
