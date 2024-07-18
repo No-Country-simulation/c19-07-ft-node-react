@@ -6,12 +6,10 @@ import { ResponseHandler } from './libs/response.lib'
 import studentRoutes from './students/students.routes'
 import professorRoutes from './professors/professors.routes'
 import parentRoutes from './parents/parents.routes'
-import authRoutes from './auth/auth.routes'
 import cookieParser from 'cookie-parser'
 import usersRoutes from './users/users.routes'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../openapi.json'
-
 class Server {
   private readonly app: Application
 
@@ -24,7 +22,7 @@ class Server {
 
   config (): void {
     this.app.set('port', process.env.PORT_SERVER !== undefined ? process.env.PORT_SERVER : 3000)
-    this.app.use(morgan('dev'))
+    this.app.use(morgan('combined'))
     this.app.use(express.json())
     this.app.use(cookieParser())
     this.app.use(cors({
@@ -40,7 +38,6 @@ class Server {
     this.app.use('/api/professors', professorRoutes)
     this.app.use('/api/parents', parentRoutes)
     this.app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
-    this.app.use('/api/v1/auth', authRoutes)
   }
 
   errorHandling (): void {
