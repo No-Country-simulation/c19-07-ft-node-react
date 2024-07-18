@@ -39,6 +39,8 @@ model Users {
   Parents      Parents[]
   Professors   Professors[]
   RefreshToken RefreshToken[]
+  messages01     Messages[] @relation(name: "sender")
+  Messages02    Messages[] @relation(name: "Receiver")
 }
 
 model Students {
@@ -58,12 +60,17 @@ model Students {
 }
 
 model Messages {
-  message_id String   @id @default(cuid())
-  message    String
-  state      Boolean
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  message_id    String   @id @default(cuid())
+  message       String
+  roomId        String   @default(uuid())   
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  userSendID    String
+  userReceiveId String
+  SendId        Users    @relation(name: "sender", fields: [userSendID], references: [user_id])
+  ReceiveID     Users    @relation(name: "Receiver", fields: [userReceiveId], references: [user_id])
 }
+  // id    Int     @id @default(autoincrement())
 
 model Parents {
   parent_id String    @id @default(cuid())
