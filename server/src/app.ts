@@ -1,22 +1,27 @@
-import express, { Request, Response, Application, NextFunction } from 'express'
-import cors from 'cors'
-import morgan from 'morgan'
-import router from './routes/index'
-import { ResponseHandler } from './libs/response.lib'
-import studentRoutes from './students/students.routes'
-import professorRoutes from './professors/professors.routes'
-import parentRoutes from './parents/parents.routes'
-import authRoutes from './auth/auth.routes'
 import cookieParser from 'cookie-parser'
-import usersRoutes from './users/users.routes'
+import cors from 'cors'
+import express, { Application, NextFunction, Request, Response } from 'express'
+import http from 'http'
+import morgan from 'morgan'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../openapi.json'
+import chatRoutes from './chat/chat.routes'
+import { ServerSocket } from './configs/chat.gateway'
+import parentRoutes from './parents/parents.routes'
+import professorRoutes from './professors/professors.routes'
+import router from './routes/index'
+import studentRoutes from './students/students.routes'
+import usersRoutes from './users/users.routes'
 
 class Server {
   private readonly app: Application
+  private readonly server: http.Server
+  private readonly socketServer: ServerSocket
 
   constructor () {
     this.app = express()
+    this.server = http.createServer(this.app)
+    this.socketServer = new ServerSocket(this.server, this.app)
     this.config()
     this.routes()
     this.errorHandling()
@@ -28,7 +33,7 @@ class Server {
     this.app.use(express.json())
     this.app.use(cookieParser())
     this.app.use(cors({
-      origin: '*',
+      origin: 'http://localhost:5173',
       credentials: true
     }))
   }
@@ -40,25 +45,22 @@ class Server {
     this.app.use('/api/professors', professorRoutes)
     this.app.use('/api/parents', parentRoutes)
     this.app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
-    this.app.use('/api/v1/auth', authRoutes)
+    this.app.use('/api/chat', chatRoutes)
   }
 
   errorHandling (): void {
-    // Manejo de errores
     this.app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-      const responseHandler = new ResponseHandler(res)
       const statusCode = typeof err.statusCode === 'number' ? err.statusCode : 500
       const message = typeof err.message === 'string' ? err.message : 'Internal Server Error'
-      const errors = err.errors !== undefined && err.errors !== null ? err.errors : {}
-
-      responseHandler.sendError(statusCode, message, errors)
+      res.status(statusCode).json({ message })
     })
   }
 
   start (): void {
-    this.app.listen(this.app.get('port'), () => {
+    this.server.listen(this.app.get('port'), () => {
       console.log('Server on port', this.app.get('port'))
     })
   }
 }
+
 export default Server
