@@ -66,3 +66,21 @@ export const deleteProfessor = async (req: Request, res: Response): Promise<void
     res.status(500).send({ error: 'Server Error', details: err.message })
   }
 }
+
+export const createEvaluations = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const isValid: boolean = professorService.validateCreateEvaluation(req.body)
+    if (!isValid) res.send(400).send({ err: 'Invalid body' })
+    const { id } = req.params
+    if (typeof id !== typeof '') res.send(400).send({ err: 'Invalid curso_id' })
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { evaluation_id } = await professorService.createEvaluation(id, req.body)
+    if (evaluation_id.length === 0) res.send(500).send({ error: 'An error ocurred creating the evaluation' })
+
+    await professorService.createEvaluationResult(evaluation_id, req.body)
+    res.status(204).send()
+  } catch (e: any) {
+    res.status(500).send({ err: 'Server error', error_details: e })
+  }
+}
