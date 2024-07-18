@@ -1,5 +1,5 @@
 // src/modules/students/repositories/student.repository.ts
-import { PrismaClient, Students } from '@prisma/client'
+import { Academic_records, PrismaClient, Students } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export const getAllStudents = async (): Promise<Students[]> => {
@@ -20,4 +20,8 @@ export const updateStudent = async (id: string, data: Partial<Students>): Promis
 
 export const deleteStudent = async (id: string): Promise<Students> => {
   return await prisma.students.delete({ where: { student_id: id } })
+}
+
+export const getAcademicRecords = async (id: string): Promise<Academic_records[]> => {
+  return await prisma.academic_records.findMany({ where: { student_id: id } })
 }

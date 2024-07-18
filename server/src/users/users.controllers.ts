@@ -1,8 +1,10 @@
 // src/modules/students/controllers/student.controller.ts
-import { Request, Response } from 'express'
-import * as getAllUsersServices from './users.services'
-import { string } from 'zod'
 import { Users } from '@prisma/client'
+import { NextFunction, Request, Response } from 'express'
+import HTTP_STATUS from '../constants/statusCodeServer.const'
+import { ResponseHandler } from '../libs/response.lib'
+import { ICustomRequest } from '../types'
+import * as getAllUsersServices from './users.services'
 
 export const getAllUsersControllers = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -61,5 +63,25 @@ export const deleteUsersControllers = async (req: Request, res: Response): Promi
     res.status(204).send('User deleted successfully')
   } catch (err) {
     res.status(500).send('Server Error')
+  }
+}
+
+export const getProfileControllers = async (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const payload = req.user
+    if (payload === undefined) {
+      throw new Error('User not found')
+    }
+
+    if (typeof payload === 'string') {
+      throw new Error('User not found')
+    }
+    const { userId, role } = payload
+
+    const user = await getAllUsersServices.getUserProfileByTypeUser(userId, role)
+
+    new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'User profile', user)
+  } catch (error) {
+    next(error)
   }
 }
