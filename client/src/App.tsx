@@ -28,6 +28,8 @@ import { Classmates } from "./modules/parents/pages/Classmates.tsx";
 import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
 import TeacherChatPage from "./modules/parents/pages/TeacherChatPage.tsx";
 import TeacherContactsPage from "./modules/parents/pages/TeacherContactsPage.tsx";
+import ParentsContactsPage from "./modules/parents/pages/ParentsContactsPage.tsx";
+import ParentChatPage from "./modules/parents/pages/ParentsChatPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -40,7 +42,7 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
     children: [
       {
-        path: "teacher",
+        path: "professors", //se cambio teacher por professors porque "teacher" no hay en backend
         element: <TeacherPage />,
       },
       {
@@ -60,7 +62,7 @@ const router = createBrowserRouter([
         element: <TeacherContactsPage />,
       },
       {
-        path: "teacher/chat",
+        path: "professors/chat",
         element: <TeacherChatPage />,
       },
       {
@@ -74,6 +76,14 @@ const router = createBrowserRouter([
       {
         path: "parent",
         element: <ParentStudientPrincipalPage />,
+      },
+      {
+        path: "parent/contacts",
+        element: <ParentsContactsPage />,
+      },
+      {
+        path: "parent/chat",
+        element: <ParentChatPage />,
       },
       {
         path: "parent/classmates",
