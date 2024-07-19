@@ -8,8 +8,13 @@ import {
 
 import { useAuthStore } from "./hooks";
 import { LoginPage, AuthLayout } from "./modules/auth/";
-import { CheckingAuth, PrivateRoute, PublicRoute } from "./components";
 import { HomePage, NotFoundPage, ParentStudientPrincipalPage } from "./pages";
+import {
+  // RequireRole,
+  PublicRoute,
+  PrivateRoute,
+  CheckingAuth,
+} from "./components";
 
 import {
   TeacherPage,
@@ -21,6 +26,8 @@ import {
 
 import { Classmates } from "./modules/parents/pages/Classmates.tsx";
 import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
+import TeacherChatPage from "./modules/parents/pages/TeacherChatPage.tsx";
+import TeacherContactsPage from "./modules/parents/pages/TeacherContactsPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +39,6 @@ const router = createBrowserRouter([
     ),
     errorElement: <NotFoundPage />,
     children: [
-      // Teacher
       {
         path: "teacher",
         element: <TeacherPage />,
@@ -46,8 +52,16 @@ const router = createBrowserRouter([
         element: <TeacherClassChosen />,
       },
       {
-        path: "/teacher/class/students",
+        path: "teacher/class/students",
         element: <TeacherClassStudents />,
+      },
+      {
+        path: "teacher/contacts",
+        element: <TeacherContactsPage />,
+      },
+      {
+        path: "teacher/chat",
+        element: <TeacherChatPage />,
       },
       {
         path: "classNewStudents",
@@ -66,7 +80,7 @@ const router = createBrowserRouter([
         element: <Classmates />,
       },
       {
-        path: "studient",
+        path: "student",
         element: <ParentStudientPrincipalPage />,
       },
     ],
