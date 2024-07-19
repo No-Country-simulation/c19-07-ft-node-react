@@ -7,15 +7,19 @@ import {
   Box,
   Link,
   Stack,
+  Alert,
   Button,
   TextField,
   IconButton,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
+
+import { useAuthStore } from "../../../hooks";
 
 const loginFormSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
@@ -23,6 +27,8 @@ const loginFormSchema = z.object({
 });
 
 export const LoginForm = () => {
+  const { errorMessage, startLogin } = useAuthStore();
+
   // ? Hide or show password
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -31,19 +37,19 @@ export const LoginForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "manuel.rodriguez@example.com",
+      password: "Cl7h0He4",
     },
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof loginFormSchema>> = async (
     data
   ) => {
-    console.log({ data });
+    await startLogin({ ...data });
   };
 
   return (
@@ -56,6 +62,7 @@ export const LoginForm = () => {
           placeholder="john.doe@example.com"
           {...register("email")}
           error={!!errors.email}
+          disabled={isSubmitting}
           helperText={errors.email?.message}
         />
         <Box display="flex" flexDirection="column">
@@ -66,6 +73,7 @@ export const LoginForm = () => {
             placeholder="********"
             {...register("password")}
             error={!!errors.password}
+            disabled={isSubmitting}
             helperText={errors.password?.message}
             InputProps={{
               endAdornment: (
@@ -94,7 +102,17 @@ export const LoginForm = () => {
           </Link>
         </Box>
 
-        <Button type="submit" variant="contained">
+        {errorMessage && (
+          <Alert
+            className="animate__animated animate__headShake"
+            severity="error"
+          >
+            {errorMessage}
+          </Alert>
+        )}
+
+        <Button type="submit" variant="contained" disabled={isSubmitting}>
+          {isSubmitting && <CircularProgress size={15} sx={{ mr: 1 }} />}
           Login
         </Button>
       </Stack>

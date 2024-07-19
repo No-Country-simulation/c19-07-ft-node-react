@@ -32,3 +32,16 @@ export const updateUserRepository = async (id: string, data: Partial<Users>): Pr
 export const deleteUserRepository = async (id: string): Promise<Users> => {
   return await prisma.users.delete({ where: { user_id: id } })
 }
+
+export const getUserProfileByTypeUserRepository = async (id: string, typeUser: Users['type_user']): Promise<Users | null> => {
+  const userProfile = await prisma.users.findFirst({
+    where: { user_id: id, type_user: typeUser },
+    include: {
+      Parents: typeUser === 'PARENTS',
+      Students: typeUser === 'STUDENT',
+      Professors: typeUser === 'PROFESSOR'
+    }
+  })
+
+  return userProfile
+}

@@ -8,6 +8,7 @@ import shape2 from "../../../assets/svgs/shape-decorator-2.svg";
 export default function AuthLayout() {
   return (
     <Box
+      className="animate__animated animate__fadeIn animate__faster"
       bgcolor="white"
       display="flex"
       alignItems="center"
@@ -24,7 +25,7 @@ export default function AuthLayout() {
       />
 
       <Box
-        width="full"
+        width="350px"
         display="flex"
         bgcolor="white"
         padding={3}

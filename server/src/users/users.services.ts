@@ -28,3 +28,7 @@ export const updateUsersServices = async (id: string, data: Partial<Users>): Pro
 export const deleteUsersServices = async (id: string): Promise<Users> => {
   return await getAllUsersRepository.deleteUserRepository(id)
 }
+
+export const getUserProfileByTypeUser = async (id: string, typeUser: Users['type_user']): Promise<Users | null> => {
+  return await getAllUsersRepository.getUserProfileByTypeUserRepository(id, typeUser)
+}

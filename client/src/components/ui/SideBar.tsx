@@ -1,4 +1,11 @@
-import { Close, AutoGraph, People } from "@mui/icons-material";
+import {
+  Close,
+  AutoGraph,
+  People,
+  Chat,
+  Campaign,
+  School,
+} from "@mui/icons-material";
 import {
   Box,
   List,
@@ -12,41 +19,69 @@ import {
 
 import { SideBarItem } from "./SideBarItem";
 
-import { useUiStore } from "../../hooks";
+import { useAuthStore, useUiStore } from "../../hooks";
 
 const drawerWidth = 300;
 const drawerBackgroundColor = "#abd1c6";
 
-// const parentOptions = [];
-
-// const studentOptions = [
-//   {
-//     text: "Performance",
-//     path: "/parent",
-//     icon: <AutoGraph></AutoGraph>,
-//   },
-//   {
-//     text: "Classmates",
-//     path: "/parent/classmates",
-//     icon: <People></People>,
-//   },
-// ];
-
-const professorOptions = [
+const parentOptions = [
   {
-    text: "Class",
-    path: "/teacher",
+    text: "Performance",
+    path: "/parent",
     icon: <AutoGraph></AutoGraph>,
   },
   {
-    text: "Chat",
+    text: "Classmates",
     path: "/parent/classmates",
     icon: <People></People>,
+  },
+  {
+    text: "Chat",
+    path: "",
+    icon: <Chat></Chat>,
+  },
+];
+
+const studentOptions = [
+  {
+    text: "Performance",
+    path: "",
+    icon: <AutoGraph></AutoGraph>,
+  },
+  {
+    text: "Announcements",
+    path: "",
+    icon: <Campaign></Campaign>,
+  },
+];
+
+const professorOptions = [
+  {
+    text: "Classes",
+    path: "/teacher/class",
+    icon: <School></School>,
+  },
+  {
+    text: "Chat",
+    path: "/teacher/contacts",
+    icon: <Chat></Chat>,
   },
 ];
 
 export const SideBar = () => {
+  const { user } = useAuthStore();
   const { isSideBarOpen, handleCloseSideBar } = useUiStore();
+
+  const { name, type_user } = user!;
+
+  const options =
+    type_user === "PARENTS"
+      ? parentOptions
+      : type_user === "STUDENT"
+      ? studentOptions
+      : type_user === "PROFESSOR"
+      ? professorOptions
+      : [];
 
   const drawerContent = (
     <>
@@ -62,7 +97,7 @@ export const SideBar = () => {
         </Tooltip>
       </Box>
 
-      <Divider />
+      <Divider sx={{ display: { lg: "none" } }} />
 
       <Box
         display="flex"
@@ -75,14 +110,14 @@ export const SideBar = () => {
         <Avatar src="" alt="" sx={{ width: "150px", height: "150px" }} />
 
         <Typography variant="h6" component="div" fontWeight="bold">
-          Teacher / Student
+          {name}
         </Typography>
       </Box>
 
       <Divider />
 
       <List>
-        {professorOptions.map(({ text, path, icon }) => (
+        {options.map(({ text, path, icon }) => (
           <SideBarItem key={text} text={text} path={path} icon={icon} />
         ))}
       </List>

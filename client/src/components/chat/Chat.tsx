@@ -1,10 +1,11 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Box } from "@mui/material";
 
 import { ChatInput } from "./ChatInput";
 import { ChatMessage } from "./ChatMessage";
 import { ChatParticipants } from "./ChatParticipants";
+import { socket } from "../../socket/socket";
 
 const authenticatedUser = {
   id: 1,
@@ -43,6 +44,9 @@ const initMessages = [
 // const participants = [];
 
 export const Chat = () => {
+  // const [isConnected, setIsConnected] = useState(socket.connected);
+  // const [fooEvents, setFooEvents] = useState([]);
+
   const msgsContainerRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState(initMessages);
 
@@ -51,6 +55,12 @@ export const Chat = () => {
 
     msgsContainerRef.current.scrollTop = msgsContainerRef.current.scrollHeight;
   };
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+  }, []);
 
   return (
     <Box
