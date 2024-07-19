@@ -39,43 +39,6 @@ export class ChatServices {
   }
 
   async createMessage(userSendID: string, userReceiveId: string, message: string, roomId?: string) {
-    // const generatedRoomId = roomId || uuidv4();
-
-    // const existingMessage = await prisma.messages.findFirst({
-    //     where: {
-    //       OR: [
-    //         {
-    //           userSendID: userSendID,
-    //           userReceiveId: userReceiveId,
-    //         },
-    //         {
-    //           userSendID: userReceiveId,
-    //           userReceiveId: userSendID,
-    //         },
-    //       ],
-    //     },
-    //   });
-
-    // const roomId = existingMessage ? existingMessage.roomId : uuidv4();
-
-    // Si no hay roomId, buscar uno existente o crear uno nuevo
-    // if (!roomId) {
-    //   const existingMessage = await prisma.messages.findFirst({
-    //     where: {
-    //       OR: [
-    //         {
-    //           userSendID: userSendID,
-    //           userReceiveId: userReceiveId,
-    //         },
-    //         {
-    //           userSendID: userReceiveId,
-    //           userReceiveId: userSendID,
-    //         },
-    //       ],
-    //     },
-    //   });
-    //   roomId = existingMessage ? existingMessage.roomId : uuidv4();
-    // }
 
     if (!roomId) {
       roomId = await this.createRoom(userSendID, userReceiveId);
