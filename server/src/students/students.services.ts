@@ -1,5 +1,5 @@
 // src/modules/students/services/student.service.ts
-import { Students } from '@prisma/client'
+import { Academic_records, Students } from '@prisma/client'
 import * as studentRepository from '../students/students.repository'
 
 export const getAllStudents = async (): Promise<Students[]> => {
@@ -20,4 +20,8 @@ export const updateStudent = async (id: string, data: Partial<Students>): Promis
 
 export const deleteStudent = async (id: string): Promise<Students> => {
   return await studentRepository.deleteStudent(id)
+}
+
+export const getFeedback = async (id: string): Promise<Academic_records[]> => {
+  return await studentRepository.getAcademicRecords(id)
 }
