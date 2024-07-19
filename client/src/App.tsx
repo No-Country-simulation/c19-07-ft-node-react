@@ -26,6 +26,8 @@ import {
 
 import { Classmates } from "./modules/parents/pages/Classmates.tsx";
 import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
+import TeacherChatPage from "./modules/parents/pages/TeacherChatPage.tsx";
+import TeacherContactsPage from "./modules/parents/pages/TeacherContactsPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +54,14 @@ const router = createBrowserRouter([
       {
         path: "teacher/class/students",
         element: <TeacherClassStudents />,
+      },
+      {
+        path: "teacher/contacts",
+        element: <TeacherContactsPage />,
+      },
+      {
+        path: "teacher/chat",
+        element: <TeacherChatPage />,
       },
       {
         path: "classNewStudents",
