@@ -1,10 +1,14 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Box } from "@mui/material";
 
 import { ChatInput } from "./ChatInput";
 import { ChatMessage } from "./ChatMessage";
 import { ChatParticipants } from "./ChatParticipants";
+import { socket } from "../../socket/socket";
+
+
+
 
 const authenticatedUser = {
   id: 1,
@@ -43,6 +47,9 @@ const initMessages = [
 // const participants = [];
 
 export const Chat = () => {
+  // const [isConnected, setIsConnected] = useState(socket.connected);
+  // const [fooEvents, setFooEvents] = useState([]);
+
   const msgsContainerRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState(initMessages);
 
@@ -50,6 +57,34 @@ export const Chat = () => {
     if (!msgsContainerRef.current) return;
 
     msgsContainerRef.current.scrollTop = msgsContainerRef.current.scrollHeight;
+  };
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+
+    socket.on("chat message", (msg: string) => {
+      setMessages((prevMessages) => [...prevMessages, { userId: 2, message: msg }]);
+      scrollToBottom();
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("chat message");
+    };
+  }, []);
+
+  // const handleSendMessage = (message: string) => {
+  //   socket.emit("chat message", message);
+  //   setMessages([...messages, { userId: 1, message }]);
+  //   scrollToBottom();
+  // };
+
+  const handleSendMessage = (message: string) => {
+    socket.emit("chat message", message);
+    setMessages((prevMessages) => [...prevMessages, { userId: authenticatedUser.id, message }]);
+    scrollToBottom();
   };
 
   return (
@@ -80,22 +115,33 @@ export const Chat = () => {
           pt={2}
           overflow="auto"
         >
-          {messages.map(({ userId, message }, index) => (
+          {/* {messages.map(({ userId, message }, index) => (
             <ChatMessage
               key={index}
               message={message}
               isSender={userId === authenticatedUser.id}
-            />
+                
+
+          />
+          ))} */}
+
+          {messages.map(({ userId, message }, index) => (
+            <ChatMessage key={index} message={message} isSender={userId === authenticatedUser.id} />
           ))}
+
+
         </Box>
       </Box>
 
-      <ChatInput
+      {/* <ChatInput
         onSendMessage={(message) => {
           setMessages([...messages, { userId: 1, message }]);
           scrollToBottom();
         }}
-      />
+      /> */}
+
+      <ChatInput onSendMessage={handleSendMessage} />
+
     </Box>
   );
 };

@@ -63,7 +63,7 @@ const professorOptions = [
   },
   {
     text: "Chat",
-    path: "",
+    path: "/teacher/contacts",
     icon: <Chat></Chat>,
   },
 ];
