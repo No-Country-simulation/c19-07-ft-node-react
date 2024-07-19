@@ -7,6 +7,9 @@ import { ChatMessage } from "./ChatMessage";
 import { ChatParticipants } from "./ChatParticipants";
 import { socket } from "../../socket/socket";
 
+
+
+
 const authenticatedUser = {
   id: 1,
   name: "Juan",
@@ -60,7 +63,29 @@ export const Chat = () => {
     socket.on("connect", () => {
       console.log("connected");
     });
+
+    socket.on("chat message", (msg: string) => {
+      setMessages((prevMessages) => [...prevMessages, { userId: 2, message: msg }]);
+      scrollToBottom();
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("chat message");
+    };
   }, []);
+
+  // const handleSendMessage = (message: string) => {
+  //   socket.emit("chat message", message);
+  //   setMessages([...messages, { userId: 1, message }]);
+  //   scrollToBottom();
+  // };
+
+  const handleSendMessage = (message: string) => {
+    socket.emit("chat message", message);
+    setMessages((prevMessages) => [...prevMessages, { userId: authenticatedUser.id, message }]);
+    scrollToBottom();
+  };
 
   return (
     <Box
@@ -90,22 +115,33 @@ export const Chat = () => {
           pt={2}
           overflow="auto"
         >
-          {messages.map(({ userId, message }, index) => (
+          {/* {messages.map(({ userId, message }, index) => (
             <ChatMessage
               key={index}
               message={message}
               isSender={userId === authenticatedUser.id}
-            />
+                
+
+          />
+          ))} */}
+
+          {messages.map(({ userId, message }, index) => (
+            <ChatMessage key={index} message={message} isSender={userId === authenticatedUser.id} />
           ))}
+
+
         </Box>
       </Box>
 
-      <ChatInput
+      {/* <ChatInput
         onSendMessage={(message) => {
           setMessages([...messages, { userId: 1, message }]);
           scrollToBottom();
         }}
-      />
+      /> */}
+
+      <ChatInput onSendMessage={handleSendMessage} />
+
     </Box>
   );
 };
