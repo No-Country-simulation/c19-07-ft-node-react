@@ -10,7 +10,7 @@ import { useAuthStore } from "./hooks";
 import { LoginPage, AuthLayout } from "./modules/auth/";
 import { HomePage, NotFoundPage, ParentStudientPrincipalPage } from "./pages";
 import {
-  RequireRole,
+  // RequireRole,
   PublicRoute,
   PrivateRoute,
   CheckingAuth,
@@ -37,61 +37,41 @@ const router = createBrowserRouter([
     ),
     errorElement: <NotFoundPage />,
     children: [
-      // Teacher
       {
         path: "teacher",
-        element: (
-          <RequireRole allowedRoles={["PROFESSOR"]}>
-            <TeacherPage />
-          </RequireRole>
-        ),
-        children: [
-          {
-            path: "class",
-            element: <TeacherClass />,
-          },
-          {
-            path: "teacher/class/:id",
-            element: <TeacherClassChosen />,
-          },
-          {
-            path: "/teacher/class/students",
-            element: <TeacherClassStudents />,
-          },
-          {
-            path: "classNewStudents",
-            element: <TeacherClassNewStudents />,
-          },
-          {
-            path: "teacher/calendar",
-            element: <TeacherCalendar />,
-          },
-        ],
+        element: <TeacherPage />,
       },
-      // Parent
+      {
+        path: "teacher/class",
+        element: <TeacherClass />,
+      },
+      {
+        path: "teacher/class/:id",
+        element: <TeacherClassChosen />,
+      },
+      {
+        path: "teacher/class/students",
+        element: <TeacherClassStudents />,
+      },
+      {
+        path: "classNewStudents",
+        element: <TeacherClassNewStudents />,
+      },
+      {
+        path: "teacher/calendar",
+        element: <TeacherCalendar />,
+      },
       {
         path: "parent",
-        element: (
-          <RequireRole allowedRoles={["PARENTS"]}>
-            <ParentStudientPrincipalPage />
-          </RequireRole>
-        ),
-        children: [
-          {
-            path: "parent/classmates",
-            element: <Classmates />,
-          },
-        ],
+        element: <ParentStudientPrincipalPage />,
       },
-      // Student
+      {
+        path: "parent/classmates",
+        element: <Classmates />,
+      },
       {
         path: "student",
-        element: (
-          <RequireRole allowedRoles={["STUDENT"]}>
-            <ParentStudientPrincipalPage />
-          </RequireRole>
-        ),
-        children: [],
+        element: <ParentStudientPrincipalPage />,
       },
     ],
   },
