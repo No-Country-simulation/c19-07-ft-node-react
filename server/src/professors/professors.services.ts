@@ -2,7 +2,7 @@
 // src/modules/professors/services/professor.service.ts
 import { Evaluation_results, Evaluations, Professors } from '@prisma/client'
 import * as professorRepository from '../professors/professors.repository'
-import { CreateEvaluationAndResults, CreateEvaluationResult, CreateEvaluations, CreateProfessor } from '../types/professors.type'
+import { CreateEvaluationAndResults, CreateProfessor } from '../types/professors.type'
 import z from 'zod'
 
 export const getAllProfessors = async (): Promise<Professors[]> => {
@@ -44,7 +44,7 @@ export const validateCreateProfessor = (object: CreateProfessor): boolean => {
 const createEvaluationSchema = z.object({
   name: z.string(),
   description: z.string(),
-  date: z.date(),
+  date: z.string(),
   student_id: z.string(),
   mark: z.number().min(1).max(100),
   comment: z.string()
@@ -54,10 +54,6 @@ export const validateCreateEvaluation = (object: CreateEvaluationAndResults): bo
   return createEvaluationSchema.safeParse(object).success
 }
 
-export const createEvaluation = async (curso_id: string, body: CreateEvaluations): Promise<Evaluations> => {
+export const createEvaluation = async (curso_id: string, body: CreateEvaluationAndResults): Promise<Evaluations> => {
   return await professorRepository.createEvaluation(curso_id, body)
-}
-
-export const createEvaluationResult = async (evaluation_id: string, body: CreateEvaluationResult): Promise<Evaluation_results> => {
-  return await professorRepository.createEvaluationResult(evaluation_id, body)
 }

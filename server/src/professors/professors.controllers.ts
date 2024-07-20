@@ -78,7 +78,6 @@ export const createEvaluations = async (req: Request, res: Response): Promise<vo
     const { evaluation_id } = await professorService.createEvaluation(id, req.body)
     if (evaluation_id.length === 0) res.send(500).send({ error: 'An error ocurred creating the evaluation' })
 
-    await professorService.createEvaluationResult(evaluation_id, req.body)
     res.status(204).send()
   } catch (e: any) {
     res.status(500).send({ err: 'Server error', error_details: e })

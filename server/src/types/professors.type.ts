@@ -14,7 +14,3 @@ export interface CreateEvaluationAndResults {
   mark: number
   comment: string
 }
-
-export type CreateEvaluations = Omit<CreateEvaluationAndResults, 'student_id' | 'mark' | 'comment' | 'curso_id'>
-
-export type CreateEvaluationResult = Omit<CreateEvaluationAndResults, 'curso_id' | 'name' | 'description' | 'date' >
