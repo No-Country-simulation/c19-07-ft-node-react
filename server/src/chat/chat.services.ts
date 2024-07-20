@@ -39,7 +39,7 @@ export class ChatServices {
   }
 
   async createMessage (userSendID: string, userReceiveId: string, message: string, roomId?: string) {
-   console.log('createMessage', userSendID, userReceiveId, message, roomId)
+    console.log('createMessage', userSendID, userReceiveId, message, roomId)
     const newMessage = await prisma.messages.create({
       data: {
         message,

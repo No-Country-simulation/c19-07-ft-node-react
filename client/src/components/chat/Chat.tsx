@@ -72,25 +72,19 @@ export const Chat = ({ receiverId }: ChatProps) => {
   };
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("connected");
-    });
-
-    socket.on("receiveMessage", (msg: Message) => {
-      console.log("receiveMessage", msg);
-      setMessages((prevMessages) => {
-        return [...prevMessages, { ...msg }];
-      });
+    const handleMessage = (msg: Message) => {
+      console.log("receiveMessage------->", msg);
+      setMessages((prevMessages) => [...prevMessages, msg]);
       scrollToBottom();
-    });
-
-    // socket.emit("receiveMessage", );
-
-    return () => {
-      socket.off("connect");
-      socket.off("chat message");
     };
-  }, [messages]);
+  
+    socket.on("receiveMessage", handleMessage);
+  
+    return () => {
+      socket.off("receiveMessage", handleMessage);
+    };
+  }, []);
+  
 
   // const handleSendMessage = (message: string) => {
   //   socket.emit("chat message", message);
