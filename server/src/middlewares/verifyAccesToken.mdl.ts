@@ -5,11 +5,11 @@ import HTTP_STATUS from '../constants/statusCodeServer.const'
 import jwt from 'jsonwebtoken'
 import { ICustomRequest } from '../types'
 
-export const verifyToken = async (
+export const verifyToken = (
   req: ICustomRequest,
   res: Response,
   next: NextFunction
-): Promise<void> => {
+): void => {
   try {
     const { accessToken } = req.cookies
     if (!accessToken) {

@@ -103,16 +103,18 @@ model Professors {
   updatedAt            DateTime           @updatedAt
   user                 Users              @relation(fields: [user_id], references: [user_id])
   educational_level    Educational_levels @relation(fields: [educational_level_id], references: [level_id])
-  areas_academicas     Academic_areas     @relation(fields: [area_academica_id], references: [area_academica_id])
+  academic_area        Academic_areas     @relation(fields: [area_academica_id], references: [academic_area_id])
 }
 
 model Academic_areas {
-  area_academica_id String       @id @default(cuid())
-  nombre            String
-  descripcion       String
-  nivel_educativo   String
-  cursos            Courses[]
-  professor         Professors[]
+  academic_area_id  String       @id @default(cuid()) @map("academicAreaId")
+  name              String
+  description       String
+  educational_level String
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  courses           Courses[]
+  professors        Professors[]
 }
 
 model Courses {
@@ -121,7 +123,7 @@ model Courses {
   descripcion       String
   professor_id      String
   area_academica_id String
-  area_academica    Academic_areas     @relation(fields: [area_academica_id], references: [area_academica_id])
+  academic_area     Academic_areas     @relation(fields: [area_academica_id], references: [academic_area_id])
   academic_record   Academic_records[]
   evaluations       Evaluations[]
 }
