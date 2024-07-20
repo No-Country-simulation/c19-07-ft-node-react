@@ -1,5 +1,5 @@
-//parte 3
-//import express, { Application } from 'express'
+// parte 3
+// import express, { Application } from 'express'
 import express, { Request, Response, Application, NextFunction } from 'express'
 
 import cors from 'cors'
@@ -22,7 +22,7 @@ class Server {
   private readonly server: http.Server
   private readonly socketServer: ServerSocket
 
-  constructor() {
+  constructor () {
     this.app = express()
     this.server = http.createServer(this.app)
     this.socketServer = new ServerSocket(this.server)
@@ -30,7 +30,6 @@ class Server {
     this.routes()
     this.errorHandling()
   }
-
 
   config (): void {
     this.app.set('port', process.env.PORT_SERVER !== undefined ? process.env.PORT_SERVER : 3000)
@@ -44,7 +43,7 @@ class Server {
     }))
   }
 
-  routes(): void {
+  routes (): void {
     this.app.use('/api/v1', router)
     this.app.use('/api/users', usersRoutes)
     this.app.use('/api/students', studentRoutes)
@@ -55,7 +54,7 @@ class Server {
     this.app.use('/api/chat', chatRoutes)
   }
 
-  errorHandling(): void {
+  errorHandling (): void {
     this.app.use((err: any, req: Request, res: Response, next: NextFunction) => {
       const statusCode = typeof err.statusCode === 'number' ? err.statusCode : 500
       const message = typeof err.message === 'string' ? err.message : 'Internal Server Error'
@@ -63,7 +62,7 @@ class Server {
     })
   }
 
-  start(): void {
+  start (): void {
     this.server.listen(this.app.get('port'), () => {
       console.log('Server on port', this.app.get('port'))
     })
