@@ -41,3 +41,10 @@ export const createEvaluation = async (curso_id: string, body: CreateEvaluationA
   })
 }
 
+export const getEvaluationsById = async (curso_id: string): Promise<Evaluations[]> => {
+  return await prisma.evaluations.findMany({ where: { curso_id } })
+}
+
+export const getEvaluationsResults = async (evaluation_id: string): Promise<Evaluation_results[]> => {
+  return await prisma.evaluation_results.findMany({ where: { evaluation_id } })
+}

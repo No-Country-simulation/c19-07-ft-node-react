@@ -57,3 +57,11 @@ export const validateCreateEvaluation = (object: CreateEvaluationAndResults): bo
 export const createEvaluation = async (curso_id: string, body: CreateEvaluationAndResults): Promise<Evaluations> => {
   return await professorRepository.createEvaluation(curso_id, body)
 }
+
+export const getEvaluationsById = async (id: string): Promise<Evaluations[]> => {
+  return await professorRepository.getEvaluationsById(id)
+}
+
+export const getEvaluationsResults = async (id: string): Promise<Evaluation_results[]> => {
+  return await professorRepository.getEvaluationsResults(id)
+}
