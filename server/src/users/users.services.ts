@@ -8,13 +8,9 @@ export const getAllUsersServices = async (): Promise<Users[]> => {
 }
 
 export const createUsersServices = async (data: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt'>): Promise<Users> => {
-  try {
-    const user = await getAllUsersRepository.createUserRepository(data)
+  const user = await getAllUsersRepository.createUserRepository(data)
 
-    return user
-  } catch (error: any) {
-    throw new Error(`Error creating user: ${error.message}`)
-  }
+  return user
 }
 
 export const getUserByIdServices = async (id: string): Promise<Users | null> => {

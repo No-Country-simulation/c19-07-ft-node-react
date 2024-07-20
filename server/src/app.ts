@@ -2,13 +2,11 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express, { Application, NextFunction, Request, Response } from 'express'
 import http from 'http'
-import authRoutes from './auth/auth.routes'
 import morgan from 'morgan'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../openapi.json'
 import { ServerSocket } from './configs/chat.gateway'
 import router from './routes/index'
-import { verifyToken } from './middlewares/verifyAccesToken.mdl'
 
 class Server {
   private readonly app: Application
@@ -37,9 +35,8 @@ class Server {
   }
 
   routes (): void {
-    this.app.use('/api/v1', verifyToken, router)
-    this.app.use('/api', router)
-    this.app.use('api/v1/auth', authRoutes)
+    this.app.use('/api/v1', router)
+
     this.app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
   }
 
