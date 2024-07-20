@@ -55,6 +55,7 @@ interface ChatProps {
 
 export const Chat = ({ receiverId }: ChatProps) => {
   const { user } = useAuthStore();
+  console.log('user--->',user)
 
   const msgsContainerRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -98,7 +99,6 @@ export const Chat = ({ receiverId }: ChatProps) => {
       userSendID: user?.user_id,
       userReceiveId: receiverId,
       message,
-      // roomId: "room1",
     };
 
     socket.emit("sendMessage", messageData);

@@ -41,11 +41,12 @@ export default function TeacherContactsPage() {
               key={parent.parent_id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               onClick={() => {
-                navigate(`/teacher/chat/${parent.parent_id}`);
+                navigate(`/teacher/chat/${parent.user_id}`);
                 console.log(parent);
               }}
             >
               <TableCell component="th" scope="row">
+              <span id={parent.parent_id}>{parent.}</span>
                 {parent.parent_id}
               </TableCell>
               {/* <TableCell align="right">{row.calories}</TableCell> */}
