@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Request, Response } from 'express'
 import * as professorService from '../professors/professors.services'
 
@@ -74,11 +75,22 @@ export const createEvaluations = async (req: Request, res: Response): Promise<vo
     const { id } = req.params
     if (typeof id !== typeof '') res.send(400).send({ err: 'Invalid curso_id' })
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { evaluation_id } = await professorService.createEvaluation(id, req.body)
     if (evaluation_id.length === 0) res.send(500).send({ error: 'An error ocurred creating the evaluation' })
 
     res.status(204).send()
+  } catch (e: any) {
+    res.status(500).send({ err: 'Server error', error_details: e })
+  }
+}
+
+export const getEvaluationsByCourse = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params
+    if (id.length === 0) res.status(400).send({ error: 'Invalid Id' })
+    const evaluations = await professorService.getEvaluationsById(id)
+    if (evaluations.length <= 0) res.status(404).send({ data: 'No evaluations found' })
+    res.status(200).send({ data: evaluations })
   } catch (e: any) {
     res.status(500).send({ err: 'Server error', error_details: e })
   }
