@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // src/modules/professors/services/professor.service.ts
-import { Evaluations, Professors } from '@prisma/client'
+import { Evaluation_results, Evaluations, Professors } from '@prisma/client'
 import * as professorRepository from '../professors/professors.repository'
 import { CreateEvaluationAndResults, CreateProfessor } from '../types/professors.type'
 import z from 'zod'
@@ -60,4 +60,8 @@ export const createEvaluation = async (curso_id: string, body: CreateEvaluationA
 
 export const getEvaluationsById = async (id: string): Promise<Evaluations[]> => {
   return await professorRepository.getEvaluationsById(id)
+}
+
+export const getEvaluationsResults = async (id: string): Promise<Evaluation_results[]> => {
+  return await professorRepository.getEvaluationsResults(id)
 }

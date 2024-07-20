@@ -95,3 +95,20 @@ export const getEvaluationsByCourse = async (req: Request, res: Response): Promi
     res.status(500).send({ err: 'Server error', error_details: e })
   }
 }
+
+export const getResultsFromOneEvaluation = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params
+    if (id.length <= 0) res.status(400).send({ error: 'Invalid Id' })
+    console.log(id)
+    const results = await professorService.getEvaluationsResults(id)
+    if (results.length <= 0) {
+      console.log(results)
+      res.status(404).send({ data: 'No results found' })
+      return
+    }
+    res.status(200).send({ data: results })
+  } catch (e: any) {
+    res.status(500).send({ err: 'Server error', error_details: e })
+  }
+}

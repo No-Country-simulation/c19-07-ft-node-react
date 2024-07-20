@@ -15,6 +15,6 @@ professorRoutes.delete('/:id', professorController.deleteProfessor)
 // Evaluations Routes
 professorRoutes.post('/evaluations/:id', professorController.createEvaluations)
 professorRoutes.get('/evaluations/:id', professorController.getEvaluationsByCourse)
-// professorRoutes.get('evaluations', professorController.getAllEvaluations)
+professorRoutes.get('/evaluation_results/:id', professorController.getResultsFromOneEvaluation)
 
 export default professorRoutes
