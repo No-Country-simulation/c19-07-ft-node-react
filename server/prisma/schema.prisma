@@ -145,7 +145,7 @@ model Evaluations {
   curso             Courses              @relation(fields: [curso_id], references: [cursos_id])
   name              String
   description       String
-  date              DateTime
+  date              DateTime @default(now())
   evaluation_result Evaluation_results[]
 }
 

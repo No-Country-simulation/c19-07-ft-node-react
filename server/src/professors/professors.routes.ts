@@ -12,5 +12,6 @@ professorRoutes.post('/', professorController.createProfessor)
 professorRoutes.get('/:id', professorController.getProfessorById)
 professorRoutes.patch('/:id', professorController.updateProfessor)
 professorRoutes.delete('/:id', professorController.deleteProfessor)
+professorRoutes.post('/evaluations/:id', professorController.createEvaluations)
 
 export default professorRoutes
