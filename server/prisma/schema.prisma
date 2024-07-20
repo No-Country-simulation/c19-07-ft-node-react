@@ -57,6 +57,8 @@ model Students {
   evaluations_results    Evaluation_results[]
   educational_level_id   String
   educational_level      Educational_levels?  @relation(fields: [educational_level_id], references: [level_id])
+  courses_id String
+  courses Courses[] 
 }
 
 model Messages {
@@ -126,6 +128,7 @@ model Courses {
   academic_area     Academic_areas     @relation(fields: [area_academica_id], references: [academic_area_id])
   academic_record   Academic_records[]
   evaluations       Evaluations[]
+  students Students[]
 }
 
 model Academic_records {
