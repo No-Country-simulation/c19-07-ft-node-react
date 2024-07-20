@@ -1,12 +1,10 @@
 import { Router } from 'express'
 import academicAreaRoutes from '../academicArea/academicArea.routes'
-
 import parentRoutes from '../parents/parents.routes'
 import professorRoutes from '../professors/professors.routes'
 import studentRoutes from '../students/students.routes'
 import usersRoutes from '../users/users.routes'
 import chatRoutes from '../chat/chat.routes'
-import { verifyToken } from '../middlewares/verifyAccesToken.mdl'
 
 const router: Router = Router()
 router.use('/academic-area', academicAreaRoutes)
