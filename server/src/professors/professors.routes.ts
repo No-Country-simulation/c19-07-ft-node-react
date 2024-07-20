@@ -8,7 +8,7 @@ import { ROLES } from '../constants/roles.const'
 
 const professorRoutes = Router()
 
-professorRoutes.get('/', verifyToken, checkRole([ROLES.ADMIN, ROLES.PROFESSOR]), professorController.getAllProfessors)
+professorRoutes.get('/', verifyToken, checkRole([ROLES.ADMIN, ROLES.PROFESSOR,ROLES.PARENTS]), professorController.getAllProfessors)
 professorRoutes.post('/', professorController.createProfessor)
 professorRoutes.get('/:id', professorController.getProfessorById)
 professorRoutes.patch('/:id', professorController.updateProfessor)
