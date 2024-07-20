@@ -38,7 +38,13 @@ export class ServerSocket {
             userReceiveId,
             message
           );
+
           this.io.to(roomId).emit("receiveMessage", newMessage);
+          
+          socket.emit("sendMessage", async (data: any) => {
+            console.log("sendMessage", data);
+          });
+
         } catch (err) {
           console.error("Error saving message:", err);
         }
@@ -47,6 +53,7 @@ export class ServerSocket {
       socket.on("disconnect", () => {
         console.log("user disconnected:", socket.id);
       });
+
     });
   }
 

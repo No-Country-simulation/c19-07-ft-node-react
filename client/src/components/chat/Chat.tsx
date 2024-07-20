@@ -45,8 +45,13 @@ import { useAuthStore } from "../../hooks";
 // const participants = [];
 
 type Message = {
-  userId: string;
+  message_id: string;
   message: string;
+  roomId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userSendID: string;
+  userReceiveId: string;
 };
 
 interface ChatProps {
@@ -70,12 +75,11 @@ export const Chat = ({ receiverId }: ChatProps) => {
       console.log("connected");
     });
 
-    socket.on("receiveMessage", (msg: string) => {
+    socket.on("receiveMessage", (msg: Message) => {
       console.log("receiveMessage", msg);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { userId: "", message: msg },
-      ]);
+      setMessages((prevMessages) => {
+        return [...prevMessages, { ...msg }];
+      });
       scrollToBottom();
     });
 
@@ -85,7 +89,7 @@ export const Chat = ({ receiverId }: ChatProps) => {
       socket.off("connect");
       socket.off("chat message");
     };
-  }, []);
+  }, [messages]);
 
   // const handleSendMessage = (message: string) => {
   //   socket.emit("chat message", message);
