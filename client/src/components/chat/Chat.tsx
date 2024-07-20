@@ -6,52 +6,63 @@ import { ChatInput } from "./ChatInput";
 import { ChatMessage } from "./ChatMessage";
 import { ChatParticipants } from "./ChatParticipants";
 import { socket } from "../../socket/socket";
+import { useAuthStore } from "../../hooks";
 
+// const authenticatedUser = {
+//   id: 1,
+//   name: "Juan",
+//   role: "teacher",
+// };
 
-
-
-const authenticatedUser = {
-  id: 1,
-  name: "Juan",
-  role: "teacher",
-};
-
-const initMessages = [
-  {
-    userId: 1,
-    message:
-      "Good afternoon, Mrs. Johnson. I wanted to discuss Emma's recent science project. She showed great creativity, but there are some areas where she needs to focus more.",
-  },
-  {
-    userId: 2,
-    message:
-      "Good afternoon, Prof. Smith. Thank you for reaching out. I'm happy to hear Emma was creative. Could you please elaborate on the areas that need improvement?",
-  },
-  {
-    userId: 1,
-    message:
-      "Of course. While Emma's project idea was innovative, her research lacked depth in certain scientific principles. I've left some comments on her project file and recommended some resources she can use to enhance her understanding.",
-  },
-  {
-    userId: 2,
-    message:
-      "Thank you for the detailed feedback, Prof. Smith. I will go through the comments with Emma this evening. Are there any specific topics we should focus on first?",
-  },
-  {
-    userId: 1,
-    message:
-      "Focusing on the scientific method and ensuring she backs her hypotheses with thorough research would be beneficial. Please let me know if you need any additional resources or have any questions as you go through the material.",
-  },
-];
+// const initMessages = [
+//   {
+//     userId: 1,
+//     message:
+//       "Good afternoon, Mrs. Johnson. I wanted to discuss Emma's recent science project. She showed great creativity, but there are some areas where she needs to focus more.",
+//   },
+//   {
+//     userId: 2,
+//     message:
+//       "Good afternoon, Prof. Smith. Thank you for reaching out. I'm happy to hear Emma was creative. Could you please elaborate on the areas that need improvement?",
+//   },
+//   {
+//     userId: 1,
+//     message:
+//       "Of course. While Emma's project idea was innovative, her research lacked depth in certain scientific principles. I've left some comments on her project file and recommended some resources she can use to enhance her understanding.",
+//   },
+//   {
+//     userId: 2,
+//     message:
+//       "Thank you for the detailed feedback, Prof. Smith. I will go through the comments with Emma this evening. Are there any specific topics we should focus on first?",
+//   },
+//   {
+//     userId: 1,
+//     message:
+//       "Focusing on the scientific method and ensuring she backs her hypotheses with thorough research would be beneficial. Please let me know if you need any additional resources or have any questions as you go through the material.",
+//   },
+// ];
 
 // const participants = [];
 
-export const Chat = () => {
-  // const [isConnected, setIsConnected] = useState(socket.connected);
-  // const [fooEvents, setFooEvents] = useState([]);
+type Message = {
+  message_id: string;
+  message: string;
+  roomId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userSendID: string;
+  userReceiveId: string;
+};
+
+interface ChatProps {
+  receiverId: string;
+}
+
+export const Chat = ({ receiverId }: ChatProps) => {
+  const { user } = useAuthStore();
 
   const msgsContainerRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState(initMessages);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const scrollToBottom = () => {
     if (!msgsContainerRef.current) return;
@@ -64,16 +75,21 @@ export const Chat = () => {
       console.log("connected");
     });
 
-    socket.on("chat message", (msg: string) => {
-      setMessages((prevMessages) => [...prevMessages, { userId: 2, message: msg }]);
+    socket.on("receiveMessage", (msg: Message) => {
+      console.log("receiveMessage", msg);
+      setMessages((prevMessages) => {
+        return [...prevMessages, { ...msg }];
+      });
       scrollToBottom();
     });
+
+    // socket.emit("receiveMessage", );
 
     return () => {
       socket.off("connect");
       socket.off("chat message");
     };
-  }, []);
+  }, [messages]);
 
   // const handleSendMessage = (message: string) => {
   //   socket.emit("chat message", message);
@@ -82,8 +98,18 @@ export const Chat = () => {
   // };
 
   const handleSendMessage = (message: string) => {
-    socket.emit("chat message", message);
-    setMessages((prevMessages) => [...prevMessages, { userId: authenticatedUser.id, message }]);
+    const messageData = {
+      userSendID: user?.user_id,
+      userReceiveId: receiverId,
+      message,
+      // roomId: "room1",
+    };
+
+    socket.emit("sendMessage", messageData);
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { userId: user!.user_id, message },
+    ]);
     scrollToBottom();
   };
 
@@ -126,10 +152,12 @@ export const Chat = () => {
           ))} */}
 
           {messages.map(({ userId, message }, index) => (
-            <ChatMessage key={index} message={message} isSender={userId === authenticatedUser.id} />
+            <ChatMessage
+              key={index}
+              message={message}
+              isSender={userId === user!.user_id}
+            />
           ))}
-
-
         </Box>
       </Box>
 
@@ -141,7 +169,6 @@ export const Chat = () => {
       /> */}
 
       <ChatInput onSendMessage={handleSendMessage} />
-
     </Box>
   );
 };
