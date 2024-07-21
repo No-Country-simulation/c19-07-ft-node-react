@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Request, Response } from 'express'
 import * as professorService from '../professors/professors.services'
+import { Courses } from '@prisma/client'
 
 export const getAllProfessors = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -108,6 +109,27 @@ export const getResultsFromOneEvaluation = async (req: Request, res: Response): 
       return
     }
     res.status(200).send({ data: results })
+  } catch (e: any) {
+    res.status(500).send({ err: 'Server error', error_details: e })
+  }
+}
+
+export const getAssignedStudents = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params
+    if (id.length <= 0) {
+      res.status(400).send({ err: 'Invalid Id' })
+      return
+    }
+    const courses: Courses[] = await professorService.getAssignedCourses(id)
+    console.log(courses)
+    if (courses.length <= 0) {
+      res.status(404).send({ err: 'This professors not have any assigned courses' })
+      return
+    }
+    const coursesAndStudents = await professorService.studentsFromCourses(courses)
+    coursesAndStudents.forEach(student => console.log(student))
+    res.status(200).send({ data: coursesAndStudents })
   } catch (e: any) {
     res.status(500).send({ err: 'Server error', error_details: e })
   }

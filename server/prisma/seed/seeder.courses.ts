@@ -66,7 +66,6 @@ const main = async () => {
 
   const resolvegetAcademicAreas = await getAcademicAreas()
   console.log('4444--->', resolvegetAcademicAreas)
-
   const forCourses = resolveGetProfessors.map((course, index) => {
     return {
       nombre: resolvegetAcademicAreas[index].name,

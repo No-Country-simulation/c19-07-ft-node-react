@@ -25,3 +25,12 @@ export const deleteStudent = async (id: string): Promise<Students> => {
 export const getAcademicRecords = async (id: string): Promise<Academic_records[]> => {
   return await prisma.academic_records.findMany({ where: { student_id: id } })
 }
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const getStudentsByCourse = async (cursos_id: string): Promise<Students[]> => {
+  return await prisma.students.findMany({
+    where: {
+      courses: { every: { cursos_id } }
+    }
+  })
+}
