@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // src/modules/professors/repositories/professor.repository.ts
-import { Evaluation_results, Evaluations, PrismaClient, Professors } from '@prisma/client'
+import { Courses, Evaluation_results, Evaluations, PrismaClient, Professors } from '@prisma/client'
 import { CreateEvaluationAndResults } from '../types/professors.type'
 const prisma = new PrismaClient()
 
@@ -47,4 +47,8 @@ export const getEvaluationsById = async (curso_id: string): Promise<Evaluations[
 
 export const getEvaluationsResults = async (evaluation_id: string): Promise<Evaluation_results[]> => {
   return await prisma.evaluation_results.findMany({ where: { evaluation_id } })
+}
+
+export const getAssignedCourses = async (professor_id: string): Promise<Courses[]> => {
+  return await prisma.courses.findMany({ where: { professor_id } })
 }

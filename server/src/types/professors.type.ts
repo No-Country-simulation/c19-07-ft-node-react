@@ -1,3 +1,4 @@
+import { Courses, Students } from '@prisma/client'
 export interface CreateProfessor {
   academicAreaId: string
   hireDate: Date
@@ -13,4 +14,8 @@ export interface CreateEvaluationAndResults {
   student_id: string
   mark: number
   comment: string
+}
+export interface StudentsAndCourse {
+  course: Courses
+  students: Students[]
 }
