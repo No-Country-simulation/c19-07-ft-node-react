@@ -1,16 +1,20 @@
 import { useEffect, useRef, useState } from "react";
+
 import { Box } from "@mui/material";
+
+import { useAuthStore } from "../../hooks";
+import { socket } from "../../socket/socket";
+
 import { ChatInput } from "./ChatInput";
 import { ChatMessage } from "./ChatMessage";
 import { ChatParticipants } from "./ChatParticipants";
-import { socket } from "../../socket/socket";
-import { useAuthStore } from "../../hooks";
 
 type Message = {
-  message_id: string;
+  message_id?: string;
   message: string;
-  createdAt: Date;
-  updatedAt: Date;
+  roomId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   userSendID: string;
   userReceiveId: string;
 };
@@ -21,10 +25,10 @@ interface ChatProps {
 
 export const Chat = ({ receiverId }: ChatProps) => {
   const { user } = useAuthStore();
-  console.log('user--->', user)
 
   const msgsContainerRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [roomId, setRoomId] = useState<string | undefined>(undefined);
 
   const scrollToBottom = () => {
     if (!msgsContainerRef.current) return;
@@ -33,36 +37,51 @@ export const Chat = ({ receiverId }: ChatProps) => {
 
   useEffect(() => {
     if (user?.user_id) {
-      console.log('Registering socket with user ID:', user.user_id);
-      socket.emit('register', user.user_id);
+      // console.log("Registering socket with user ID:", user.user_id);
+      socket.emit("register", user.user_id);
     }
-  
-    const handleMessage = (msg) => {
-      console.log('Message received:', msg);
-      setMessages((prevMessages) => [...prevMessages, msg]);
-    };
-  
-    socket.on('receiveMessage', handleMessage);
-  
+
+    // const handleMessage = (msg: Message) => {
+    //   console.log("Message received:", msg);
+    //   setMessages((prevMessages) => [...prevMessages, msg]);
+    // };
+
+    socket.on("receiveMessage", (message: Message) => {
+      // console.log({ message });
+      setRoomId(message.roomId);
+      setMessages((prevMessages) => [...prevMessages, message]);
+      scrollToBottom();
+    });
+
     return () => {
-      socket.off('receiveMessage', handleMessage);
+      socket.off("receiveMessage");
     };
-  }, [user?.user_id]);
+  }, [user?.user_id, messages]);
+
+  useEffect(() => {
+    console.log(roomId);
+  }, [roomId])
+
+  useEffect(() => {
+    console.log(messages);
+  }, [messages])
   
 
   const handleSendMessage = (message: string) => {
-    const messageData = {
-      userSendID: user?.user_id,
-      userReceiveId: receiverId,
+    // if (!roomId) return;
+
+    const newMessage: Message = {
       message,
+      roomId,
+      userSendID: user!.user_id,
+      userReceiveId: receiverId,
     };
 
-    socket.emit("sendMessage", messageData);
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { ...messageData, message_id: '', createdAt: new Date(), updatedAt: new Date() },
-    ]);
-    scrollToBottom();
+    socket.emit("sendMessage", newMessage);
+
+    // setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+    // scrollToBottom();
   };
 
   return (
