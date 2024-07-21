@@ -16,6 +16,8 @@ import swaggerFile from '../openapi.json'
 import http from 'http'
 import chatRoutes from './chat/chat.routes'
 import { ServerSocket } from './configs/chat.gateway'
+import alertRoutes from './alerts/AlertsRoutes'
+
 
 class Server {
   private readonly app: Application
@@ -53,6 +55,7 @@ class Server {
     this.app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
     this.app.use('/api/v1/auth', authRoutes)
     this.app.use('/api/chat', chatRoutes)
+    this.app.use('/api/alerts', alertRoutes)
   }
 
   errorHandling(): void {
