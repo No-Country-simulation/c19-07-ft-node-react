@@ -5,6 +5,8 @@ import * as professorRepository from '../professors/professors.repository'
 import { CreateEvaluationAndResults, CreateProfessor, StudentsAndCourse } from '../types/professors.type'
 import z from 'zod'
 import { studentsFromCourse } from '../students/students.services'
+import { DatabaseError } from '../errors/databaseError'
+import { LogicError } from '../errors/logicError'
 
 export const getAllProfessors = async (): Promise<Professors[]> => {
   return await professorRepository.getAllProfessors()
@@ -73,17 +75,22 @@ export const getAssignedCourses = async (id: string): Promise<Courses[]> => {
 
 export const studentsFromCourses = async (courses: Courses[]): Promise<StudentsAndCourse[]> => {
   const coursesAndStudents: StudentsAndCourse[] = []
-  for (const course of courses) {
-    const students = await studentsFromCourse(course.cursos_id)
-    const courseAndStudents = {
-      course,
-      students
+  try {
+    for (const course of courses) {
+      const students = await studentsFromCourse(course.cursos_id)
+      const courseAndStudents = {
+        course,
+        students
+      }
+      coursesAndStudents.push(courseAndStudents)
     }
-    coursesAndStudents.push(courseAndStudents)
+
+    return await new Promise((resolve, reject) => {
+      if (coursesAndStudents.length <= 0) throw new LogicError('Cannot relation students to courses')
+      resolve(coursesAndStudents)
+    })
+  } catch (e: any) {
+    if (e instanceof DatabaseError) throw e
+    throw new Error(e.message)
   }
-  console.log('Courses and Students: ', coursesAndStudents)
-  return await new Promise((resolve, reject) => {
-    if (coursesAndStudents.length <= 0) reject(coursesAndStudents)
-    resolve(coursesAndStudents)
-  })
 }
