@@ -24,17 +24,26 @@ export const createParents = async (req: Request, res: Response, next: NextFunct
     const parent = await parentsService.createParents({ user_id: userId, relation, createdAt: new Date(), updatedAt: new Date() })
 
     new ResponseHandler(res).sendResponse(HTTP_STATUS.CREATED, 'Parent created successfully', parent)
-  } catch (err: any) {
-    if (err instanceof PrismaClientKnownRequestError) {
-      console.error('prisma error:', { ...err, message: err.message })
-      return new ResponseHandler(res).sendError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'server error')
+  } catch (error: any) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case 'P2002':
+          console.error('prisma error:', { ...error, message: error.message })
+          return new ResponseHandler(res).sendError(HTTP_STATUS.CONFLICT, 'Parent already exists')
+        case 'P2003':
+          console.error('prisma error:', { ...error, message: error.message })
+          return new ResponseHandler(res).sendError(HTTP_STATUS.NOT_FOUND, 'User not found')
+        default:
+          console.error('prisma error:', { ...error, message: error.message })
+          return new ResponseHandler(res).sendError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'server error')
+      }
     }
-    if (err instanceof z.ZodError) {
-      console.error('zod error:', { ...err, message: err.message })
-      return new ResponseHandler(res).sendError(HTTP_STATUS.BAD_REQUEST, 'Validation error', { msg: err.message })
+    if (error instanceof z.ZodError) {
+      console.error('zod error:', { ...error, message: error.message })
+      return new ResponseHandler(res).sendError(HTTP_STATUS.BAD_REQUEST, 'Validation error', { msg: error.message })
     }
-    console.error(err) // Log para ver el error
-    next(err)
+    console.error(error) // Log para ver el error
+    next(error)
   }
 }
 

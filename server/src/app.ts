@@ -44,6 +44,7 @@ class Server {
     this.app.use((err: any, req: Request, res: Response, next: NextFunction) => {
       const statusCode = typeof err.statusCode === 'number' ? err.statusCode : 500
       const message = typeof err.message === 'string' ? err.message : 'Internal Server Error'
+      console.log(err)
       res.status(statusCode).json({ message })
     })
   }

@@ -5,7 +5,7 @@ import HTTP_STATUS from '../constants/statusCodeServer.const'
 import { ResponseHandler } from '../libs/response.lib'
 import { ICustomRequest } from '../types'
 import * as getAllUsersServices from './users.services'
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
+import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library'
 
 export const getAllUsersControllers = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -34,6 +34,10 @@ export const createUsersControllers = async (req: Request, res: Response, next: 
   } catch (error: any) {
     if (error instanceof PrismaClientKnownRequestError) {
       console.error('Prisma error:', { ...error, message: error.message })
+      return new ResponseHandler(res).sendError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'server error')
+    }
+    if (error instanceof PrismaClientValidationError) {
+      console.error('Prisma validation error:', { ...error, message: error.message })
       return new ResponseHandler(res).sendError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'server error')
     }
     next(error)

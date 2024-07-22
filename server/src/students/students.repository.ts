@@ -1,13 +1,24 @@
 // src/modules/students/repositories/student.repository.ts
 import { Academic_records, PrismaClient, Students } from '@prisma/client'
+import { CreateStudent } from './schemas/student.schema'
 const prisma = new PrismaClient()
 
 export const getAllStudents = async (): Promise<Students[]> => {
   return await prisma.students.findMany()
 }
 
-export const createStudent = async (data: Omit<Students, 'student_id'>): Promise<Students> => {
-  return await prisma.students.create({ data })
+export const createStudent = async (data: CreateStudent): Promise<Students> => {
+  return await prisma.students.create({
+    data: {
+      user_id: data.userId,
+      telephone: data.telephone,
+      age: data.age,
+      grade: data.grade,
+      section: data.section,
+      parentId: data.parentId,
+      educational_level_id: data.educationalLevelId
+    }
+  })
 }
 
 export const getStudentById = async (id: string): Promise<Students | null> => {
