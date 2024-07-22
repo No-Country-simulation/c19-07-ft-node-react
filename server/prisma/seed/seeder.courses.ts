@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import fs from 'fs'
 
 const prisma = new PrismaClient()
 
@@ -59,7 +58,12 @@ const getAcademicAreas = async () => {
 //   return courses
 // }
 
-const main = async () => {
+const main = async (): Promise<Array<{
+  nombre: string
+  descripcion: string
+  professor_id: string
+  area_academica_id: string
+}>> => {
 //    const resolveCourse = await generateCourses()
   const resolveGetProfessors = await getProfessors()
   console.log('3333--->', resolveGetProfessors)
