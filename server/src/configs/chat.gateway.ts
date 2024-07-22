@@ -1,84 +1,98 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-import http from 'http'
-import { Server as SocketServer, Socket } from 'socket.io'
-import { ChatServices } from '../chat/chat.services'
+import http from 'http';
+import { Server as SocketServer, Socket } from 'socket.io';
+import { ChatServices } from '../chat/chat.services';
 
-const chatServices = new ChatServices()
+const chatServices = new ChatServices();
+const activeSockets = new Map<string, string>();
 
 export class ServerSocket {
-  private readonly server: http.Server
-  private readonly io: SocketServer
-  private readonly userSockets = new Map<string, string>() // Mapa para almacenar sockets de usuario
+  private readonly server: http.Server;
+  private readonly io: SocketServer;
 
-  constructor (server: http.Server) {
-    this.server = server
+  constructor(server: http.Server) {
+    this.server = server;
     this.io = new SocketServer(this.server, {
       cors: {
         origin: 'http://localhost:5173',
         methods: ['GET', 'POST'],
-        credentials: true
-      }
-    })
+        credentials: true,
+      },
+    });
 
-    this.initializeSocket()
+    this.initializeSocket();
   }
 
-  private initializeSocket (): void {
+  private initializeSocket(): void {
     this.io.on('connection', (socket: Socket) => {
-      console.log('A user connected:', socket.id)
+      console.log('A user connected:', socket.id);
 
-      // Registrar el socket del usuario
-      socket.on('register', (userId: string) => {
-        this.userSockets.set(userId, socket.id)
-        console.log(`User ${userId} registered with socket ID: ${socket.id}`)
-      })
+      socket.on('register', async (data: { userId: string; userReceiveId?: string }) => {
+        const { userId, userReceiveId } = data;
 
-      // Enviar un mensaje
+        if (!userId) {
+          console.error('No userId provided');
+          return;
+        }
+
+        activeSockets.set(userId, socket.id);
+        console.log(`User ${userId} registered with socket ID: ${socket.id}`);
+
+        if (userReceiveId) {
+          try {
+            const messages = await chatServices.getMessagesBetweenUsers(userId, userReceiveId);
+            socket.emit('messageHistory', messages);
+          } catch (err) {
+            console.error('Error fetching message history:', err);
+          }
+        }
+      });
+
       socket.on('sendMessage', async (data) => {
-        const { userSendID, userReceiveId, message } = data
+        const { userSendID, userReceiveId, message } = data;
 
-        console.log(`Sending message from ${userSendID} to ${userReceiveId}:`, message)
+        if (!userSendID || !userReceiveId || !message) {
+          console.error('Missing data for sendMessage:', data);
+          return;
+        }
 
-        try {
-          const newMessage = await chatServices.createMessage(userSendID, userReceiveId, message)
+        console.log(`Sending message from ${userSendID} to ${userReceiveId}:`, message);
 
-          const receiverSocketId = this.userSockets.get(userReceiveId)
-          const senderSocketId = this.userSockets.get(userSendID)
+        try {          
+          // Create or get room ID
+          const roomId = await chatServices.createRoom(userSendID, userReceiveId);
+
+          // Save the message with room ID
+          const newMessage = await chatServices.createMessage(userSendID, userReceiveId, message, roomId);
+
+
+          const receiverSocketId = activeSockets.get(userReceiveId);
 
           if (receiverSocketId) {
-            console.log(`Emitting to receiver ${receiverSocketId}`)
-            socket.to(receiverSocketId).emit('receiveMessage', newMessage)
+            console.log(`Emitting to receiver ${receiverSocketId}`);
+            this.io.to(receiverSocketId).emit('receiveMessage', newMessage);
           } else {
-            console.log(`No socket found for receiver ${userReceiveId}`)
-          }
-
-          if (senderSocketId) {
-            console.log(`Emitting to sender ${senderSocketId}`)
-            socket.to(senderSocketId).emit('receiveMessage', newMessage)
-          } else {
-            console.log(`No socket found for sender ${userSendID}`)
+            console.log(`No socket found for receiver ${userReceiveId}`);
           }
         } catch (err) {
-          console.error('Error saving message:', err)
+          console.error('Error saving message:', err);
         }
-      })
+      });
 
-      // Manejar la desconexión
       socket.on('disconnect', () => {
-        console.log('User disconnected:', socket.id)
-        this.userSockets.forEach((value, key) => {
-          if (value === socket.id) {
-            this.userSockets.delete(key)
+        for (const [userId, socketId] of activeSockets.entries()) {
+          if (socketId === socket.id) {
+            activeSockets.delete(userId);
+            console.log('User disconnected:', userId);
+            break;
           }
-        })
-      })
-    })
+        }
+      });
+    });
   }
 
-  public start (port: number): void {
+  public start(port: number): void {
     this.server.listen(port, () => {
-      console.log(`Server is running on port ${port}`)
-    })
+      console.log(`Server is running on port ${port}`);
+    });
   }
 }

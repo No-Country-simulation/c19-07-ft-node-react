@@ -1,7 +1,4 @@
-// parte 3
-// import express, { Application } from 'express'
 import express, { Request, Response, Application, NextFunction } from 'express'
-
 import cors from 'cors'
 import morgan from 'morgan'
 import router from './routes/index'

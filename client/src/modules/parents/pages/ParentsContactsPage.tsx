@@ -20,6 +20,7 @@ export default function ParentsContactsPage() {
   const api = useAxiosPrivate();
   const [professors, setProfessors] = useState<Professor[]>([]);
 
+
   useEffect(() => {
     api.get<Professor[]>("/professors").then((res) => {
       setProfessors(res.data);

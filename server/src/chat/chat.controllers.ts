@@ -4,6 +4,19 @@ import { Messages } from '@prisma/client'
 
 const chatServices = new ChatServices()
 
+
+export const getMessageHistory = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userSendID, userReceiveId } = req.params;
+    const messages = await chatServices.getMessagesBetweenUsers(userSendID, userReceiveId);
+    res.status(200).json(messages);
+  } catch (err: any) {
+    console.error('Error getting message history:', err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
+  }
+};
+
+
 export const createRoom = async (req: Request, res: Response): Promise<void> => {
   try {
     const { userSendID, userReceiveId } = req.body
