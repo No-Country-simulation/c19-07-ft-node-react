@@ -1,6 +1,6 @@
 import { Chat } from "../../../components";
 
-export default function ParentChatPage() {
+export default function TeacherChatPage() {
   return (
     <Chat />
   );
