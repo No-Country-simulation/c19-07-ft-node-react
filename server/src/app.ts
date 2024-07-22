@@ -1,3 +1,4 @@
+import express, { Request, Response, Application, NextFunction } from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express, { Application, NextFunction, Request, Response } from 'express'
@@ -36,6 +37,12 @@ class Server {
   }
 
   routes (): void {
+    this.app.use('/api/v1', router)
+    this.app.use('/api/users', usersRoutes)
+    this.app.use('/api/students', studentRoutes)
+    this.app.use('/api/professors', professorRoutes)
+    this.app.use('/api/parents', parentRoutes)
+    this.app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
     this.app.use('/api/v1/auth', authRoutes)
     this.app.use('/api/v1', verifyToken, router)
 

@@ -1,2 +1,9 @@
-[{"user_id":"clyx3fdag000612qly3eov6kz","fecha_contratacion":"2024-07-22T14:39:45.234Z","estado_empleado":"ACTIVE","educational_level_id":"clyx3fd13000012qllec2fsmg","area_academica_id":"clyx3fdck000c12qlc3lxto50"}]
-
+[
+  {
+    "user_id": "clytabu850006txnsfguapbf4",
+    "fecha_contratacion": "2024-07-19T22:41:53.239Z",
+    "estado_empleado": "ACTIVE",
+    "educational_level_id": "clytabtwt0000txnsrnkv2ecf",
+    "area_academica_id": "clytabubl000btxnsg3b4tuqd"
+  }
+]

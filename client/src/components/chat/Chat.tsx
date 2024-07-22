@@ -1,90 +1,90 @@
 import { useEffect, useRef, useState } from "react";
-
 import { Box } from "@mui/material";
-
 import { ChatInput } from "./ChatInput";
 import { ChatMessage } from "./ChatMessage";
 import { ChatParticipants } from "./ChatParticipants";
 import { socket } from "../../socket/socket";
+import { useAuthStore } from "../../hooks";
 
-
-
-
-const authenticatedUser = {
-  id: 1,
-  name: "Juan",
-  role: "teacher",
+type Message = {
+  message_id: string;
+  message: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userSendID: string;
+  userReceiveId: string;
 };
 
-const initMessages = [
-  {
-    userId: 1,
-    message:
-      "Good afternoon, Mrs. Johnson. I wanted to discuss Emma's recent science project. She showed great creativity, but there are some areas where she needs to focus more.",
-  },
-  {
-    userId: 2,
-    message:
-      "Good afternoon, Prof. Smith. Thank you for reaching out. I'm happy to hear Emma was creative. Could you please elaborate on the areas that need improvement?",
-  },
-  {
-    userId: 1,
-    message:
-      "Of course. While Emma's project idea was innovative, her research lacked depth in certain scientific principles. I've left some comments on her project file and recommended some resources she can use to enhance her understanding.",
-  },
-  {
-    userId: 2,
-    message:
-      "Thank you for the detailed feedback, Prof. Smith. I will go through the comments with Emma this evening. Are there any specific topics we should focus on first?",
-  },
-  {
-    userId: 1,
-    message:
-      "Focusing on the scientific method and ensuring she backs her hypotheses with thorough research would be beneficial. Please let me know if you need any additional resources or have any questions as you go through the material.",
-  },
-];
+interface ChatProps {
+  receiverId: string;
+}
 
-// const participants = [];
-
-export const Chat = () => {
-  // const [isConnected, setIsConnected] = useState(socket.connected);
-  // const [fooEvents, setFooEvents] = useState([]);
-
+export const Chat = ({ receiverId }: ChatProps) => {
+  const { user } = useAuthStore();
   const msgsContainerRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState(initMessages);
-
-  const scrollToBottom = () => {
-    if (!msgsContainerRef.current) return;
-
-    msgsContainerRef.current.scrollTop = msgsContainerRef.current.scrollHeight;
-  };
+  const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("connected");
-    });
+    if (user?.user_id && receiverId) {
+      console.log('Registering socket with user ID:', user.user_id);
+      socket.emit('register', { userId: user.user_id, userReceiveId: receiverId });
 
-    socket.on("chat message", (msg: string) => {
-      setMessages((prevMessages) => [...prevMessages, { userId: 2, message: msg }]);
-      scrollToBottom();
-    });
+      const handleMessageHistory = (messages: Message[]) => {
+        if (Array.isArray(messages)) {
+          setMessages(messages);
+          scrollToBottom(); // Ensure to scroll to bottom when history is loaded
+        } else {
+          console.error('Message history is not an array:', messages);
+        }
+      };
 
-    return () => {
-      socket.off("connect");
-      socket.off("chat message");
-    };
-  }, []);
+      const handleMessage = (msg: Message) => {
+        console.log('Message received:', msg);
 
-  // const handleSendMessage = (message: string) => {
-  //   socket.emit("chat message", message);
-  //   setMessages([...messages, { userId: 1, message }]);
-  //   scrollToBottom();
-  // };
+        setMessages((prevMessages) => {
+          if (prevMessages.some(m => m.message_id === msg.message_id)) {
+            return prevMessages;
+          }
+          return [...prevMessages, msg];
+        });
+        scrollToBottom();
+      };
+
+      socket.on('messageHistory', handleMessageHistory);
+      socket.on('receiveMessage', handleMessage);
+
+      return () => {
+        socket.off('receiveMessage', handleMessage);
+        socket.off('messageHistory', handleMessageHistory);
+      };
+    }
+  }, [user?.user_id, receiverId]);
 
   const handleSendMessage = (message: string) => {
-    socket.emit("chat message", message);
-    setMessages((prevMessages) => [...prevMessages, { userId: authenticatedUser.id, message }]);
-    scrollToBottom();
+    if (user?.user_id && receiverId) {
+      const messageData = {
+        userSendID: user.user_id,
+        userReceiveId: receiverId,
+        message,
+      };
+
+      console.log('Sending message data:', messageData);
+      socket.emit("sendMessage", messageData);
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { ...messageData, message_id: '', createdAt: new Date(), updatedAt: new Date() },
+      ]);
+      scrollToBottom();
+    } else {
+      console.error('User ID or Receiver ID is missing.');
+    }
+  };
+
+  const scrollToBottom = () => {
+    if (msgsContainerRef.current) {
+      msgsContainerRef.current.scrollTop = msgsContainerRef.current.scrollHeight;
+    }
   };
 
   return (
@@ -115,33 +115,17 @@ export const Chat = () => {
           pt={2}
           overflow="auto"
         >
-          {/* {messages.map(({ userId, message }, index) => (
+          {Array.isArray(messages) && messages.map(({ userSendID, message, message_id }, index) => (
             <ChatMessage
-              key={index}
+              key={message_id || index}
               message={message}
-              isSender={userId === authenticatedUser.id}
-                
-
-          />
-          ))} */}
-
-          {messages.map(({ userId, message }, index) => (
-            <ChatMessage key={index} message={message} isSender={userId === authenticatedUser.id} />
+              isSender={userSendID === user?.user_id}
+            />
           ))}
-
-
         </Box>
       </Box>
 
-      {/* <ChatInput
-        onSendMessage={(message) => {
-          setMessages([...messages, { userId: 1, message }]);
-          scrollToBottom();
-        }}
-      /> */}
-
       <ChatInput onSendMessage={handleSendMessage} />
-
     </Box>
   );
 };

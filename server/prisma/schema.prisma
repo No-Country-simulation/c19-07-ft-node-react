@@ -64,8 +64,8 @@ model Students {
 
 model Messages {
   message_id    String   @id @default(cuid())
-  message       String
-  roomId        String   @default(uuid())
+  message       String?
+  roomId        String   @default(uuid())   
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   userSendID    String
