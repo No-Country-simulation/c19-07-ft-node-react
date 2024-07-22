@@ -11,7 +11,7 @@
     "test:production": "dotenv -e ./env/.env.production jest --config ./jest.config.js",
     "prisma:migrate:dev": "dotenv -e ./env/.env.development prisma migrate dev --skip-seed",
     "prisma:migrate:prod": "dotenv -e ./env/.env.production prisma migrate dev",
-    "prisma:studio:prod": "dotenv -e ./env/.env.production prisma studio",
+    "prisma:studio:dev": "dotenv -e ./env/.env.development prisma studio",
     "prisma:reset:dev": "dotenv -e ./env/.env.development prisma migrate reset"
   },
   "prisma": {
