@@ -23,7 +23,6 @@ export default function TeacherContactsPage() {
   useEffect(() => {
     api.get<Parent[]>("/parents").then((res) => {
       setParents(res.data);
-      console.log("---->", res.data);
     });
   }, []);
 
@@ -48,7 +47,6 @@ export default function TeacherContactsPage() {
               <TableCell component="th" scope="row">
                 {parent.user_id}
               </TableCell>
-              {/* <TableCell align="right">{row.calories}</TableCell> */}
             </TableRow>
           ))}
         </TableBody>

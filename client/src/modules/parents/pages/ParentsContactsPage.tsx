@@ -23,7 +23,6 @@ export default function ParentsContactsPage() {
   useEffect(() => {
     api.get<Professor[]>("/professors").then((res) => {
       setProfessors(res.data);
-      console.log("----> profesor", res.data);
     });
   }, []);
 
@@ -41,7 +40,7 @@ export default function ParentsContactsPage() {
               key={professor.user_id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               onClick={() => {
-                navigate(`/parent/chat/${professor.user_id}`);
+                navigate(`/parents/chat/${professor.user_id}`);
                 console.log(professors);
               }}
             >
