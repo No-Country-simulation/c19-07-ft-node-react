@@ -127,9 +127,20 @@ const main = async (): Promise<void> => {
   const coursesDb = await seederCourses()
   fs.writeFileSync('./prisma/seed/courses.json', JSON.stringify(coursesDb))
 
-  const COURSES = JSON.parse(fs.readFileSync('./prisma/seed/courses.json', 'utf8'))
-  await prisma.courses.createMany({ data: COURSES })
-
+  JSON.parse(fs.readFileSync('./prisma/seed/courses.json', 'utf8'))
+  const createdStudents = await prisma.students.findMany()
+  console.log(createdStudents[0])
+  for (const course of coursesDb) {
+    const result = await prisma.courses.create({
+      data: {
+        ...course,
+        students: {
+          connect: createdStudents
+        }
+      }
+    })
+    console.log('Courses created', result)
+  }
   await mainAcademicRecords()
 }
 main().then(async () => {

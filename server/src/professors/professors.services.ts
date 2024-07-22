@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // src/modules/professors/services/professor.service.ts
-import { Evaluation_results, Evaluations, Professors } from '@prisma/client'
+import { Courses, Evaluation_results, Evaluations, Professors } from '@prisma/client'
 import * as professorRepository from '../professors/professors.repository'
-import { CreateEvaluationAndResults, CreateProfessor } from '../types/professors.type'
+import { CreateEvaluationAndResults, CreateProfessor, StudentsAndCourse } from '../types/professors.type'
 import z from 'zod'
+import { studentsFromCourse } from '../students/students.services'
+import { DatabaseError } from '../errors/databaseError'
+import { LogicError } from '../errors/logicError'
 
 export const getAllProfessors = async (): Promise<Professors[]> => {
   return await professorRepository.getAllProfessors()
@@ -64,4 +67,30 @@ export const getEvaluationsById = async (id: string): Promise<Evaluations[]> => 
 
 export const getEvaluationsResults = async (id: string): Promise<Evaluation_results[]> => {
   return await professorRepository.getEvaluationsResults(id)
+}
+
+export const getAssignedCourses = async (id: string): Promise<Courses[]> => {
+  return await professorRepository.getAssignedCourses(id)
+}
+
+export const studentsFromCourses = async (courses: Courses[]): Promise<StudentsAndCourse[]> => {
+  const coursesAndStudents: StudentsAndCourse[] = []
+  try {
+    for (const course of courses) {
+      const students = await studentsFromCourse(course.cursos_id)
+      const courseAndStudents = {
+        course,
+        students
+      }
+      coursesAndStudents.push(courseAndStudents)
+    }
+
+    return await new Promise((resolve, reject) => {
+      if (coursesAndStudents.length <= 0) throw new LogicError('Cannot relation students to courses')
+      resolve(coursesAndStudents)
+    })
+  } catch (e: any) {
+    if (e instanceof DatabaseError) throw e
+    throw new Error(e.message)
+  }
 }

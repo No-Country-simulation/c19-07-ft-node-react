@@ -33,3 +33,7 @@ export const deleteStudent = async (id: string): Promise<Students> => {
 export const getFeedback = async (id: string): Promise<Academic_records[]> => {
   return await studentRepository.getAcademicRecords(id)
 }
+
+export const studentsFromCourse = async (id: string): Promise<Students[]> => {
+  return await studentRepository.getStudentsByCourse(id)
+}
