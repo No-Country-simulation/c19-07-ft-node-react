@@ -7,7 +7,8 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../openapi.json'
 import { ServerSocket } from './configs/chat.gateway'
 import router from './routes/index'
-
+import authRoutes from './auth/auth.routes'
+import { verifyToken } from './middlewares/verifyAccesToken.mdl'
 class Server {
   private readonly app: Application
   private readonly server: http.Server
@@ -35,7 +36,8 @@ class Server {
   }
 
   routes (): void {
-    this.app.use('/api/v1', router)
+    this.app.use('/api/v1/auth', authRoutes)
+    this.app.use('/api/v1', verifyToken, router)
 
     this.app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
   }
