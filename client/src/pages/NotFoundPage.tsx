@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 
+import { HomeOutlined } from "@mui/icons-material";
 import { Box, Typography, Button } from "@mui/material";
+
 import { CompassIcon } from "../components/icons/CompassIcon";
 
 export function NotFoundPage() {
@@ -38,7 +40,11 @@ export function NotFoundPage() {
         </Typography>
 
         <Link to="/">
-          <Button variant="contained" color="secondary">
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<HomeOutlined />}
+          >
             <Typography textTransform="capitalize" fontWeight="bold">
               Go to Homepage
             </Typography>
