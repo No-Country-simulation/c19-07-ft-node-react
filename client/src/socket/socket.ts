@@ -1,9 +1,14 @@
-import { io } from "socket.io-client";
+import { io } from 'socket.io-client';
 
-const URL = import.meta.env.VITE_API_URL_SOCKET;
+// "undefined" means the URL will be computed from the `window.location` object
+const URL = import.meta.env.VITE_API_URL|| "http://localhost:3001/api";
 
+// export const socket = io(URL, {
+//     autoConnect: true,
+//   });
 
 export const socket = io(URL, {
-  transports: ["websocket", "polling"],
-  autoConnect: true,
+    transports: ['websocket', 'polling'], // Intenta usar ambos transportes
+    autoConnect: true
+
 });

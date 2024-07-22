@@ -12,19 +12,18 @@ import {
   TableContainer,
 } from "@mui/material";
 
-import { Professor } from "../../../interfaces";
+import { Parent } from "../../../interfaces";
 import { useAxiosPrivate } from "../../../hooks";
 
 export default function ParentsContactsPage() {
   const navigate = useNavigate();
   const api = useAxiosPrivate();
-  const [professors, setProfessors] = useState<Professor[]>([]);
-
+  const [parents, setParents] = useState<Parent[]>([]);
 
   useEffect(() => {
-    api.get<Professor[]>("/professors").then((res) => {
-      setProfessors(res.data);
-      console.log("----> profesor", res.data);
+    api.get<Parent[]>("/parents").then((res) => {
+      setParents(res.data);
+      console.log("---->",res.data);
     });
   }, []);
 
@@ -33,22 +32,23 @@ export default function ParentsContactsPage() {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Teachers</TableCell>
+            <TableCell>Parents</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {professors!.map((professor) => (
+          {parents!.map((parent) => (
             <TableRow
-              key={professor.user_id}
+              key={parent.parent_id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               onClick={() => {
-                navigate(`/parent/chat/${professor.user_id}`);
-                console.log(professors);
+                navigate("/parent/chat");
+                console.log(parents);
               }}
             >
               <TableCell component="th" scope="row">
-                {professor.user_id}
+                {parent.parent_id}
               </TableCell>
+              {/* <TableCell align="right">{row.calories}</TableCell> */}
             </TableRow>
           ))}
         </TableBody>
