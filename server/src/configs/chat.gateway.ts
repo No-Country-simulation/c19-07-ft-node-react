@@ -2,6 +2,7 @@ import http from 'http';
 import { Server as SocketServer, Socket } from 'socket.io';
 import { ChatServices } from '../chat/chat.services';
 
+
 const chatServices = new ChatServices();
 const activeSockets = new Map<string, string>();
 
@@ -9,8 +10,9 @@ export class ServerSocket {
   private readonly server: http.Server;
   private readonly io: SocketServer;
 
-  constructor(server: http.Server) {
-    this.server = server;
+
+  constructor (server: http.Server) {
+    this.server = server
     this.io = new SocketServer(this.server, {
       cors: {
         origin: 'http://localhost:5173',
@@ -19,7 +21,8 @@ export class ServerSocket {
       },
     });
 
-    this.initializeSocket();
+
+    this.initializeSocket()
   }
 
   private initializeSocket(): void {
@@ -73,10 +76,11 @@ export class ServerSocket {
           } else {
             console.log(`No socket found for receiver ${userReceiveId}`);
           }
+
         } catch (err) {
-          console.error('Error saving message:', err);
+          console.error('Error saving message:', err)
         }
-      });
+      })
 
       socket.on('disconnect', () => {
         for (const [userId, socketId] of activeSockets.entries()) {
@@ -88,9 +92,10 @@ export class ServerSocket {
         }
       });
     });
+
   }
 
-  public start(port: number): void {
+  public start (port: number): void {
     this.server.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });

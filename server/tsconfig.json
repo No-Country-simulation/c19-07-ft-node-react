@@ -31,9 +31,10 @@
     "resolveJsonModule": true
   },
   "include": [
-    "src",
-    "prisma/seed/**/*.ts"
-, "swagger.js"  ],
+    "src/**/*.ts",
+    "prisma/seed/**/*.ts",
+    "swagger.js"
+  ],
   "exclude": [
     "node_modules",
     "dist"

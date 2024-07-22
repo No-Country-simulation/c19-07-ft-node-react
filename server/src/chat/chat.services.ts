@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 export class ChatServices {
   constructor () {}
 
-  async getMessagesBetweenUsers(userSendID: string, userReceiveId: string) {
+async getMessagesBetweenUsers(userSendID: string, userReceiveId: string) {
     return await prisma.messages.findMany({
       where: {
         OR: [
@@ -46,6 +46,7 @@ export class ChatServices {
 
   async createMessage (userSendID: string, userReceiveId: string, message: string, roomId?: string) {
     console.log('createMessage', userSendID, userReceiveId, message, roomId)
+
     const newMessage = await prisma.messages.create({
       data: {
         message,

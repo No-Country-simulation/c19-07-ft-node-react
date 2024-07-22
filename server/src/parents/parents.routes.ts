@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 // src/modules/professors/professor.routes.ts
 import { Router } from 'express'
 import * as parentController from './parents.controllers'

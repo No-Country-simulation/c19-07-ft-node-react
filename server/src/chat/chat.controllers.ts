@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { ChatServices } from './chat.services'
-import { Messages } from '@prisma/client'
 
 const chatServices = new ChatServices()
 
