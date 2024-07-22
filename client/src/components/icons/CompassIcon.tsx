@@ -1,4 +1,8 @@
-export const CompassIcon = (props) => {
+import type { SVGProps } from "react";
+
+export const CompassIcon = (
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+) => {
   return (
     <svg
       {...props}

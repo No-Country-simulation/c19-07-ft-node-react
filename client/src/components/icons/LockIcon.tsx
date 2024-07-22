@@ -1,4 +1,8 @@
-export const LockIcon = (props) => {
+import type { SVGProps } from "react";
+
+export const LockIcon = (
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+) => {
   return (
     <svg
       {...props}
