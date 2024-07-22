@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import fs from 'fs'
 
 const prisma = new PrismaClient()
 
@@ -35,7 +34,7 @@ const getProfessors = async () => {
   // }
 }
 const getAcademicAreas = async () => {
-  return await prisma.academic_areas.findMany({ select: { area_academica_id: true, nombre: true, descripcion: true } })
+  return await prisma.academic_areas.findMany({ select: { academic_area_id: true, name: true, description: true } })
 }
 
 // const generateCourses = async () => {
@@ -59,20 +58,24 @@ const getAcademicAreas = async () => {
 //   return courses
 // }
 
-const main = async () => {
+const main = async (): Promise<Array<{
+  nombre: string
+  descripcion: string
+  professor_id: string
+  area_academica_id: string
+}>> => {
 //    const resolveCourse = await generateCourses()
   const resolveGetProfessors = await getProfessors()
   console.log('3333--->', resolveGetProfessors)
 
   const resolvegetAcademicAreas = await getAcademicAreas()
   console.log('4444--->', resolvegetAcademicAreas)
-
-  const forCourses = await resolveGetProfessors.map((course, index) => {
+  const forCourses = resolveGetProfessors.map((course, index) => {
     return {
-      nombre: resolvegetAcademicAreas[index].nombre,
-      descripcion: resolvegetAcademicAreas[index].descripcion,
+      nombre: resolvegetAcademicAreas[index].name,
+      descripcion: resolvegetAcademicAreas[index].description,
       professor_id: course.professor_id,
-      area_academica_id: resolvegetAcademicAreas[index].area_academica_id
+      area_academica_id: resolvegetAcademicAreas[index].academic_area_id
     }
   })
 

@@ -1,6 +1,9 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import * as parentsService from '../parents/parents.services'
-
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
+import { ResponseHandler } from '../libs/response.lib'
+import HTTP_STATUS from '../constants/statusCodeServer.const'
+import { z } from 'zod'
 export const getAllParents = async (req: Request, res: Response): Promise<void> => {
   try {
     const parents = await parentsService.getAllParents()
@@ -11,18 +14,36 @@ export const getAllParents = async (req: Request, res: Response): Promise<void> 
   }
 }
 
-export const createParents = async (req: Request, res: Response): Promise<void> => {
+export const createParents = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const isValid = parentsService.validateCreateParents(req.body)
-    if (!isValid) res.status(400).send({ error: 'Invalid Body' })
+    if (!isValid) throw Error('Invalid body')
 
     const { userId, relation } = req.body
+
     const parent = await parentsService.createParents({ user_id: userId, relation, createdAt: new Date(), updatedAt: new Date() })
 
-    res.json(parent)
-  } catch (err: any) {
-    console.error(err) // Log para ver el error
-    res.status(500).send({ error: 'Server Error', details: err.message })
+    new ResponseHandler(res).sendResponse(HTTP_STATUS.CREATED, 'Parent created successfully', parent)
+  } catch (error: any) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case 'P2002':
+          console.error('prisma error:', { ...error, message: error.message })
+          return new ResponseHandler(res).sendError(HTTP_STATUS.CONFLICT, 'Parent already exists')
+        case 'P2003':
+          console.error('prisma error:', { ...error, message: error.message })
+          return new ResponseHandler(res).sendError(HTTP_STATUS.NOT_FOUND, 'User not found')
+        default:
+          console.error('prisma error:', { ...error, message: error.message })
+          return new ResponseHandler(res).sendError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'server error')
+      }
+    }
+    if (error instanceof z.ZodError) {
+      console.error('zod error:', { ...error, message: error.message })
+      return new ResponseHandler(res).sendError(HTTP_STATUS.BAD_REQUEST, 'Validation error', { msg: error.message })
+    }
+    console.error(error) // Log para ver el error
+    next(error)
   }
 }
 

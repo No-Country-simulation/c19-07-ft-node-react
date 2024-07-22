@@ -1,15 +1,29 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
+// parte dos
 import http from 'http'
+import express, { Application } from 'express'
 import { Server as SocketServer, Socket } from 'socket.io'
+import { PrismaClient } from '@prisma/client'
 import { ChatServices } from '../chat/chat.services'
 
+const prisma = new PrismaClient()
 const chatServices = new ChatServices()
 
 export class ServerSocket {
   private readonly server: http.Server
   private readonly io: SocketServer
-  private readonly userSockets = new Map<string, string>() // Mapa para almacenar sockets de usuario
+
+  // constructor(server: http.Server, app: Application) {
+  //   this.server = server
+  //   this.io = new SocketServer(this.server, {
+  //     cors: {
+  //       origin: 'http://localhost:5173',
+  //       // credentials: true,
+  //       methods: ['GET', 'POST']
+  //     }
+  //   })
+
+  //   this.initializeSocket()
+  // }
 
   constructor (server: http.Server) {
     this.server = server
@@ -17,61 +31,52 @@ export class ServerSocket {
       cors: {
         origin: 'http://localhost:5173',
         methods: ['GET', 'POST'],
-        credentials: true
+        allowedHeaders: ['Content-Type']
+
       }
     })
 
     this.initializeSocket()
   }
 
+  // private initializeSocket(): void {
+  //   this.io.on('connection', (socket: Socket) => {
+  //     console.log('a user connected:', socket.id)
+
+  //     socket.on('sendMessage', async (data) => {
+  //       const { userSendID, userReceiveId, message,roomId } = data
+
+  //       try {
+  //         const newMessage = await chatServices.createMessage(userSendID, userReceiveId, message)
+  //         this.io.to(roomId).emit('receiveMessage', newMessage)
+  //       } catch (err) {
+  //         console.error('Error saving message:', err)
+  //       }
+  //     })
+
+  //     socket.on('disconnect', () => {
+  //       console.log('user disconnected:', socket.id)
+  //     })
+  //   })
+  // }
+
   private initializeSocket (): void {
     this.io.on('connection', (socket: Socket) => {
-      console.log('A user connected:', socket.id)
+      console.log('a user connected:', socket.id)
 
-      // Registrar el socket del usuario
-      socket.on('register', (userId: string) => {
-        this.userSockets.set(userId, socket.id)
-        console.log(`User ${userId} registered with socket ID: ${socket.id}`)
-      })
-
-      // Enviar un mensaje
       socket.on('sendMessage', async (data) => {
-        const { userSendID, userReceiveId, message } = data
-
-        console.log(`Sending message from ${userSendID} to ${userReceiveId}:`, message)
+        const { userSendID, userReceiveId, message, roomId } = data
 
         try {
           const newMessage = await chatServices.createMessage(userSendID, userReceiveId, message)
-
-          const receiverSocketId = this.userSockets.get(userReceiveId)
-          const senderSocketId = this.userSockets.get(userSendID)
-
-          if (receiverSocketId) {
-            console.log(`Emitting to receiver ${receiverSocketId}`)
-            socket.to(receiverSocketId).emit('receiveMessage', newMessage)
-          } else {
-            console.log(`No socket found for receiver ${userReceiveId}`)
-          }
-
-          if (senderSocketId) {
-            console.log(`Emitting to sender ${senderSocketId}`)
-            socket.to(senderSocketId).emit('receiveMessage', newMessage)
-          } else {
-            console.log(`No socket found for sender ${userSendID}`)
-          }
+          this.io.to(roomId).emit('receiveMessage', newMessage)
         } catch (err) {
           console.error('Error saving message:', err)
         }
       })
 
-      // Manejar la desconexión
       socket.on('disconnect', () => {
-        console.log('User disconnected:', socket.id)
-        this.userSockets.forEach((value, key) => {
-          if (value === socket.id) {
-            this.userSockets.delete(key)
-          }
-        })
+        console.log('user disconnected:', socket.id)
       })
     })
   }

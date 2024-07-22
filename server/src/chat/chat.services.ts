@@ -39,7 +39,11 @@ export class ChatServices {
   }
 
   async createMessage (userSendID: string, userReceiveId: string, message: string, roomId?: string) {
-    console.log('createMessage', userSendID, userReceiveId, message, roomId)
+    if (!roomId) {
+      roomId = await this.createRoom(userSendID, userReceiveId)
+    }
+
+    // Crear un nuevo mensaje con el roomId encontrado o uno nuevo
     const newMessage = await prisma.messages.create({
       data: {
         message,

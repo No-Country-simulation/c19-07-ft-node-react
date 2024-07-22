@@ -9,6 +9,7 @@ import { z } from 'zod'
 import HTTP_STATUS from '../constants/statusCodeServer.const'
 import { ICustomRequest } from '../types'
 import { AuthenticationError } from '../errors/authenticationError'
+import { formattedErrorsZod } from '../libs/formatedErrorsZod'
 const refreshTokenRepository = new RefreshTokenRepository(new PrismaClient())
 const userRepository = new UserRepository(new PrismaClient())
 const authService = new AuthService(userRepository, refreshTokenRepository)
@@ -25,11 +26,8 @@ export class AuthCtrl {
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'Login successful', null)
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const formattedErrors = error.errors.reduce<Record<string, string>>((acc, err) => {
-          acc[err.path[0]] = err.message
-          return acc
-        }, {})
-        new ResponseHandler(res).sendError(HTTP_STATUS.BAD_REQUEST, 'Validation error', formattedErrors)
+        const formattedErrors = formattedErrorsZod(error)
+        return new ResponseHandler(res).sendError(HTTP_STATUS.BAD_REQUEST, 'Validation error', formattedErrors)
       }
       next(error)
     }
