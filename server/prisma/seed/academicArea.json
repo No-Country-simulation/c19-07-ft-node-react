@@ -1,33 +1,33 @@
 [
     {
 
-      "nombre": "Matemáticas",
-      "descripcion": "Estudio de los números, formas y patrones.",
-      "nivel_educativo": "PRIMARY"
+      "name": "Matemáticas",
+      "description": "Estudio de los números, formas y patrones.",
+      "educational_level": "PRIMARY"
     },
     {
 
-      "nombre": "Ciencias Naturales",
-      "descripcion": "Estudio de los fenómenos naturales y el mundo físico.",
-      "nivel_educativo": "PRIMARY"
+      "name": "Ciencias Naturales",
+      "description": "Estudio de los fenómenos naturales y el mundo físico.",
+      "educational_level": "PRIMARY"
     },
     {
 
-      "nombre": "Lengua y Literatura",
-      "descripcion": "Estudio de la lengua y las obras literarias.",
-      "nivel_educativo": "SECONDARY"
+      "name": "Lengua y Literatura",
+      "description": "Estudio de la lengua y las obras literarias.",
+      "educational_level": "SECONDARY"
     },
     {
 
-      "nombre": "Historia",
-      "descripcion": "Estudio de los eventos y procesos históricos.",
-      "nivel_educativo": "SECONDARY"
+      "name": "Historia",
+      "description": "Estudio de los eventos y procesos históricos.",
+      "educational_level": "SECONDARY"
     },
     {
 
-      "nombre": "Educación Física",
-      "descripcion": "Desarrollo de las habilidades físicas y el conocimiento sobre la salud.",
-      "nivel_educativo": "SECONDARY"
+      "name": "Educación Física",
+      "description": "Desarrollo de las habilidades físicas y el conocimiento sobre la salud.",
+      "educational_level": "SECONDARY"
     }
   ]
   

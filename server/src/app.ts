@@ -1,30 +1,23 @@
-//parte 3
-//import express, { Application } from 'express'
-import express, { Request, Response, Application, NextFunction } from 'express'
-
-import cors from 'cors'
-import morgan from 'morgan'
-import router from './routes/index'
-import studentRoutes from './students/students.routes'
-import professorRoutes from './professors/professors.routes'
-import parentRoutes from './parents/parents.routes'
-import authRoutes from './auth/auth.routes'
 import cookieParser from 'cookie-parser'
-import usersRoutes from './users/users.routes'
+import cors from 'cors'
+import express, { Application, NextFunction, Request, Response } from 'express'
+import http from 'http'
+import authRoutes from './auth/auth.routes'
+import morgan from 'morgan'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../openapi.json'
-import http from 'http'
-import chatRoutes from './chat/chat.routes'
 import { ServerSocket } from './configs/chat.gateway'
 import alertRoutes from './alerts/AlertsRoutes'
 
+import router from './routes/index'
+import { verifyToken } from './middlewares/verifyAccesToken.mdl'
 
 class Server {
   private readonly app: Application
   private readonly server: http.Server
   private readonly socketServer: ServerSocket
 
-  constructor() {
+  constructor () {
     this.app = express()
     this.server = http.createServer(this.app)
     this.socketServer = new ServerSocket(this.server)
@@ -32,7 +25,6 @@ class Server {
     this.routes()
     this.errorHandling()
   }
-
 
   config (): void {
     this.app.set('port', process.env.PORT_SERVER !== undefined ? process.env.PORT_SERVER : 3000)
@@ -46,19 +38,15 @@ class Server {
     }))
   }
 
-  routes(): void {
-    this.app.use('/api/v1', router)
-    this.app.use('/api/users', usersRoutes)
-    this.app.use('/api/students', studentRoutes)
-    this.app.use('/api/professors', professorRoutes)
-    this.app.use('/api/parents', parentRoutes)
+  routes (): void {
+    this.app.use('/api/v1', verifyToken, router)
+    this.app.use('/api', router)
+    this.app.use('api/v1/auth', authRoutes)
     this.app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
-    this.app.use('/api/v1/auth', authRoutes)
-    this.app.use('/api/chat', chatRoutes)
     this.app.use('/api/alerts', alertRoutes)
   }
 
-  errorHandling(): void {
+  errorHandling (): void {
     this.app.use((err: any, req: Request, res: Response, next: NextFunction) => {
       const statusCode = typeof err.statusCode === 'number' ? err.statusCode : 500
       const message = typeof err.message === 'string' ? err.message : 'Internal Server Error'
@@ -66,7 +54,7 @@ class Server {
     })
   }
 
-  start(): void {
+  start (): void {
     this.server.listen(this.app.get('port'), () => {
       console.log('Server on port', this.app.get('port'))
     })

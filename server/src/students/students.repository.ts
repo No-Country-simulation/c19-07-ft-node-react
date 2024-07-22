@@ -1,5 +1,6 @@
 // src/modules/students/repositories/student.repository.ts
 import { Academic_records, PrismaClient, Students } from '@prisma/client'
+import { DatabaseError } from '../errors/databaseError'
 const prisma = new PrismaClient()
 
 export const getAllStudents = async (): Promise<Students[]> => {
@@ -24,4 +25,17 @@ export const deleteStudent = async (id: string): Promise<Students> => {
 
 export const getAcademicRecords = async (id: string): Promise<Academic_records[]> => {
   return await prisma.academic_records.findMany({ where: { student_id: id } })
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const getStudentsByCourse = async (cursos_id: string): Promise<Students[]> => {
+  try {
+    return await prisma.students.findMany({
+      where: {
+        courses: { every: { cursos_id } }
+      }
+    })
+  } catch (e: any) {
+    throw new DatabaseError(e)
+  }
 }
