@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Delete, Edit } from "@mui/icons-material";
 import {
   Container,
@@ -14,37 +15,47 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useAxiosPrivate } from "../../../hooks";
 
 type AlignType = "left" | "right" | "center";
 
 const headers: { name: string; align: AlignType }[] = [
   { name: "No.", align: "left" },
-  { name: "Full Name", align: "left" },
-  { name: "User Type", align: "left" },
-  { name: "Telephone", align: "left" },
+  { name: "name", align: "left" },
+  { name: "type_user", align: "left" },
+  { name: "email", align: "left" },
 ];
 
-const dummyData = [
-  {
-    id: "1",
-    full_name: "Juan Pérez",
-    user_type: "PROFESSOR",
-    telephone: "123-456-7890",
-  },
-  {
-    id: "2",
-    full_name: "Ana Gómez",
-    user_type: "PARENTS",
-    telephone: "987-654-3210",
-  },
-];
+interface User  {
+  id: string;
+  name: string;
+  type_user: string; 
+  email: string;
+}
+
 
 const TableUser = () => {
+  const api = useAxiosPrivate()
+  const [users, setUsers] = useState<User[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await api.get<User[]>(`/users`);
+        setUsers(response.data);
+      } catch (error) {
+        console.error("There was an error fetching the users!", error);
+      }
+    };
+
+    fetchUsers();
+  }, [api]);
 
   const handleAddUser = () => {
     navigate("/newUser");
   };
+
   return (
     <>
       <Typography>Users</Typography>
@@ -97,21 +108,21 @@ const TableUser = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {dummyData.map((item, index) => (
-                        <TableRow key={item.id}>
+                      {users.map((user, index) => (
+                        <TableRow key={user.id}>
                           <TableCell align="left">{index + 1}</TableCell>
                           <TableCell
                             component="th"
                             scope="row"
                             sx={{ color: "black", fontWeight: "bold" }}
                           >
-                            {item.full_name}
+                            {user.name}
                           </TableCell>
                           <TableCell align="left" sx={{ color: "black" }}>
-                            {item.user_type}
+                            {user.type_user}
                           </TableCell>
                           <TableCell align="left" sx={{ color: "black" }}>
-                            {item.telephone}
+                            {user.email}
                           </TableCell>
                           <TableCell
                             align="left"
