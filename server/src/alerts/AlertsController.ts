@@ -1,101 +1,106 @@
-import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-import { alertRepository } from './AlertRepository';
-import { sendEmail } from '../configs/emailConfig';
+import { Request, Response } from 'express'
+import { PrismaClient } from '@prisma/client'
+import { AlertRepository } from './AlertRepository'
+import { sendEmail } from '../configs/emailConfig'
+import HTTP_STATUS from '../constants/statusCodeServer.const'
+import { ConflictError } from '../errors/conflictError'
 
-const prisma = new PrismaClient();
-
+const prisma = new PrismaClient()
+const alertRepository = new AlertRepository()
 class AlertController {
-  async getAllAlerts(req: Request, res: Response): Promise<void> {
+  async getAllAlerts (req: Request, res: Response): Promise<void> {
     try {
-      const alerts = await alertRepository.getAllAlerts();
-      res.status(200).json(alerts);
+      const alerts = await alertRepository.getAllAlerts()
+      res.status(200).json(alerts)
     } catch (err) {
-      res.status(500).json({ error: 'An error occurred while fetching alerts.' });
+      res.status(500).json({ error: 'An error occurred while fetching alerts.' })
     }
   }
 
-  async createAlert(req: Request, res: Response): Promise<void> {
+  async createAlert (req: Request, res: Response): Promise<void> {
     try {
-      const alert = await alertRepository.createAlert(req.body);
-      res.status(201).json(alert);
+      const alert = await alertRepository.createAlert(req.body)
+      res.status(201).json(alert)
     } catch (err) {
-      res.status(500).json({ error: 'An error occurred while creating the alert.' });
+      res.status(500).json({ error: 'An error occurred while creating the alert.' })
     }
   }
 
-  async getAlertById(req: Request, res: Response): Promise<void> {
+  async getAlertById (req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const alert = await alertRepository.getAlertById(id);
-      if (alert) {
-        res.status(200).json(alert);
+      const { id } = req.params
+      const alert = await alertRepository.getAlertById(id)
+      if (alert != null) {
+        res.status(200).json(alert)
       } else {
-        res.status(404).json({ error: 'Alert not found.' });
+        res.status(404).json({ error: 'Alert not found.' })
       }
     } catch (err) {
-      res.status(500).json({ error: 'An error occurred while fetching the alert.' });
+      res.status(500).json({ error: 'An error occurred while fetching the alert.' })
     }
   }
 
-  async updateAlert(req: Request, res: Response): Promise<void> {
+  async updateAlert (req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const alert = await alertRepository.updateAlert(id, req.body);
-      res.status(200).json(alert);
+      const { id } = req.params
+      const alert = await alertRepository.updateAlert(id, req.body)
+      res.status(200).json(alert)
     } catch (err) {
-      res.status(500).json({ error: 'An error occurred while updating the alert.' });
+      res.status(500).json({ error: 'An error occurred while updating the alert.' })
     }
   }
 
-  async deleteAlert(req: Request, res: Response): Promise<void> {
+  async deleteAlert (req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      await alertRepository.deleteAlert(id);
-      res.status(204).send();
+      const { id } = req.params
+      await alertRepository.deleteAlert(id)
+      res.status(204).send()
     } catch (err) {
-      res.status(500).json({ error: 'An error occurred while deleting the alert.' });
+      res.status(500).json({ error: 'An error occurred while deleting the alert.' })
     }
   }
 
-  async getFeedback(req: Request, res: Response): Promise<void> {
+  async getFeedback (req: Request, res: Response): Promise<void> {
     try {
-      const { studentId } = req.params;
-      const academicRecords = await alertRepository.getFeedback(studentId);
+      const { studentId } = req.params
+      const academicRecords = await alertRepository.getFeedback(studentId)
       if (academicRecords.length > 0) {
-        res.status(200).json(academicRecords);
+        res.status(200).json(academicRecords)
       } else {
-        res.status(204).json({ message: 'No feedback available for this student.' });
+        res.status(204).json({ message: 'No feedback available for this student.' })
       }
     } catch (err) {
-      res.status(500).json({ error: 'An error occurred while fetching feedback.' });
+      res.status(500).json({ error: 'An error occurred while fetching feedback.' })
     }
   }
 
   // Envio de Correos
-  async sendGradesEmail(req: Request, res: Response): Promise<void> {
+  async sendGradesEmail (req: Request, res: Response): Promise<void> {
     try {
-      const { studentId, email } = req.body;
-      const academicRecords = await alertRepository.getFeedback(studentId);
+      const { studentId, email } = req.body
+      const academicRecords = await alertRepository.getFeedback(studentId)
 
       if (academicRecords.length > 0) {
         // Asumiendo que los cursos están relacionados con los registros académicos
         const gradeText = await Promise.all(academicRecords.map(async (record) => {
-          const course = await prisma.courses.findUnique({ where: { cursos_id: record.curso_id } });
-          return `Subject: ${course?.nombre || 'Unknown'}, Grade: ${record.mark}`;
-        }));
-        const text = `Here are the grades for your child:\n\n${gradeText.join('\n')}`;
+          const course = await prisma.courses.findUnique({ where: { cursos_id: record.curso_id } })
+          if (course === null) {
+            throw new ConflictError('Course not found', HTTP_STATUS.NOT_FOUND)
+          }
+          return `Subject: ${course.nombre}, Grade: ${record.mark}`
+        }))
+        const text = `Here are the grades for your child:\n\n${gradeText.join('\n')}`
 
         // Envía el correo usando el transporter de Nodemailer
-        await sendEmail(email, 'Your Child\'s Grades', text);
-        res.status(200).json({ message: 'Email sent successfully' });
+        await sendEmail(email, 'Your Child\'s Grades', text)
+        res.status(200).json({ message: 'Email sent successfully' })
       } else {
-        res.status(204).json({ message: 'No feedback available for this student.' });
+        res.status(204).json({ message: 'No feedback available for this student.' })
       }
     } catch (err) {
-      res.status(500).json({ error: 'An error occurred while sending the email.' });
+      res.status(500).json({ error: 'An error occurred while sending the email.' })
     }
   }
 }
 
-export const alertController = new AlertController();
+export const alertController = new AlertController()
