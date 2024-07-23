@@ -84,7 +84,7 @@ export const useAuthStore = () => {
 
 const getUserProfile = async () => {
   try {
-    const response = await axios.get<ProfileResponse>(
+    const response = await schoolMetricsApi.get<ProfileResponse>(
       "/users/get-profile"
     );
 
