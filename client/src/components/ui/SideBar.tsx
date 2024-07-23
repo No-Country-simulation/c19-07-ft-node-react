@@ -5,6 +5,11 @@ import {
   Chat,
   Campaign,
   School,
+  Dashboard,
+  Person,
+  FamilyRestroom,
+  Work,
+  Class,
 } from "@mui/icons-material";
 import {
   Box,
@@ -59,12 +64,40 @@ const professorOptions = [
   {
     text: "Classes",
     path: "/teacher/class",
-    icon: <School></School>,
+    icon: <Class></Class>,
   },
   {
     text: "Chat",
     path: "/teacher/contacts",
     icon: <Chat></Chat>,
+  },
+];
+
+const adminOptions = [
+  {
+    text: "Dashboard",
+    path: "/",
+    icon: <Dashboard></Dashboard>,
+  },
+  {
+    text: "Users",
+    path: "/admin",
+    icon: <Person></Person>,
+  },
+  {
+    text: "Students",
+    path: "",
+    icon: <School></School>,
+  },
+  {
+    text: "Parents",
+    path: "",
+    icon: <FamilyRestroom></FamilyRestroom>,
+  },
+  {
+    text: "professors",
+    path: "",
+    icon: <Work></Work>,
   },
 ];
 
@@ -81,6 +114,8 @@ export const SideBar = () => {
       ? studentOptions
       : type_user === "PROFESSOR"
       ? professorOptions
+      : type_user === "ADMIN"
+      ? adminOptions
       : [];
 
   const drawerContent = (

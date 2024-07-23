@@ -1,9 +1,9 @@
-import { ClassRoomNewStudents } from "../components/ClassRoomNewStudents";
+// import { ClassRoomNewStudents } from "../components/ClassRoomNewStudents";
 
-export default function TeacherClassNewStudents() {
-  return (
-    <div>
-      <ClassRoomNewStudents/>
-    </div>
-  );
-}
+// export default function TeacherClassNewStudents() {
+//   return (
+//     <div>
+//       <ClassRoomNewStudents/>
+//     </div>
+//   );
+// }

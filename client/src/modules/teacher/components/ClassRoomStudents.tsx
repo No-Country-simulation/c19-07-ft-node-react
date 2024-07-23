@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 import {
   Box,
   Container,
@@ -16,35 +16,29 @@ import {
   Checkbox,
   Snackbar,
   Alert,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Typography,
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 const URL_BASE = import.meta.env.VITE_API_URL;
 
-type AlignType = 'left' | 'right' | 'center';
+type AlignType = "left" | "right" | "center";
 
 const headers: { name: string; align: AlignType }[] = [
-    { name: "Selection", align: "left" },
-    { name: "Student", align: "left" },
-    { name: "Math", align: "right" },
-    { name: "Science", align: "right" },
-    { name: "English", align: "right" },
-    { name: "History", align: "right" },
-    { name: "Average", align: "right" },
-    { name: "Report", align: "right" },
-   ];
+  { name: "Selection", align: "left" },
+  { name: "Student", align: "left" },
+  { name: "Math", align: "right" },
+  { name: "Science", align: "right" },
+  { name: "English", align: "right" },
+  { name: "History", align: "right" },
+  { name: "Average", align: "right" },
+  { name: "Report", align: "right" },
+];
 
 const ClassRoomStudents = () => {
   const navigate = useNavigate();
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [students, setStudents] = useState<any[]>([]);
 
   const fetchStudents = async () => {
@@ -53,7 +47,7 @@ const ClassRoomStudents = () => {
       setStudents(response.data);
       console.log(response.data);
     } catch (error) {
-      console.error('Error fetching students:', error);
+      console.error("Error fetching students:", error);
     }
   };
 
@@ -65,21 +59,9 @@ const ClassRoomStudents = () => {
     navigate(-1);
   };
 
-  const handleNewStudentClick = () => {
-    navigate(`/classNewStudents/`);
-  };
-
   const handleEditButtonClick = () => {
     if (selectedRows.length === 1) {
       navigate(`/classNewStudents/`);
-    } else {
-      setOpenSnackbar(true);
-    }
-  };
-
-  const handleDeleteButtonClick = () => {
-    if (selectedRows.length === 1) {
-      setOpenDeleteDialog(true);
     } else {
       setOpenSnackbar(true);
     }
@@ -99,15 +81,6 @@ const ClassRoomStudents = () => {
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
-  };
-
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
-  };
-
-  const handleConfirmDelete = () => {
-    console.log(`Eliminar estudiante con ID ${selectedRows[0]}`);
-    setOpenDeleteDialog(false);
   };
 
   return (
@@ -149,20 +122,6 @@ const ClassRoomStudents = () => {
                 <Box>
                   <Button
                     variant="contained"
-                    onClick={handleNewStudentClick}
-                    sx={{
-                      color: "black",
-                      fontWeight: "bold",
-                      marginRight: "10px",
-                      "&:hover": {
-                        backgroundColor: "#e16162",
-                      },
-                    }}
-                  >
-                    Nuevo
-                  </Button>
-                  <Button
-                    variant="contained"
                     onClick={handleEditButtonClick}
                     sx={{
                       color: "black",
@@ -174,19 +133,6 @@ const ClassRoomStudents = () => {
                     }}
                   >
                     Editar
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={handleDeleteButtonClick}
-                    sx={{
-                      color: "black",
-                      fontWeight: "bold",
-                      "&:hover": {
-                        backgroundColor: "#e16162",
-                      },
-                    }}
-                  >
-                    Eliminar
                   </Button>
                 </Box>
               </Box>
@@ -214,7 +160,9 @@ const ClassRoomStudents = () => {
                         <TableCell>
                           <Checkbox
                             checked={selectedRows.includes(student.student_id)}
-                            onChange={() => handleCheckboxChange(student.student_id)}
+                            onChange={() =>
+                              handleCheckboxChange(student.student_id)
+                            }
                           />
                         </TableCell>
                         <TableCell
@@ -284,25 +232,6 @@ const ClassRoomStudents = () => {
             : "Solo debe haber un estudiante seleccionado para realizar esta acción."}
         </Alert>
       </Snackbar>
-
-      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>{"¿Está seguro de eliminar este estudiante?"}</DialogTitle>
-        <DialogContent>
-          <Box sx={{ marginBottom: 2 }}>
-            <Typography variant="body1">
-              Esta acción no se puede deshacer.
-            </Typography>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDeleteDialog} color="primary">
-            Cancelar
-          </Button>
-          <Button onClick={handleConfirmDelete} color="primary" autoFocus>
-            Eliminar
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Container>
   );
 };

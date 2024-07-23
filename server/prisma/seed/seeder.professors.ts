@@ -6,7 +6,14 @@ const prisma = new PrismaClient()
 // poblar area academica
 const getUserAcademic = async () => {
   const academicArea = JSON.parse(fs.readFileSync('./prisma/seed/academicArea.json', 'utf8'))
-  await prisma.academic_areas.createMany({ data: academicArea })
+  const transformAcademicArea = academicArea.map((academic: any) => {
+    return {
+      ...academic,
+      name: academic.name.toUpperCase(),
+      educational_level: academic.educational_level.toUpperCase()
+    }
+  })
+  await prisma.academic_areas.createMany({ data: transformAcademicArea })
   const resolveAcademic = await prisma.academic_areas.findMany({})
 
   return resolveAcademic
@@ -42,7 +49,7 @@ const main = async () => {
       fecha_contratacion: new Date(),
       estado_empleado: 'ACTIVE',
       educational_level_id: resolveEducationLevels[index].level_id,
-      area_academica_id: resolveAcademic[index].area_academica_id
+      area_academica_id: resolveAcademic[index].academic_area_id
 
     }
     // return dataa
