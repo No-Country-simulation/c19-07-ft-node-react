@@ -6,18 +6,24 @@ const prisma = new PrismaClient()
 export class ChatServices {
   constructor () {}
 
+async getMessagesBetweenUsers(userSendID: string, userReceiveId: string) {
+    return await prisma.messages.findMany({
+      where: {
+        OR: [
+          { userSendID: userSendID, userReceiveId: userReceiveId },
+          { userSendID: userReceiveId, userReceiveId: userSendID }
+        ]
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
+
   async createRoom (userSendID: string, userReceiveId: string) {
     const existingMessage = await prisma.messages.findFirst({
       where: {
         OR: [
-          {
-            userSendID,
-            userReceiveId
-          },
-          {
-            userSendID: userReceiveId,
-            userReceiveId: userSendID
-          }
+          { userSendID, userReceiveId },
+          { userSendID: userReceiveId, userReceiveId: userSendID }
         ]
       }
     })
@@ -39,11 +45,8 @@ export class ChatServices {
   }
 
   async createMessage (userSendID: string, userReceiveId: string, message: string, roomId?: string) {
-    if (!roomId) {
-      roomId = await this.createRoom(userSendID, userReceiveId)
-    }
+    console.log('createMessage', userSendID, userReceiveId, message, roomId)
 
-    // Crear un nuevo mensaje con el roomId encontrado o uno nuevo
     const newMessage = await prisma.messages.create({
       data: {
         message,
