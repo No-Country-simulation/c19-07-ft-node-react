@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PrismaClient } from '@prisma/client'
 import { IApiRandomUser, IUserJSON } from './apiRandomUser.type'
 import bcrypt from 'bcrypt'
@@ -13,7 +14,7 @@ interface IUserDb {
   name: string
   password: string
   email: string
-  type_user: 'PROFESSOR' | 'STUDENT' | 'PARENTS'
+  type_user: 'PROFESSOR' | 'STUDENT' | 'PARENTS' | 'ADMIN'
   state: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'
 }
 const getApiRandomUser = async (): Promise<IApiRandomUser['results']> => {
@@ -74,7 +75,15 @@ const main = async (): Promise<void> => {
     ...user,
     password: bcrypt.hashSync(user.password, 10) // Encriptar la contraseña con saltos de 10
   }))
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+
+  // add user admin
+  hashedUsers.push({
+    name: 'Luis Perez García',
+    password: bcrypt.hashSync('admin123', 10),
+    email: 'admin@example.com',
+    state: 'ACTIVE',
+    type_user: 'ADMIN'
+  })
 
   for (let i = 0; i < hashedUsers.length; i++) {
     await prisma.users.create({

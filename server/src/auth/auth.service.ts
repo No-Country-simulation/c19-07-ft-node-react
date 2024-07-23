@@ -14,7 +14,7 @@ export class AuthService {
       throw new AuthenticationError('Invalid credentials', HTTP_STATUS.UNAUTHORIZED, { email: 'is email not found' })
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password)
+    const isPasswordValid = AuthService.verifyPassword(password, user.password)
     if (!isPasswordValid) {
       throw new AuthenticationError('Invalid credentials', HTTP_STATUS.UNAUTHORIZED, { password: 'is password not valid' })
     }
@@ -85,5 +85,14 @@ export class AuthService {
     } else {
       throw new Error('JWT refresh secret is not defined')
     }
+  }
+
+  static hashPassword (password: string): string {
+    const saltRounds = 10
+    return bcrypt.hashSync(password, saltRounds)
+  }
+
+  static verifyPassword (password: string, hash: string): boolean {
+    return bcrypt.compareSync(password, hash)
   }
 }
