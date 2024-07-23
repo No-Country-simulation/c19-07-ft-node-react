@@ -6,37 +6,43 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 
-import { useAuthStore } from "./hooks";
-import { LoginPage, AuthLayout } from "./modules/auth/";
-import { HomePage, NotFoundPage, ParentStudientPrincipalPage } from "./pages";
 import {
-  // RequireRole,
+  HomePage,
+  WelcomePage,
+  NotFoundPage,
+  ParentStudientPrincipalPage,
+} from "./pages";
+import {
+  RequireRole,
   PublicRoute,
   PrivateRoute,
   CheckingAuth,
 } from "./components";
 
+import { LoginPage, AuthLayout } from "./modules/auth/";
 import {
-  TeacherPage,
   TeacherClass,
+  TeacherLayout,
   TeacherCalendar,
+  TeacherChatPage,
   TeacherClassChosen,
+  TeacherContactsPage,
   TeacherClassStudents,
-} from "./modules/teacher/pages/index.tsx";
+} from "./modules/teacher";
+import {
+  Classmates,
+  ParentsLayout,
+  ParentsChatPage,
+  ParentsContactsPage,
+} from "./modules/parents";
 
-import { Classmates } from "./modules/parents/pages/Classmates.tsx";
-// import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
-import TeacherChatPage from "./modules/parents/pages/TeacherChatPage.tsx";
-import TeacherContactsPage from "./modules/parents/pages/TeacherContactsPage.tsx";
-import ParentsContactsPage from "./modules/parents/pages/ParentsContactsPage.tsx";
-import ParentChatPage from "./modules/parents/pages/ParentsChatPage.tsx";
-import PageAdminUsers from "./modules/admin/pages/PageAdminUsers.tsx";
-import PageNewUser from "./modules/admin/pages/PageNewUser.tsx";
+import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
+
+import { useAuthStore } from "./hooks";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-
+    path: "/*",
     element: (
       <PrivateRoute>
         <HomePage />
@@ -44,62 +50,94 @@ const router = createBrowserRouter([
     ),
     errorElement: <NotFoundPage />,
     children: [
+      // Welcome
       {
-        path: "professors", //se cambio teacher por professors porque "teacher" no hay en backend
-        element: <TeacherPage />,
+        path: "welcome",
+        element: <WelcomePage />,
+      },
+      // Teacher
+      {
+        path: "teacher/*",
+        element: (
+          <RequireRole allowedRoles={["PROFESSOR"]}>
+            <TeacherLayout />
+          </RequireRole>
+        ),
+        children: [
+          {
+            path: "class",
+            element: <TeacherClass />,
+          },
+          {
+            path: "class/:classId",
+            element: <TeacherClassChosen />,
+          },
+          {
+            path: "class/students",
+            element: <TeacherClassStudents />,
+          },
+          {
+            path: "contacts",
+            element: <TeacherContactsPage />,
+          },
+          {
+            path: "chat/:parentId",
+            element: <TeacherChatPage />,
+          },
+          {
+            path: "classNewStudents",
+            element: <TeacherClassNewStudents />,
+          },
+          {
+            path: "calendar",
+            element: <TeacherCalendar />,
+          },
+          {
+            path: "*",
+            element: <Navigate to="class" replace />,
+          },
+        ],
+      },
+      // Parent
+      {
+        path: "parents/*",
+        element: (
+          <RequireRole allowedRoles={["PARENTS"]}>
+            <ParentsLayout />
+          </RequireRole>
+        ),
+        children: [
+          {
+            path: "classmates",
+            element: <Classmates />,
+          },
+          {
+            path: "contacts",
+            element: <ParentsContactsPage />,
+          },
+          {
+            path: "chat/:teacherId",
+            element: <ParentsChatPage />,
+          },
+          {
+            path: "*",
+            element: <Navigate to="classmates" replace />,
+          },
+        ],
+      },
+      // Student
+      {
+        path: "student",
+        element: (
+          <RequireRole allowedRoles={["STUDENT"]}>
+            <ParentStudientPrincipalPage />
+          </RequireRole>
+        ),
+        children: [],
       },
       {
-        path: "teacher/class",
-        element: <TeacherClass />,
-      },
-      {
-        path: "teacher/class/:id",
-        element: <TeacherClassChosen />,
-      },
-      {
-        path: "teacher/class/students",
-        element: <TeacherClassStudents />,
-      },
-      {
-        path: "teacher/contacts",
-        element: <TeacherContactsPage />,
-      },
-      {
-        path: "professors/chat",
-        element: <TeacherChatPage />,
-      },
-      // {
-      //   path: "classNewStudents",
-      //   element: <TeacherClassNewStudents />,
-      // },
-      {
-        path: "teacher/calendar",
-        element: <TeacherCalendar />,
-      },
-      {
-        path: "parent",
-        element: <ParentStudientPrincipalPage />,
-      },
-      {
-        path: "parent/contacts",
-        element: <ParentsContactsPage />,
-      },
-      {
-        path: "parent/chat",
-        element: <ParentChatPage />,
-      },
-      {
-        path: "parent/classmates",
-        element: <Classmates />,
-      },
-      
-      {
-        path: "admin",
-        element: <PageAdminUsers />,
-      },
-      {
-        path: "newUser",
-        element: <PageNewUser />,
+        path: "*",
+        element: <Navigate to="welcome" replace />,
       },
     ],
   },
@@ -116,11 +154,8 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "register",
-      },
-      {
         path: "*",
-        element: <Navigate to="/auth/login" />,
+        element: <Navigate to="login" replace />,
       },
     ],
   },
