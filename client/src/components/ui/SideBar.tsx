@@ -27,17 +27,17 @@ const drawerBackgroundColor = "#abd1c6";
 const parentOptions = [
   {
     text: "Performance",
-    path: "/parent",
+    path: "/parents",
     icon: <AutoGraph></AutoGraph>,
   },
   {
     text: "Classmates",
-    path: "/parent/classmates",
+    path: "/parents/classmates",
     icon: <People></People>,
   },
   {
     text: "Chat",
-    path: "",
+    path: "parents/contacts",
     icon: <Chat></Chat>,
   },
 ];

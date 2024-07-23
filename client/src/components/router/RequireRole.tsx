@@ -11,9 +11,5 @@ type RequireRoleProps = PropsWithChildren & {
 export const RequireRole = ({ children, allowedRoles }: RequireRoleProps) => {
   const { user } = useAuthStore();
 
-  return (
-    <>
-      {allowedRoles.includes(user!.type_user) ? { children } : <Unathorized />}
-    </>
-  );
+  return allowedRoles.includes(user!.type_user) ? children : <Unathorized />;
 };

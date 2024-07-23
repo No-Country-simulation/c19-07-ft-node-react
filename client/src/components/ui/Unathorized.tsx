@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import { Box, Typography, Button } from "@mui/material";
+import { ArrowBackOutlined } from "@mui/icons-material";
 
 import { LockIcon } from "../icons/LockIcon";
 
@@ -39,7 +40,12 @@ export const Unathorized = () => {
           You are not authorized to view this page.
         </Typography>
 
-        <Button variant="contained" color="secondary" onClick={goBack}>
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<ArrowBackOutlined />}
+          onClick={goBack}
+        >
           <Typography textTransform="capitalize" fontWeight="bold">
             Go Back
           </Typography>

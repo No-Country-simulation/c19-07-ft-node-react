@@ -21,7 +21,7 @@ interface ChatParticipantsProps {
 
 export const ChatParticipants = ({ onClearChat }: ChatParticipantsProps) => {
   const navigate = useNavigate();
-  
+
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
   return (
