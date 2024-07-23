@@ -6,7 +6,12 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 
-import { HomePage, NotFoundPage, ParentStudientPrincipalPage } from "./pages";
+import {
+  HomePage,
+  WelcomePage,
+  NotFoundPage,
+  ParentStudientPrincipalPage,
+} from "./pages";
 import {
   RequireRole,
   PublicRoute,
@@ -48,7 +53,7 @@ const router = createBrowserRouter([
       // Welcome
       {
         path: "welcome",
-        element: <h1>Welecome back, </h1>,
+        element: <WelcomePage />,
       },
       // Teacher
       {

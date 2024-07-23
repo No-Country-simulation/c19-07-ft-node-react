@@ -5,7 +5,7 @@ import { Box, Typography, Button } from "@mui/material";
 
 import { CompassIcon } from "../components/icons/CompassIcon";
 
-export function NotFoundPage() {
+export default function NotFoundPage() {
   return (
     <Box
       display="flex"
