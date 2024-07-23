@@ -28,7 +28,6 @@ export const Chat = ({ receiverId }: ChatProps) => {
 
   const msgsContainerRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [roomId, setRoomId] = useState<string | undefined>(undefined);
 
   const scrollToBottom = () => {
     if (!msgsContainerRef.current) return;
@@ -36,52 +35,67 @@ export const Chat = ({ receiverId }: ChatProps) => {
   };
 
   useEffect(() => {
-    if (user?.user_id) {
-      // console.log("Registering socket with user ID:", user.user_id);
-      socket.emit("register", user.user_id);
+    if (user?.user_id && receiverId) {
+      console.log("Registering socket with user ID:", user.user_id);
+      socket.emit("register", {
+        userId: user.user_id,
+        userReceiveId: receiverId,
+      });
+
+      const handleMessageHistory = (messages: Message[]) => {
+        if (Array.isArray(messages)) {
+          setMessages(messages);
+          scrollToBottom();
+        } else {
+          console.error("Message history is not an array:", messages);
+        }
+      };
+
+      const handleMessage = (msg: Message) => {
+        console.log("Message received:", msg);
+
+        setMessages((prevMessages) => {
+          if (prevMessages.some((m) => m.message_id === msg.message_id)) {
+            return prevMessages;
+          }
+          return [...prevMessages, msg];
+        });
+        scrollToBottom();
+      };
+
+      socket.on("messageHistory", handleMessageHistory);
+      socket.on("receiveMessage", handleMessage);
+
+      return () => {
+        socket.off("receiveMessage", handleMessage);
+        socket.off("messageHistory", handleMessageHistory);
+      };
     }
-
-    // const handleMessage = (msg: Message) => {
-    //   console.log("Message received:", msg);
-    //   setMessages((prevMessages) => [...prevMessages, msg]);
-    // };
-
-    socket.on("receiveMessage", (message: Message) => {
-      // console.log({ message });
-      setRoomId(message.roomId);
-      setMessages((prevMessages) => [...prevMessages, message]);
-      scrollToBottom();
-    });
-
-    return () => {
-      socket.off("receiveMessage");
-    };
-  }, [user?.user_id, messages]);
-
-  useEffect(() => {
-    console.log(roomId);
-  }, [roomId])
+  }, [user?.user_id, receiverId]);
 
   useEffect(() => {
     console.log(messages);
-  }, [messages])
-  
+  }, [messages]);
 
   const handleSendMessage = (message: string) => {
-    // if (!roomId) return;
+    if (user?.user_id && receiverId) {
+      const messageData = {
+        message,
+        userSendID: user.user_id,
+        userReceiveId: receiverId,
+      };
 
-    const newMessage: Message = {
-      message,
-      roomId,
-      userSendID: user!.user_id,
-      userReceiveId: receiverId,
-    };
+      console.log("Sending message data:", messageData);
+      socket.emit("sendMessage", messageData);
 
-    socket.emit("sendMessage", newMessage);
-
-    // setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-    // scrollToBottom();
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { ...messageData, message_id: "" },
+      ]);
+      scrollToBottom();
+    } else {
+      console.error("User ID or Receiver ID is missing.");
+    }
   };
 
   return (
@@ -112,13 +126,14 @@ export const Chat = ({ receiverId }: ChatProps) => {
           pt={2}
           overflow="auto"
         >
-          {messages.map(({ userSendID, message }, index) => (
-            <ChatMessage
-              key={index}
-              message={message}
-              isSender={userSendID === user!.user_id}
-            />
-          ))}
+          {messages &&
+            messages.map(({ userSendID, message }, index) => (
+              <ChatMessage
+                key={index}
+                message={message}
+                isSender={userSendID === user!.user_id}
+              />
+            ))}
         </Box>
       </Box>
 
