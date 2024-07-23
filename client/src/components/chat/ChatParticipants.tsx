@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { MoreHoriz } from "@mui/icons-material";
+import { ArrowBack, MoreHoriz } from "@mui/icons-material";
 import {
   Box,
   Menu,
@@ -12,6 +12,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface ChatParticipantsProps {
   // participants: User[];
@@ -19,6 +20,8 @@ interface ChatParticipantsProps {
 }
 
 export const ChatParticipants = ({ onClearChat }: ChatParticipantsProps) => {
+  const navigate = useNavigate();
+
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
   return (
@@ -27,11 +30,21 @@ export const ChatParticipants = ({ onClearChat }: ChatParticipantsProps) => {
       sx={{ bgcolor: "white", borderTopLeftRadius: 4, borderTopRightRadius: 4 }}
     >
       <Toolbar>
-        <Box flexGrow="1">
+        <Box display="flex" alignItems="center" gap={1} flexGrow="1">
           <Tooltip title="Juan">
             <Avatar alt="Juan" src="/static/images/avatar/2.jpg" />
           </Tooltip>
+
+          <Typography variant="h6" color="primary">
+            Juan
+          </Typography>
         </Box>
+
+        <Tooltip title="Back to contacts">
+          <IconButton onClick={() => navigate(-1)}>
+            <ArrowBack />
+          </IconButton>
+        </Tooltip>
 
         {/* More options menu */}
         <Tooltip title="Options">

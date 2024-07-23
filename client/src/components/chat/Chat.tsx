@@ -1,55 +1,101 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Box } from "@mui/material";
+
+import { useAuthStore } from "../../hooks";
+import { socket } from "../../socket/socket";
 
 import { ChatInput } from "./ChatInput";
 import { ChatMessage } from "./ChatMessage";
 import { ChatParticipants } from "./ChatParticipants";
 
-const authenticatedUser = {
-  id: 1,
-  name: "Juan",
-  role: "teacher",
+type Message = {
+  message_id?: string;
+  message: string;
+  roomId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  userSendID: string;
+  userReceiveId: string;
 };
 
-const initMessages = [
-  {
-    userId: 1,
-    message:
-      "Good afternoon, Mrs. Johnson. I wanted to discuss Emma's recent science project. She showed great creativity, but there are some areas where she needs to focus more.",
-  },
-  {
-    userId: 2,
-    message:
-      "Good afternoon, Prof. Smith. Thank you for reaching out. I'm happy to hear Emma was creative. Could you please elaborate on the areas that need improvement?",
-  },
-  {
-    userId: 1,
-    message:
-      "Of course. While Emma's project idea was innovative, her research lacked depth in certain scientific principles. I've left some comments on her project file and recommended some resources she can use to enhance her understanding.",
-  },
-  {
-    userId: 2,
-    message:
-      "Thank you for the detailed feedback, Prof. Smith. I will go through the comments with Emma this evening. Are there any specific topics we should focus on first?",
-  },
-  {
-    userId: 1,
-    message:
-      "Focusing on the scientific method and ensuring she backs her hypotheses with thorough research would be beneficial. Please let me know if you need any additional resources or have any questions as you go through the material.",
-  },
-];
+interface ChatProps {
+  receiverId: string;
+}
 
-// const participants = [];
+export const Chat = ({ receiverId }: ChatProps) => {
+  const { user } = useAuthStore();
 
-export const Chat = () => {
   const msgsContainerRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState(initMessages);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const scrollToBottom = () => {
     if (!msgsContainerRef.current) return;
-
     msgsContainerRef.current.scrollTop = msgsContainerRef.current.scrollHeight;
+  };
+
+  useEffect(() => {
+    if (user?.user_id && receiverId) {
+      console.log("Registering socket with user ID:", user.user_id);
+      socket.emit("register", {
+        userId: user.user_id,
+        userReceiveId: receiverId,
+      });
+
+      const handleMessageHistory = (messages: Message[]) => {
+        if (Array.isArray(messages)) {
+          setMessages(messages);
+          scrollToBottom();
+        } else {
+          console.error("Message history is not an array:", messages);
+        }
+      };
+
+      const handleMessage = (msg: Message) => {
+        console.log("Message received:", msg);
+
+        setMessages((prevMessages) => {
+          if (prevMessages.some((m) => m.message_id === msg.message_id)) {
+            return prevMessages;
+          }
+          return [...prevMessages, msg];
+        });
+        scrollToBottom();
+      };
+
+      socket.on("messageHistory", handleMessageHistory);
+      socket.on("receiveMessage", handleMessage);
+
+      return () => {
+        socket.off("receiveMessage", handleMessage);
+        socket.off("messageHistory", handleMessageHistory);
+      };
+    }
+  }, [user?.user_id, receiverId]);
+
+  useEffect(() => {
+    console.log(messages);
+  }, [messages]);
+
+  const handleSendMessage = (message: string) => {
+    if (user?.user_id && receiverId) {
+      const messageData = {
+        message,
+        userSendID: user.user_id,
+        userReceiveId: receiverId,
+      };
+
+      console.log("Sending message data:", messageData);
+      socket.emit("sendMessage", messageData);
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { ...messageData, message_id: "" },
+      ]);
+      scrollToBottom();
+    } else {
+      console.error("User ID or Receiver ID is missing.");
+    }
   };
 
   return (
@@ -80,22 +126,18 @@ export const Chat = () => {
           pt={2}
           overflow="auto"
         >
-          {messages.map(({ userId, message }, index) => (
-            <ChatMessage
-              key={index}
-              message={message}
-              isSender={userId === authenticatedUser.id}
-            />
-          ))}
+          {messages &&
+            messages.map(({ userSendID, message }, index) => (
+              <ChatMessage
+                key={index}
+                message={message}
+                isSender={userSendID === user!.user_id}
+              />
+            ))}
         </Box>
       </Box>
 
-      <ChatInput
-        onSendMessage={(message) => {
-          setMessages([...messages, { userId: 1, message }]);
-          scrollToBottom();
-        }}
-      />
+      <ChatInput onSendMessage={handleSendMessage} />
     </Box>
   );
 };

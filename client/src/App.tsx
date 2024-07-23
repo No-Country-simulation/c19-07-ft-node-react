@@ -6,25 +6,43 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 
-import { useAuthStore } from "./hooks";
-import { LoginPage, AuthLayout } from "./modules/auth/";
-import { CheckingAuth, PrivateRoute, PublicRoute } from "./components";
-import { HomePage, NotFoundPage, ParentStudientPrincipalPage } from "./pages";
-
 import {
-  TeacherPage,
-  TeacherClass,
-  TeacherCalendar,
-  TeacherClassChosen,
-  TeacherClassStudents,
-} from "./modules/teacher/pages/index.tsx";
+  HomePage,
+  WelcomePage,
+  NotFoundPage,
+  ParentStudientPrincipalPage,
+} from "./pages";
+import {
+  RequireRole,
+  PublicRoute,
+  PrivateRoute,
+  CheckingAuth,
+} from "./components";
 
-import { Classmates } from "./modules/parents/pages/Classmates.tsx";
+import { LoginPage, AuthLayout } from "./modules/auth/";
+import {
+  TeacherClass,
+  TeacherLayout,
+  TeacherCalendar,
+  TeacherChatPage,
+  TeacherClassChosen,
+  TeacherContactsPage,
+  TeacherClassStudents,
+} from "./modules/teacher";
+import {
+  Classmates,
+  ParentsLayout,
+  ParentsChatPage,
+  ParentsContactsPage,
+} from "./modules/parents";
+
 import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
+
+import { useAuthStore } from "./hooks";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/*",
     element: (
       <PrivateRoute>
         <HomePage />
@@ -32,42 +50,94 @@ const router = createBrowserRouter([
     ),
     errorElement: <NotFoundPage />,
     children: [
+      // Welcome
+      {
+        path: "welcome",
+        element: <WelcomePage />,
+      },
       // Teacher
       {
-        path: "teacher",
-        element: <TeacherPage />,
+        path: "teacher/*",
+        element: (
+          <RequireRole allowedRoles={["PROFESSOR"]}>
+            <TeacherLayout />
+          </RequireRole>
+        ),
+        children: [
+          {
+            path: "class",
+            element: <TeacherClass />,
+          },
+          {
+            path: "class/:classId",
+            element: <TeacherClassChosen />,
+          },
+          {
+            path: "class/students",
+            element: <TeacherClassStudents />,
+          },
+          {
+            path: "contacts",
+            element: <TeacherContactsPage />,
+          },
+          {
+            path: "chat/:parentId",
+            element: <TeacherChatPage />,
+          },
+          {
+            path: "classNewStudents",
+            element: <TeacherClassNewStudents />,
+          },
+          {
+            path: "calendar",
+            element: <TeacherCalendar />,
+          },
+          {
+            path: "*",
+            element: <Navigate to="class" replace />,
+          },
+        ],
+      },
+      // Parent
+      {
+        path: "parents/*",
+        element: (
+          <RequireRole allowedRoles={["PARENTS"]}>
+            <ParentsLayout />
+          </RequireRole>
+        ),
+        children: [
+          {
+            path: "classmates",
+            element: <Classmates />,
+          },
+          {
+            path: "contacts",
+            element: <ParentsContactsPage />,
+          },
+          {
+            path: "chat/:teacherId",
+            element: <ParentsChatPage />,
+          },
+          {
+            path: "*",
+            element: <Navigate to="classmates" replace />,
+          },
+        ],
+      },
+      // Student
+      {
+        path: "student",
+        element: (
+          <RequireRole allowedRoles={["STUDENT"]}>
+            <ParentStudientPrincipalPage />
+          </RequireRole>
+        ),
+        children: [],
       },
       {
-        path: "teacher/class",
-        element: <TeacherClass />,
-      },
-      {
-        path: "teacher/class/:id",
-        element: <TeacherClassChosen />,
-      },
-      {
-        path: "/teacher/class/students",
-        element: <TeacherClassStudents />,
-      },
-      {
-        path: "classNewStudents",
-        element: <TeacherClassNewStudents />,
-      },
-      {
-        path: "teacher/calendar",
-        element: <TeacherCalendar />,
-      },
-      {
-        path: "parent",
-        element: <ParentStudientPrincipalPage />,
-      },
-      {
-        path: "parent/classmates",
-        element: <Classmates />,
-      },
-      {
-        path: "studient",
-        element: <ParentStudientPrincipalPage />,
+        path: "*",
+        element: <Navigate to="welcome" replace />,
       },
     ],
   },
@@ -84,11 +154,8 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "register",
-      },
-      {
         path: "*",
-        element: <Navigate to="/auth/login" />,
+        element: <Navigate to="login" replace />,
       },
     ],
   },
