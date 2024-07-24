@@ -7,8 +7,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-// import { useStudent } from "../modules/studients/hooks/useStudent";
-// import { useEffect } from "react";
+import { useStudent } from "../modules/studients/hooks/useStudent";
+import { useEffect } from "react";
 
 
 const StudientFakeGrades = [
@@ -56,11 +56,12 @@ const StudientFakeGrades = [
 
 export const StudientAreaChart = () => {
 
-  // const {
-  //   // fetchStudents,
-  //   students
-  // } = useStudent();
+  const {
+    students
+  } = useStudent();
 
+  console.log(students);
+  
 
 
   return (
