@@ -6,6 +6,8 @@ import * as parentController from './parents.controllers'
 const parentRoutes = Router()
 
 parentRoutes.get('/', parentController.getAllParents)
+parentRoutes.get('/details', parentController.getStudentsWithDetailsController)
+parentRoutes.get('/details/:id', parentController.getStudentByIdController)
 parentRoutes.post('/', parentController.createParents)
 parentRoutes.get('/:id', parentController.getParentsById)
 parentRoutes.put('/:id', parentController.updateParents)
