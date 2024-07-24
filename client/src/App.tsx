@@ -28,6 +28,7 @@ import {
   TeacherClassChosen,
   TeacherContactsPage,
   TeacherClassStudents,
+  TeacherReport,
 } from "./modules/teacher";
 import {
   Classmates,
@@ -36,7 +37,7 @@ import {
   ParentsContactsPage,
 } from "./modules/parents";
 
-import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
+// import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
 
 import { useAuthStore } from "./hooks";
 
@@ -85,9 +86,13 @@ const router = createBrowserRouter([
             element: <TeacherChatPage />,
           },
           {
-            path: "classNewStudents",
-            element: <TeacherClassNewStudents />,
+            path: "class/student/report",
+            element: <TeacherReport />,
           },
+          // {
+          //   path: "classNewStudents",
+          //   element: <TeacherClassNewStudents />,
+          // },
           {
             path: "calendar",
             element: <TeacherCalendar />,

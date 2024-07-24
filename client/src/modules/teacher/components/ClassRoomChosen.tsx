@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { Box, Container, Grid, IconButton } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { Box, Container, Grid} from "@mui/material";
+import { useLocation, Link } from "react-router-dom";
 
 interface Student {
   grade: string;
@@ -9,7 +8,6 @@ interface Student {
 }
 
 const ClassRoomChosen = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const students = location.state?.students as Student[] || [];
 
@@ -17,9 +15,6 @@ const ClassRoomChosen = () => {
     console.log('Estudiantes:', students);
   }, [students]);
 
-  const handleBackButtonClick = () => {
-    navigate(-1);
-  };
 
   return (
     <Container disableGutters>
@@ -32,23 +27,6 @@ const ClassRoomChosen = () => {
               sx={{ backgroundColor: "#004643", padding: "4vh" }}
             >
               <Box sx={{ position: "relative" }}>
-                <IconButton
-                  onClick={handleBackButtonClick}
-                  sx={{
-                    color: "black",
-                    fontWeight: "bold",
-                    top: "-15px",
-                    height: "5vh",
-                    width: "50px",
-                    borderRadius: "0px",
-                    "&:hover": {
-                      backgroundColor: "#f9bc60",
-                    },
-                  }}
-                >
-                  <ArrowBack />
-                </IconButton>
-
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={12} md={12} lg={12}>
                     <Link
@@ -90,6 +68,10 @@ const ClassRoomChosen = () => {
                     </Link>
                   </Grid>
                   <Grid item xs={12} sm={12} md={12} lg={12}>
+                    <Link
+                      to="/teacher/calendar"
+                      style={{ textDecoration: "none" }}
+                      >
                     <Box
                       component="div"
                       sx={{
@@ -121,6 +103,7 @@ const ClassRoomChosen = () => {
                         Schedule
                       </Box>
                     </Box>
+                    </Link>
                   </Grid>
                 </Grid>
               </Box>

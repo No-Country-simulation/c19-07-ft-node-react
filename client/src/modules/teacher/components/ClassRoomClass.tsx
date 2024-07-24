@@ -1,38 +1,44 @@
 import { useState, useEffect } from "react";
 import { Box, Container, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { useAxiosPrivate } from "../../../hooks";
 
 interface Student {
   grade: string;
   section: string;
 }
-const URL_BASE = import.meta.env.VITE_API_URL;
 
 const ClassRoomClass = () => {
+  const api = useAxiosPrivate();
   const [gradeSections, setGradeSections] = useState<string[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
 
   useEffect(() => {
-    axios.get<Student[]>(`${URL_BASE}/students`)
-      .then(response => {
+    api
+      .get<Student[]>(`/students`)
+      .then((response) => {
         const studentData = response.data;
         setStudents(studentData);
 
         const uniqueGradeSections = new Set<string>();
-        studentData.forEach(student => {
+        studentData.forEach((student) => {
           uniqueGradeSections.add(`${student.grade}${student.section}`);
         });
 
         setGradeSections(Array.from(uniqueGradeSections));
       })
-      .catch(error => {
-        console.error("There was an error fetching the grades and sections!", error);
+      .catch((error) => {
+        console.error(
+          "There was an error fetching the grades and sections!",
+          error
+        );
       });
   }, []);
 
   const handleBoxClick = (gradeSection: string) => {
-    const studentsInGradeSection = students.filter(student => `${student.grade}${student.section}` === gradeSection);
+    const studentsInGradeSection = students.filter(
+      (student) => `${student.grade}${student.section}` === gradeSection
+    );
     console.log(`Estudiantes en ${gradeSection}:`, studentsInGradeSection);
   };
 
@@ -50,7 +56,12 @@ const ClassRoomClass = () => {
               <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
                 <Link
                   to={`/teacher/class/${gradeSection}`}
-                  state={{ students: students.filter(student => `${student.grade}${student.section}` === gradeSection) }}
+                  state={{
+                    students: students.filter(
+                      (student) =>
+                        `${student.grade}${student.section}` === gradeSection
+                    ),
+                  }}
                   style={{ textDecoration: "none" }}
                   onClick={() => handleBoxClick(gradeSection)}
                 >
