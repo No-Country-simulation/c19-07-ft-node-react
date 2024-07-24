@@ -1,4 +1,4 @@
-import { PrismaClient, Users } from '@prisma/client'
+import { Prisma, PrismaClient, Users } from '@prisma/client'
 import { IUserRepository } from './interface/user.interface'
 
 export class UserRepository implements IUserRepository {
@@ -20,17 +20,29 @@ export class UserRepository implements IUserRepository {
     return count
   }
 
-  async getAllUser (page: number, limit: number, filtros: { name: string, typeUser: Users['type_user'] }): Promise<Array<Omit<Users, 'password'>>> {
-    const user = await this.prisma.users.findMany({
+  async getAllUser (
+    page: number,
+    limit: number,
+    filtros: { name?: string, typeUser?: Users['type_user'] | undefined }
+  ): Promise<Array<Omit<Users, 'password'>>> {
+    // Construye el objeto de filtros de manera condicional
+    const whereConditions: Prisma.UsersWhereInput = {}
+
+    if (filtros?.name !== undefined) {
+      whereConditions.name = {
+        contains: filtros.name,
+        mode: 'insensitive'
+      }
+    }
+
+    if (filtros?.typeUser !== undefined) {
+      whereConditions.type_user = filtros.typeUser
+    }
+
+    const users = await this.prisma.users.findMany({
       skip: (page - 1) * limit,
       take: limit,
-      where: {
-        name: {
-          contains: filtros.name,
-          mode: 'insensitive'
-        },
-        type_user: filtros.typeUser
-      },
+      where: whereConditions,
       select: {
         user_id: true,
         name: true,
@@ -41,6 +53,7 @@ export class UserRepository implements IUserRepository {
         updatedAt: true
       }
     })
-    return user
+
+    return users
   }
 }

@@ -1,4 +1,4 @@
-import { PrismaClient, Users } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { NextFunction, Response } from 'express'
 import { z } from 'zod'
@@ -16,8 +16,10 @@ export class UserCtrl {
       const page = isNaN(Number(req.query.page)) ? 1 : Number(req.query.page)
       const limit = isNaN(Number(req.query.limit)) ? 10 : Number(req.query.limit)
       const name = req.query.name as string
-      const typeUser: TypeUser = typeUserSchema.parse(req.query['type-user']) as Users['type_user']
+
+      const typeUser = typeUserSchema.parse(req.query['type-user'] as TypeUser)
       const filtros = { name, typeUser }
+
       const user = await userService.getAllUsers(page, limit, filtros)
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'User retrieved successfully', user)
     } catch (error) {

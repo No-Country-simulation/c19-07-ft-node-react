@@ -22,12 +22,11 @@ export const deleteParent = async (id: string): Promise<Parents> => {
   return await prisma.parents.delete({ where: { parent_id: id } })
 }
 
-
-//Rutas especificas:
-//GET ALL
-export const getAllStudentsWithDetailsRepository = async() => {
+// Rutas especificas:
+// GET ALL
+export const getAllStudentsWithDetailsRepository = async () => {
   const data = await prisma.students.findMany({
-    
+
     // include: {
     //   user: true,
     //   parent: { include: { user: true } },
@@ -80,12 +79,10 @@ export const getAllStudentsWithDetailsRepository = async() => {
 
   })
 
-
-
   return data
 }
 
-//GET BY ID
+// GET BY ID
 // repositorio
 export const getStudentByIdRepository = async (id: string) => {
   const data = await prisma.students.findUnique({
@@ -114,10 +111,6 @@ export const getStudentByIdRepository = async (id: string) => {
         }
       }
     }
-  });
-  return data;
-
-
-};
-
-
+  })
+  return data
+}

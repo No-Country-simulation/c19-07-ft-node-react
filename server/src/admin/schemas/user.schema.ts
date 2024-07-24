@@ -1,5 +1,15 @@
-import { Users } from '@prisma/client'
 import z from 'zod'
-export const typeUserSchema = z.string()
-  .transform(value => value.toUpperCase() as Users['type_user']).refine(value => value === 'ADMIN' || value === 'PARENTS' || value === 'STUDENT' || value === 'PROFESSOR') // Transformar a mayúsculas
+export const typeUserSchema = z
+  .string()
+  .transform((value) => {
+    return value.toUpperCase()
+  })
+  .refine(
+    (value) =>
+      value === 'ADMIN' ||
+      value === 'PARENTS' ||
+      value === 'STUDENT' ||
+      value === 'PROFESSOR'
+  ).optional()
+
 export type TypeUser = z.infer<typeof typeUserSchema>

@@ -36,41 +36,41 @@ export const validateUpdateParents = (object: Partial<CreateParents>): boolean =
   return createParentSchema.safeParse(object).success
 }
 
-//RUTAS ESPECIFICAS:
+// RUTAS ESPECIFICAS:
 interface StudentDetails {
-  studentId: string;
-  studentName: string;
-  parentId: string | null;
-  parentName: string | null;
-  courses: {
-    courseId: string;
-    courseName: string;
-    professorId: string;
-    professorName: string;
-    academicAreaId: string;
-    academicAreaName: string;
-    academicRecords: {
-      recordId: string;
-      mark: number;
-      comment: string;
-      date: Date;
-    }[];
-    evaluations: {
-      evaluationId: string;
-      name: string;
-      description: string;
-      date: Date;
-      results: {
-        resultId: string;
-        studentId: string;
-        mark: number;
-        comment: string;
-      }[];
-    }[];
-  }[];
+  studentId: string
+  studentName: string
+  parentId: string | null
+  parentName: string | null
+  courses: Array<{
+    courseId: string
+    courseName: string
+    professorId: string
+    professorName: string
+    academicAreaId: string
+    academicAreaName: string
+    academicRecords: Array<{
+      recordId: string
+      mark: number
+      comment: string
+      date: Date
+    }>
+    evaluations: Array<{
+      evaluationId: string
+      name: string
+      description: string
+      date: Date
+      results: Array<{
+        resultId: string
+        studentId: string
+        mark: number
+        comment: string
+      }>
+    }>
+  }>
 }
 
-//GET ALL
+// GET ALL
 export const getStudentsWithDetailsService = async (): Promise<StudentDetails[]> => {
   const students = await parentRepository.getAllStudentsWithDetailsRepository()
   // return students.map((student: any) => ({
@@ -104,8 +104,6 @@ export const getStudentsWithDetailsService = async (): Promise<StudentDetails[]>
   //     }))
   //   }))
   // }))
-
-
 
   return students.map((student: any) => ({
     studentId: student.student_id,
@@ -142,14 +140,13 @@ export const getStudentsWithDetailsService = async (): Promise<StudentDetails[]>
           }))
       }))
     }))
-  }));
+  }))
 }
 
-//GET BY ID
+// GET BY ID
 export const getStudentByIdService = async (id: string): Promise<StudentDetails | null> => {
-
-  const student = await parentRepository.getStudentByIdRepository(id);
-  if (!student) return null;
+  const student = await parentRepository.getStudentByIdRepository(id)
+  if (student == null) return null
 
   return {
     studentId: student.student_id,
@@ -186,6 +183,5 @@ export const getStudentByIdService = async (id: string): Promise<StudentDetails 
           }))
       }))
     }))
-  };
-
-};
+  }
+}
