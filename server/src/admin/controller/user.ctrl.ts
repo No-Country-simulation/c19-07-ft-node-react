@@ -19,7 +19,7 @@ export class UserCtrl {
 
       const typeUser = typeUserSchema.parse(req.query['type-user'] as TypeUser)
       const filtros = { name, typeUser }
-      console.log('-->', filtros)
+
       const user = await userService.getAllUsers(page, limit, filtros)
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'User retrieved successfully', user)
     } catch (error) {

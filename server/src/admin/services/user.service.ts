@@ -14,7 +14,7 @@ export class UserService {
       process.env.BASE_URL !== undefined &&
       process.env.PORT_SERVER !== undefined
     ) {
-      baseUrl = `${process.env.BASE_URL}:${process.env.PORT_SERVER}/api/v1/admin/users`
+      baseUrl = `${process.env.BASE_URL}:${process.env.PORT_SERVER}/api/v1/admin/users`    
     } else {
       throw new Error('Base URL is not defined')
     }

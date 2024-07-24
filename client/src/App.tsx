@@ -108,6 +108,10 @@ const router = createBrowserRouter([
         ),
         children: [
           {
+            path: "performance",
+            element: <ParentStudientPrincipalPage />,
+          },
+          {
             path: "classmates",
             element: <Classmates />,
           },

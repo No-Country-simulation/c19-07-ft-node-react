@@ -10,5 +10,6 @@ export const typeUserSchema = z
       value === 'PARENTS' ||
       value === 'STUDENT' ||
       value === 'PROFESSOR'
-  ).optional() // Transformar a mayúsculas
+  ).optional()
+
 export type TypeUser = z.infer<typeof typeUserSchema>
