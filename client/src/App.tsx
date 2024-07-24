@@ -107,7 +107,6 @@ const router = createBrowserRouter([
           </RequireRole>
         ),
         children: [
-          
           {
             path: "performance",
             element: <ParentStudientPrincipalPage />,
