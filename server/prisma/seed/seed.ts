@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PrismaClient } from '@prisma/client'
 import { IApiRandomUser, IUserJSON } from './apiRandomUser.type'
 import bcrypt from 'bcrypt'
@@ -13,7 +14,7 @@ interface IUserDb {
   name: string
   password: string
   email: string
-  type_user: 'PROFESSOR' | 'STUDENT' | 'PARENTS'
+  type_user: 'PROFESSOR' | 'STUDENT' | 'PARENTS' | 'ADMIN'
   state: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'
 }
 const getApiRandomUser = async (): Promise<IApiRandomUser['results']> => {
@@ -74,7 +75,15 @@ const main = async (): Promise<void> => {
     ...user,
     password: bcrypt.hashSync(user.password, 10) // Encriptar la contraseña con saltos de 10
   }))
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+
+  // add user admin
+  hashedUsers.push({
+    name: 'Luis Perez García',
+    password: bcrypt.hashSync('admin123', 10),
+    email: 'admin@example.com',
+    state: 'ACTIVE',
+    type_user: 'ADMIN'
+  })
 
   for (let i = 0; i < hashedUsers.length; i++) {
     await prisma.users.create({
@@ -127,9 +136,20 @@ const main = async (): Promise<void> => {
   const coursesDb = await seederCourses()
   fs.writeFileSync('./prisma/seed/courses.json', JSON.stringify(coursesDb))
 
-  const COURSES = JSON.parse(fs.readFileSync('./prisma/seed/courses.json', 'utf8'))
-  await prisma.courses.createMany({ data: COURSES })
-
+  JSON.parse(fs.readFileSync('./prisma/seed/courses.json', 'utf8'))
+  const createdStudents = await prisma.students.findMany()
+  console.log(createdStudents[0])
+  for (const course of coursesDb) {
+    const result = await prisma.courses.create({
+      data: {
+        ...course,
+        students: {
+          connect: createdStudents
+        }
+      }
+    })
+    console.log('Courses created', result)
+  }
   await mainAcademicRecords()
 }
 main().then(async () => {
