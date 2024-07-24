@@ -3,6 +3,7 @@ import { AcademicAreaRepository } from './repositories/academicArea.repository'
 import { ConflictError } from '../errors/conflictError'
 import HTTP_STATUS from '../constants/statusCodeServer.const'
 import { NotFoundError } from '../errors/notFoundError'
+import { ResponseHandler } from '../libs/response.lib'
 export class AcademicAreaService {
   constructor (
     private readonly academicAreaRepository: AcademicAreaRepository
@@ -73,27 +74,7 @@ export class AcademicAreaService {
       limit
     )
 
-    const totalItems = totalAcademicAreas
-    const itemCount = academicAreas.length
-    const itemsPerPage = limit
-    const totalPages = Math.ceil(totalItems / itemsPerPage)
-    const currentPage = page
-    const nextPage =
-      page < totalPages ? `${baseUrl}?page=${page + 1}&limit=${limit}` : null
-    const prevPage =
-      page > 1 ? `${baseUrl}?page=${page - 1}&limit=${limit}` : null
-    return {
-      items: academicAreas,
-      meta: {
-        totalItems,
-        itemCount,
-        itemsPerPage,
-        totalPages,
-        currentPage,
-        nextPage,
-        prevPage
-      }
-    }
+    return ResponseHandler.paginate(academicAreas, totalAcademicAreas, page, limit, baseUrl)
   }
 
   async getAcademicAreaById (
