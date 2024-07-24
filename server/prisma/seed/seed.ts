@@ -7,6 +7,8 @@ import seederProfessors from './seeder.professors'
 import seederCourses from './seeder.courses'
 
 import { mainAcademicRecords } from './academicRecords.seeder'
+import { faker } from '@faker-js/faker'
+import studentRoutes from '../../src/students/students.routes'
 
 const prisma = new PrismaClient()
 const APIRANDOMUSER = 'https://randomuser.me/api/?inc=name,login,picture,email&password=upper,lower,number,8&nat=es&results=5'
@@ -116,14 +118,15 @@ const main = async (): Promise<void> => {
       section: 'A',
       user_id: user.user_id,
       educational_level_id: educationalLevels[0].level_id,
-      parentId: parentsId[i].parent_id
+      parentId: parentsId[i].parent_id,
+      feedback: faker.lorem.words(10)
     }
   })
 
   fs.writeFileSync('./prisma/seed/students.json', JSON.stringify(students))
 
   const studentsDb = JSON.parse(fs.readFileSync('./prisma/seed/students.json', 'utf8'))
-
+  console.log(studentsDb)
   await prisma.students.createMany({ data: studentsDb })
   console.log('-->', { userTypeParents, userTypeStudents })
   const professorsdb = await seederProfessors()
