@@ -1,1 +1,16 @@
-[{"grade":"1","section":"A","user_id":"clz01psym0004iwmv94tynz6n","educational_level_id":"clz01pslo0000iwmv9juanc63","parentId":"clz01psza0008iwmvlpw4g4af"},{"grade":"1","section":"A","user_id":"clz01psyq0005iwmvbuqjodj6","educational_level_id":"clz01pslo0000iwmv9juanc63","parentId":"clz01psza0009iwmvs36yn7hk"}]
+[
+    {
+        "grade": "1",
+        "section": "A",
+        "user_id": "clyzctvcu00044qnj1sw7hwtl",
+        "educational_level_id": "clyzctuun00004qnjhtkap57v",
+        "parentId": "clyzctvdj00084qnjjlvlsvc2"
+    },
+    {
+        "grade": "1",
+        "section": "A",
+        "user_id": "clyzctvcw00054qnjpdgl8wp4",
+        "educational_level_id": "clyzctuun00004qnjhtkap57v",
+        "parentId": "clyzctvdj00094qnjtpvcb1is"
+    }
+]
