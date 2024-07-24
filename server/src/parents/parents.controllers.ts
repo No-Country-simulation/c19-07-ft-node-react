@@ -82,9 +82,8 @@ export const deleteParents = async (req: Request, res: Response): Promise<void> 
   }
 }
 
-
-//rutas especificas:
-//GET ALL
+// rutas especificas:
+// GET ALL
 export const getStudentsWithDetailsController = async (req: Request, res: Response): Promise<void> => {
   try {
     const students = await parentsService.getStudentsWithDetailsService()
@@ -95,19 +94,18 @@ export const getStudentsWithDetailsController = async (req: Request, res: Respon
   }
 }
 
-
-//GET BY ID
+// GET BY ID
 export const getStudentByIdController = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
+  const { id } = req.params
   try {
-    const student = await parentsService.getStudentByIdService(id);
-    if (!student) {
-      res.status(404).json({ error: 'Student not found' });
-      return;
+    const student = await parentsService.getStudentByIdService(id)
+    if (student == null) {
+      res.status(404).json({ error: 'Student not found' })
+      return
     }
-    res.json(student);
+    res.json(student)
   } catch (error) {
-    console.error('Error getting student details:', error);
-    res.status(500).json({ error: 'An error occurred while fetching student details' });
+    console.error('Error getting student details:', error)
+    res.status(500).json({ error: 'An error occurred while fetching student details' })
   }
-};
+}

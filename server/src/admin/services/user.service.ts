@@ -6,15 +6,15 @@ export class UserService {
   constructor (private readonly userRepository: UserRepository) {}
 
   async getAllUsers (page: number, limit: number, filtro: {
-    name: string
-    typeUser: Users['type_user']
+    name?: string
+    typeUser?: Users['type_user']
   }): Promise<PaginatedResponse<Omit<Users, 'password'>>> {
     let baseUrl = ''
     if (
       process.env.BASE_URL !== undefined &&
       process.env.PORT_SERVER !== undefined
     ) {
-      baseUrl = `${process.env.BASE_URL}:${process.env.PORT_SERVER}/api/v1/academic-area`
+      baseUrl = `${process.env.BASE_URL}:${process.env.PORT_SERVER}/api/v1/admin/users`
     } else {
       throw new Error('Base URL is not defined')
     }
