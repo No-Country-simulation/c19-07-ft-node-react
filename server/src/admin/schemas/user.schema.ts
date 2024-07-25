@@ -30,7 +30,6 @@ export type CreateUserSchema = z.infer<typeof createUserSchema>
 export const updateUserSchema = z.object({
   name: z.string(),
   email: z.string().email({ message: 'Invalid email' }),
-  typeUser: z.enum(['ADMIN', 'PARENTS', 'STUDENT', 'PROFESSOR']),
-  password: z.string().min(8, { message: 'Password must be at least 8 characters long' })
+  typeUser: z.enum(['ADMIN', 'PARENTS', 'STUDENT', 'PROFESSOR'])
 })
 export type UpdateUserSchema = z.infer<typeof updateUserSchema>

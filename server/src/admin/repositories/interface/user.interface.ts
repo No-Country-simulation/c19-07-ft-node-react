@@ -1,5 +1,6 @@
 import { Users } from '@prisma/client'
 import { CreateUserSchema, UpdateUserSchema } from '../../schemas/user.schema'
+import { IUserFilter } from '../../interface/usertInterface'
 
 export interface IUserRepository {
   createUser: (data: CreateUserSchema) => Promise<Omit<Users, 'password' | 'deletedAt'>>
@@ -11,10 +12,4 @@ export interface IUserRepository {
   getAllUser: (page: number, limit: number, filtros: { name?: string, typeUser?: Users['type_user'], includeDeleted?: boolean, onlyDeleted?: boolean }) => Promise<Array<Omit<Users, 'password' | 'deletedAt'>>>
   countAllusers: () => Promise<number>
   countFilteredUsers: (filtros: IUserFilter) => Promise<number>
-}
-
-export interface IUserFilter {
-  name?: string
-  typeUser?: Users['type_user']
-  viewDeleted?: 'only' | 'include' | 'none'
 }

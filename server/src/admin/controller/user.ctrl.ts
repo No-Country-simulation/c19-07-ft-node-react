@@ -10,7 +10,8 @@ import { UserRepository } from '../repositories/user.repository'
 import { TypeUserSchemaOptional, typeUserSchemaOptional, CreateUserSchema, createUserSchema, UpdateUserSchema, updateUserSchema, QueryNameSchema, queryNameSchema } from '../schemas/user.schema'
 import { UserService } from '../services/user.service'
 import { CustomError } from '../../errors/customError'
-import { IUserFilter } from '../repositories/interface/user.interface'
+import { IUserFilter } from '../interface/usertInterface'
+
 const userService = new UserService(new UserRepository(new PrismaClient()))
 export class UserCtrl {
   async createUser (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {

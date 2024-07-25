@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient, Users } from '@prisma/client'
-import { IUserFilter, IUserRepository } from './interface/user.interface'
+import { IUserRepository } from './interface/user.interface'
 import { CreateUserSchema, UpdateUserSchema } from '../schemas/user.schema'
+import { IUserFilter } from '../interface/usertInterface'
 
 export class UserRepository implements IUserRepository {
   constructor (private readonly prisma: PrismaClient) {}
