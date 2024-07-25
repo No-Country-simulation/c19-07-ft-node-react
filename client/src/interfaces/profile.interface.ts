@@ -14,14 +14,16 @@ export interface Data {
   state: string;
   createdAt: Date;
   updatedAt: Date;
-  Students?: Student[];
-  Parents?: Parent[];
+  Students?: Student;
+  Parents?: Parent;
   Professors?: Professor[];
 }
 
 export interface Student {
   student_id: string;
   user_id: string;
+  telephone: null;
+  age: null;
   grade: string;
   section: string;
   createdAt: Date;

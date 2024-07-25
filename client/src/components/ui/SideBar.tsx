@@ -1,10 +1,14 @@
 import {
-  Close,
-  AutoGraph,
-  People,
   Chat,
-  Campaign,
+  Close,
+  People,
   School,
+  Subject,
+  Campaign,
+  AutoGraph,
+  Dashboard,
+  BorderColor,
+  FamilyRestroom,
 } from "@mui/icons-material";
 import {
   Box,
@@ -27,7 +31,7 @@ const drawerBackgroundColor = "#abd1c6";
 const parentOptions = [
   {
     text: "Performance",
-    path: "/parents",
+    path: "/parents/performance",
     icon: <AutoGraph></AutoGraph>,
   },
   {
@@ -68,6 +72,39 @@ const professorOptions = [
   },
 ];
 
+const adminOptions = [
+  {
+    text: "Dashboard",
+    path: "/admin/dashboard",
+    icon: <Dashboard></Dashboard>,
+  },
+  {
+    text: "Users",
+    path: "/admin/users",
+    icon: <People></People>,
+  },
+  {
+    text: "Students",
+    path: "/admin/students",
+    icon: <School></School>,
+  },
+  {
+    text: "Teachers",
+    path: "/admin/teachers",
+    icon: <BorderColor></BorderColor>,
+  },
+  {
+    text: "Parents",
+    path: "/admin/parents",
+    icon: <FamilyRestroom></FamilyRestroom>,
+  },
+  {
+    text: "Academic Areas",
+    path: "/admin/academic-areas",
+    icon: <Subject></Subject>,
+  },
+];
+
 export const SideBar = () => {
   const { user } = useAuthStore();
   const { isSideBarOpen, handleCloseSideBar } = useUiStore();
@@ -81,6 +118,8 @@ export const SideBar = () => {
       ? studentOptions
       : type_user === "PROFESSOR"
       ? professorOptions
+      : type_user === "ADMIN"
+      ? adminOptions
       : [];
 
   const drawerContent = (

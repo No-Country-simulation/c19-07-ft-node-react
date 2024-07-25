@@ -35,6 +35,15 @@ import {
   ParentsChatPage,
   ParentsContactsPage,
 } from "./modules/parents";
+import {
+  AdminLayout,
+  AdminUsersPage,
+  AdminParentsPage,
+  AdminStudentsPage,
+  AdminTeachersPage,
+  AdminDashboardPage,
+  AdminAcademicAreasPage,
+} from "./modules/admin";
 
 import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
 
@@ -108,6 +117,10 @@ const router = createBrowserRouter([
         ),
         children: [
           {
+            path: "performance",
+            element: <ParentStudientPrincipalPage />,
+          },
+          {
             path: "classmates",
             element: <Classmates />,
           },
@@ -134,6 +147,45 @@ const router = createBrowserRouter([
           </RequireRole>
         ),
         children: [],
+      },
+      // Admin
+      {
+        path: "admin/*",
+        element: (
+          <RequireRole allowedRoles={["ADMIN"]}>
+            <AdminLayout />
+          </RequireRole>
+        ),
+        children: [
+          {
+            path: "dashboard",
+            element: <AdminDashboardPage />,
+          },
+          {
+            path: "users",
+            element: <AdminUsersPage />,
+          },
+          {
+            path: "students",
+            element: <AdminStudentsPage />,
+          },
+          {
+            path: "teachers",
+            element: <AdminTeachersPage />,
+          },
+          {
+            path: "parents",
+            element: <AdminParentsPage />,
+          },
+          {
+            path: "academic-areas",
+            element: <AdminAcademicAreasPage />,
+          },
+          {
+            path: "*",
+            element: <Navigate to="dashboard" replace />,
+          },
+        ],
       },
       {
         path: "*",
