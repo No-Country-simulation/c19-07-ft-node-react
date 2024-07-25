@@ -1,12 +1,12 @@
 import { Prisma, PrismaClient, Users } from '@prisma/client'
-import { IUserRepository } from './interface/user.interface'
+import { IUserFilter, IUserRepository } from './interface/user.interface'
 import { CreateUserSchema, UpdateUserSchema } from '../schemas/user.schema'
 
 export class UserRepository implements IUserRepository {
   constructor (private readonly prisma: PrismaClient) {}
   async createUser (
     data: CreateUserSchema
-  ): Promise<Omit<Users, 'password'>> {
+  ): Promise<Omit<Users, 'password' | 'deletedAt'>> {
     const user = await this.prisma.users.create({
       data: {
         name: data.name,
@@ -30,7 +30,7 @@ export class UserRepository implements IUserRepository {
   async updateUser (
     userId: string,
     data: UpdateUserSchema
-  ): Promise<Omit<Users, 'password'>> {
+  ): Promise<Omit<Users, 'password' | 'deletedAt'>> {
     const user = await this.prisma.users.update({
       where: {
         user_id: userId
@@ -48,6 +48,30 @@ export class UserRepository implements IUserRepository {
         state: true,
         createdAt: true,
         updatedAt: true
+      }
+    })
+    return user
+  }
+
+  async softDeleteUser (userId: string): Promise<Users> {
+    const user = await this.prisma.users.update({
+      where: {
+        user_id: userId
+      },
+      data: {
+        deletedAt: new Date()
+      }
+    })
+    return user
+  }
+
+  async restoreUser (userId: string): Promise<Users> {
+    const user = await this.prisma.users.update({
+      where: {
+        user_id: userId
+      },
+      data: {
+        deletedAt: null
       }
     })
     return user
@@ -79,13 +103,42 @@ export class UserRepository implements IUserRepository {
     return count
   }
 
+  async countFilteredUsers (filtros: IUserFilter): Promise<number> {
+    const whereConditions: Prisma.UsersWhereInput = {}
+
+    if (filtros?.name !== undefined) {
+      whereConditions.name = {
+        contains: filtros.name,
+        mode: 'insensitive'
+      }
+    }
+
+    if (filtros?.typeUser !== undefined) {
+      whereConditions.type_user = filtros.typeUser
+    }
+
+    if (filtros?.viewDeleted === 'only') {
+      whereConditions.deletedAt = { not: null }
+    } else if (filtros?.viewDeleted !== 'include') {
+      whereConditions.deletedAt = null
+    }
+
+    return await this.prisma.users.count({
+      where: whereConditions
+    })
+  }
+
   async getAllUser (
     page: number,
     limit: number,
-    filtros: { name?: string, typeUser?: Users['type_user'] | undefined }
-  ): Promise<Array<Omit<Users, 'password'>>> {
-    // Construye el objeto de filtros de manera condicional
+    filtros: IUserFilter
+  ): Promise<Array<Omit<Users, 'password' | 'deletedAt'>>> {
     const whereConditions: Prisma.UsersWhereInput = {}
+    if (filtros?.viewDeleted === 'only') {
+      whereConditions.deletedAt = { not: null }
+    } else if (filtros?.viewDeleted !== 'include') {
+      whereConditions.deletedAt = null
+    }
 
     if (filtros?.name !== undefined) {
       whereConditions.name = {
