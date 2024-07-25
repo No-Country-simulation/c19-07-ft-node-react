@@ -17,7 +17,8 @@ export const createStudent = async (data: CreateStudent): Promise<Students> => {
       grade: data.grade,
       section: data.section,
       parentId: data.parentId,
-      educational_level_id: data.educationalLevelId
+      educational_level_id: data.educationalLevelId,
+      feedback: ''
     }
   })
 }
