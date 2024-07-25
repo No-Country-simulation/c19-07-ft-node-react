@@ -60,6 +60,7 @@ model Students {
   educational_level_id   String
   educational_level      Educational_levels?  @relation(fields: [educational_level_id], references: [level_id])
   courses                Courses[]
+  feedback String
 }
 
 model Messages {
