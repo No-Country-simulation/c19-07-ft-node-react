@@ -3,10 +3,10 @@ import {
   Close,
   People,
   School,
-  Subject,
   Campaign,
   AutoGraph,
   Dashboard,
+  SquareFoot,
   BorderColor,
   FamilyRestroom,
 } from "@mui/icons-material";
@@ -101,7 +101,7 @@ const adminOptions = [
   {
     text: "Academic Areas",
     path: "/admin/academic-areas",
-    icon: <Subject></Subject>,
+    icon: <SquareFoot></SquareFoot>,
   },
 ];
 

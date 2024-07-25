@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 
 import books from "../assets/images/books.png";
-import chalkboardBg2 from "../assets/images/chalkboard-bg.jpg";
+import chalkboardBg from "../assets/images/chalkboard-bg.jpg";
 
 import { useAuthStore } from "../hooks";
 
@@ -25,8 +25,9 @@ export default function WelcomePage() {
         height="100%"
         border={2}
         borderColor="#001E1D"
+        bgcolor="primary.main"
         sx={{
-          backgroundImage: `url(${chalkboardBg2})`,
+          backgroundImage: `url(${chalkboardBg})`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "cover",
@@ -49,21 +50,8 @@ export default function WelcomePage() {
           sx={{ userSelect: "none" }}
         >
           Welcome Back {user?.name}
-          {/* <Box
-            width="100px"
-            height="100px"
-            position="absolute"
-            bottom={-68}
-            right={-64}
-            sx={{
-              backgroundImage: `url(${chalk})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            }}
-          /> */}
         </Typography>
         <Box
-          // display={{ xs: "" }}
           width={{ xs: "100px", sm: "120px", md: "150px" }}
           height={{ xs: "100px", sm: "120px", md: "150px" }}
           position="absolute"

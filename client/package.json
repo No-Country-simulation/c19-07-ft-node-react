@@ -16,6 +16,7 @@
     "@mui/icons-material": "^5.16.0",
     "@mui/material": "^5.16.0",
     "@reduxjs/toolkit": "^2.2.6",
+    "@types/node": "^20.14.12",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
     "dayjs": "^1.11.11",

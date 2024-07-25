@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 import { Box } from "@mui/material";
 
 import {
-  AddButton,
   CustomTable,
   SearchInput,
   CustomDialog,
   CustomSelect,
   ConfirmModal,
 } from "../../../components";
-import { User } from "../../../interfaces";
+import { AddButton, UserForm } from "../components";
 import { useAxiosPrivate } from "../../../hooks";
+import { User, UsersResponse } from "../../../interfaces";
 
 const userTableColumns = [
   { id: "name", label: "Name" },
@@ -26,21 +26,29 @@ const filterItems = [
     label: "All",
   },
   {
-    value: "students",
+    value: "student",
     label: "Student",
-  },
-  {
-    value: "professors",
-    label: "Tearcher",
   },
   {
     value: "parents",
     label: "Parent",
   },
+  {
+    value: "professor",
+    label: "Tearcher",
+  },
 ];
 
 export default function AdminUsersPage() {
   const api = useAxiosPrivate();
+
+  const debounceRef = useRef<NodeJS.Timeout>();
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [totalItems, setTotalItems] = useState(0);
+  const [roleFilter, setRoleFilter] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
 
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,11 +72,11 @@ export default function AdminUsersPage() {
     setUserToEdit(null);
   };
 
-  const handleUpdateOrCreateUser = (userData: any) => {
-    // api.post("/users", userData).then((res) => {
-    //   setUsers([...users, res.data]);
-    //   setOpenDialog(false
-  };
+  // const handleUpdateOrCreateUser = (userData: any) => {
+  //   api.post("/users", userData).then((res) => {
+  //     setUsers([...users, res.data]);
+  //     setOpenDialog(false
+  // };
 
   // ? User deletion
   const handleDeleteUser = (user: any) => {
@@ -84,14 +92,39 @@ export default function AdminUsersPage() {
     // });
   };
 
+  // ? Table pagination
+  const handleChangePage = (event: any, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  // ? Filtering
+  const handleQueryChange = (value: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(() => {
+      setNameFilter(value);
+    }, 500);
+  };
+
+  // ? Data fetching
   useEffect(() => {
     setIsLoading(true);
 
-    api.get<User[]>("/users").then((res) => {
-      setUsers(res.data);
-      setIsLoading(false);
-    });
-  }, []);
+    api
+      .get<UsersResponse>(
+        `/admin/users?page=${page + 1}&limit=${rowsPerPage}&name=${nameFilter}`
+      )
+      .then((res) => {
+        setUsers(res.data.data.items);
+        setTotalItems(res.data.data.meta.totalItems);
+        setIsLoading(false);
+      });
+  }, [api, page, rowsPerPage, roleFilter, nameFilter]);
 
   return (
     <Box
@@ -108,29 +141,28 @@ export default function AdminUsersPage() {
         pb={2}
         gap={2}
       >
-        <SearchInput />
+        <SearchInput onChange={handleQueryChange} />
 
         <CustomSelect
           label="Select a role"
           items={filterItems}
-          onChange={() => {}}
+          onChange={setRoleFilter}
         />
 
-        <AddButton
-          label="Add"
-          variant="outlined"
-          sx={{ width: { xs: "100%", sm: "120px" }, ml: { xs: 0, sm: "auto" } }}
-          onClick={() => setOpenDialog(true)}
-        />
+        <AddButton onClick={() => setOpenDialog(true)} />
       </Box>
 
       <CustomTable
-        totalCount={0}
+        count={totalItems}
         rows={users}
+        page={page}
+        rowsPerPage={rowsPerPage}
         columns={userTableColumns}
         isLoading={isLoading}
         onEdit={handleSetUserToEdit}
         onDelete={handleDeleteUser}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
       />
 
       <CustomDialog
@@ -139,7 +171,7 @@ export default function AdminUsersPage() {
         title={userToEdit ? "Edit User" : "Create User"}
         btnLabel={userToEdit ? "Update" : "Create"}
       >
-        {/* User Form here */}
+        <UserForm onSubmit={(data) => console.log(data)} />
       </CustomDialog>
 
       <ConfirmModal

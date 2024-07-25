@@ -1,4 +1,4 @@
-import { type ChangeEvent, useState } from "react";
+import type { ChangeEvent } from "react";
 
 import {
   Paper,
@@ -17,33 +17,29 @@ import { Delete, Edit } from "@mui/icons-material";
 
 interface CustomTableProps {
   rows: any[];
+  page: number;
+  rowsPerPage: number;
   columns: { id: string; label: string }[];
   isLoading: boolean;
-  totalCount?: number;
+  count: number;
   onEdit: (row: any) => void;
   onDelete: (row: any) => void;
+  onChangePage: (event: any, newPage: number) => void;
+  onChangeRowsPerPage: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const CustomTable = ({
   rows,
+  page,
+  count,
   onEdit,
   columns,
   onDelete,
   isLoading,
-  totalCount,
+  rowsPerPage,
+  onChangePage,
+  onChangeRowsPerPage,
 }: CustomTableProps) => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const handleChangePage = (event: any, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
   return (
     <Paper sx={{ bgcolor: "secondary.main", width: "100%" }}>
       <TableContainer>
@@ -78,11 +74,7 @@ export const CustomTable = ({
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Delete">
-                      <IconButton
-                        color="error"
-                        sx={{ marginLeft: 1 }}
-                        onClick={() => onDelete(row)}
-                      >
+                      <IconButton color="error" onClick={() => onDelete(row)}>
                         <Delete />
                       </IconButton>
                     </Tooltip>
@@ -91,7 +83,7 @@ export const CustomTable = ({
               ))}
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={5} align="center">
+                <TableCell colSpan={columns.length + 1} align="center">
                   <CircularProgress />
                 </TableCell>
               </TableRow>
@@ -103,11 +95,11 @@ export const CustomTable = ({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={totalCount ?? rows.length}
+        count={count}
         rowsPerPage={rowsPerPage}
         page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        onPageChange={onChangePage}
+        onRowsPerPageChange={onChangeRowsPerPage}
       />
     </Paper>
   );

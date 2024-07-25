@@ -20,15 +20,15 @@ export const CustomSelect = ({ label, items, onChange }: CustomSelectProps) => {
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     setValue(event.target.value);
-    onChange(value);
+    onChange(event.target.value);
   };
 
   return (
     <Box width={{ xs: "100%", sm: "150px" }}>
       <FormControl fullWidth>
-        <InputLabel id="custom-select">{label}</InputLabel>
+        <InputLabel id="custom-select-label">{label}</InputLabel>
         <Select
-          id="custom-select"
+          labelId="custom-select-label"
           label={label}
           value={value}
           onChange={handleChange}
