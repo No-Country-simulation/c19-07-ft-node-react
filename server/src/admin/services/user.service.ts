@@ -2,7 +2,7 @@ import { Users } from '@prisma/client'
 import { UserRepository } from '../repositories/user.repository'
 import { PaginatedResponse, ResponseHandler } from '../../libs/response.lib'
 import { AuthService } from '../../auth/auth.service'
-import { CreateUserSchema } from '../schemas/user.schema'
+import { CreateUserSchema, UpdateUserSchema } from '../schemas/user.schema'
 import { NotFoundError } from '../../errors/notFoundError'
 import HTTP_STATUS from '../../constants/statusCodeServer.const'
 import { IUserFilter } from '../repositories/interface/user.interface'
@@ -15,7 +15,7 @@ export class UserService {
     return user
   }
 
-  async updateUser (userId: string, data: CreateUserSchema): Promise<Omit<Users, 'password' | 'deletedAt'>> {
+  async updateUser (userId: string, data: UpdateUserSchema): Promise<Omit<Users, 'password' | 'deletedAt'>> {
     const existUser = await this.userRepository.findUserById(userId)
     if (existUser === null) {
       throw new NotFoundError('User not found', HTTP_STATUS.NOT_FOUND)
