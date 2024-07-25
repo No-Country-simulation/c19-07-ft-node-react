@@ -1,8 +1,12 @@
 import z from 'zod'
 
+export const queryNameSchema = z.string().optional()
+export type QueryNameSchema = z.infer<typeof queryNameSchema>
+
 export const typeUserSchemaOptional = z
   .string()
   .transform((value) => {
+    if (value === '') return undefined
     return value.toUpperCase()
   })
   .refine(
@@ -10,7 +14,8 @@ export const typeUserSchemaOptional = z
       value === 'ADMIN' ||
       value === 'PARENTS' ||
       value === 'STUDENT' ||
-      value === 'PROFESSOR'
+      value === 'PROFESSOR' ||
+      value === undefined
   ).optional()
 export type TypeUserSchemaOptional = z.infer<typeof typeUserSchemaOptional>
 
