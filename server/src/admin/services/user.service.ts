@@ -5,6 +5,7 @@ import { AuthService } from '../../auth/auth.service'
 import { CreateUserSchema } from '../schemas/user.schema'
 import { NotFoundError } from '../../errors/notFoundError'
 import HTTP_STATUS from '../../constants/statusCodeServer.const'
+import { IUserFilter } from '../repositories/interface/user.interface'
 
 export class UserService {
   constructor (private readonly userRepository: UserRepository) {}
@@ -41,11 +42,7 @@ export class UserService {
     return user
   }
 
-  async getAllUsers (page: number, limit: number, filtro: {
-    name?: string
-    typeUser?: Users['type_user']
-    includeDeleted?: boolean
-  }): Promise<PaginatedResponse<Omit<Users, 'password' | 'deletedAt'>>> {
+  async getAllUsers (page: number, limit: number, filtro: IUserFilter): Promise<PaginatedResponse<Omit<Users, 'password' | 'deletedAt'>>> {
     let baseUrl = ''
     if (
       process.env.BASE_URL !== undefined &&
@@ -55,7 +52,7 @@ export class UserService {
     } else {
       throw new Error('Base URL is not defined')
     }
-    const totalUser = await this.userRepository.countAllusers()
+    const totalUser = await this.userRepository.countFilteredUsers(filtro)
     const users = await this.userRepository.getAllUser(page, limit, filtro)
     const listUsers = ResponseHandler.paginate(users, totalUser, page, limit, baseUrl)
     return listUsers

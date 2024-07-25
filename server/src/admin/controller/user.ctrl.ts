@@ -87,9 +87,10 @@ export class UserCtrl {
       const page = isNaN(Number(req.query.page)) ? 1 : Number(req.query.page)
       const limit = isNaN(Number(req.query.limit)) ? 10 : Number(req.query.limit)
       const name = req.query.name as string
-      const includeDeleted = req.body.includeDeleted as boolean
+      const viewDeleted = req.body.viewDeleted
+      // const onlyDeleted = req.body.onlyDeleted as boolean
       const typeUser = typeUserSchemaOptional.parse(req.query['type-user'] as TypeUserSchemaOptional)
-      const filtros = { name, typeUser, includeDeleted }
+      const filtros = { name, typeUser, viewDeleted }
 
       const user = await userService.getAllUsers(page, limit, filtros)
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'User retrieved successfully', user)
