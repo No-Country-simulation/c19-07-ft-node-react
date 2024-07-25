@@ -5,7 +5,7 @@ import { AuthService } from '../../auth/auth.service'
 import { CreateUserSchema, UpdateUserSchema } from '../schemas/user.schema'
 import { NotFoundError } from '../../errors/notFoundError'
 import HTTP_STATUS from '../../constants/statusCodeServer.const'
-import { IUserFilter } from '../repositories/interface/user.interface'
+import { IUserFilter } from '../interface/usertInterface'
 
 export class UserService {
   constructor (private readonly userRepository: UserRepository) {}
