@@ -50,14 +50,46 @@ export class UserCtrl {
     }
   }
 
+  async softDeleteUser (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.params.id
+      const user = await userService.softDeleteUser(userId)
+      new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'User deleted successfully', user)
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        return new ResponseHandler(res).sendError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'server error')
+      }
+      if (error instanceof CustomError && error.name === 'NotFoundError') {
+        return new ResponseHandler(res).sendError(error.statusCode, error.message)
+      }
+      next(error)
+    }
+  }
+
+  async restoreUser (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.params.id
+      const user = await userService.restoreUser(userId)
+      new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'User restored successfully', user)
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        return new ResponseHandler(res).sendError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'server error')
+      }
+      if (error instanceof CustomError && error.name === 'NotFoundError') {
+        return new ResponseHandler(res).sendError(error.statusCode, error.message)
+      }
+      next(error)
+    }
+  }
+
   async getAllUsers (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const page = isNaN(Number(req.query.page)) ? 1 : Number(req.query.page)
       const limit = isNaN(Number(req.query.limit)) ? 10 : Number(req.query.limit)
       const name = req.query.name as string
-
+      const includeDeleted = req.body.includeDeleted as boolean
       const typeUser = typeUserSchemaOptional.parse(req.query['type-user'] as TypeUserSchemaOptional)
-      const filtros = { name, typeUser }
+      const filtros = { name, typeUser, includeDeleted }
 
       const user = await userService.getAllUsers(page, limit, filtros)
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'User retrieved successfully', user)

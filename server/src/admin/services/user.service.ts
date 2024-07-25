@@ -8,13 +8,13 @@ import HTTP_STATUS from '../../constants/statusCodeServer.const'
 
 export class UserService {
   constructor (private readonly userRepository: UserRepository) {}
-  async createUser (data: CreateUserSchema): Promise<Omit<Users, 'password'>> {
+  async createUser (data: CreateUserSchema): Promise<Omit<Users, 'password' | 'deletedAt'>> {
     const dataParseUser = { ...data, password: AuthService.hashPassword(data.password) }
     const user = await this.userRepository.createUser(dataParseUser)
     return user
   }
 
-  async updateUser (userId: string, data: CreateUserSchema): Promise<Omit<Users, 'password'>> {
+  async updateUser (userId: string, data: CreateUserSchema): Promise<Omit<Users, 'password' | 'deletedAt'>> {
     const existUser = await this.userRepository.findUserById(userId)
     if (existUser === null) {
       throw new NotFoundError('User not found', HTTP_STATUS.NOT_FOUND)
@@ -23,10 +23,29 @@ export class UserService {
     return user
   }
 
+  async softDeleteUser (userId: string): Promise<Users> {
+    const existUser = await this.userRepository.findUserById(userId)
+    if (existUser === null) {
+      throw new NotFoundError('User not found', HTTP_STATUS.NOT_FOUND)
+    }
+    const user = await this.userRepository.softDeleteUser(userId)
+    return user
+  }
+
+  async restoreUser (userId: string): Promise<Users> {
+    const existUser = await this.userRepository.findUserById(userId)
+    if (existUser === null) {
+      throw new NotFoundError('User not found', HTTP_STATUS.NOT_FOUND)
+    }
+    const user = await this.userRepository.restoreUser(userId)
+    return user
+  }
+
   async getAllUsers (page: number, limit: number, filtro: {
     name?: string
     typeUser?: Users['type_user']
-  }): Promise<PaginatedResponse<Omit<Users, 'password'>>> {
+    includeDeleted?: boolean
+  }): Promise<PaginatedResponse<Omit<Users, 'password' | 'deletedAt'>>> {
     let baseUrl = ''
     if (
       process.env.BASE_URL !== undefined &&
