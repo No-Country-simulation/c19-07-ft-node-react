@@ -7,6 +7,7 @@ const parentCtrl = new ParentCtrl()
 const router: Router = Router()
 
 router.get('/users', userCtrl.getAllUsers)
+router.get('/active-students', userCtrl.getActiveUsersByTypeUser)
 router.get('/parents', parentCtrl.getAllParents)
 router.post('/create-user', userCtrl.createUser)
 router.put('/update-user/:id', userCtrl.updateUser)

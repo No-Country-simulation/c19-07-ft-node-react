@@ -19,6 +19,13 @@ export const typeUserSchemaOptional = z
   ).optional()
 export type TypeUserSchemaOptional = z.infer<typeof typeUserSchemaOptional>
 
+export const queryParamsSchema = z.object({
+  'type-user': z.string().transform((val) => val.toUpperCase()).refine((val) => ['ADMIN', 'PARENTS', 'STUDENT', 'PROFESSOR'].includes(val), {
+    message: 'Invalid type-user value'
+  })
+})
+export type QueryParamsSchema = z.infer<typeof queryParamsSchema>
+
 export const createUserSchema = z.object({
   name: z.string(),
   email: z.string().email({ message: 'Invalid email' }),

@@ -169,4 +169,14 @@ export class UserRepository implements IUserRepository {
 
     return users
   }
+
+  async countActiveUsersByTypeUser (typeUSer: Users['type_user']): Promise<number> {
+    const count = await this.prisma.users.count({
+      where: {
+        type_user: typeUSer,
+        state: 'ACTIVE'
+      }
+    })
+    return count
+  }
 }
