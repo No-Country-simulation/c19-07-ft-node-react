@@ -3,12 +3,23 @@ import { UserRepository } from '../repositories/user.repository'
 import { PaginatedResponse, ResponseHandler } from '../../libs/response.lib'
 import { AuthService } from '../../auth/auth.service'
 import { CreateUserSchema } from '../schemas/user.schema'
+import { NotFoundError } from '../../errors/notFoundError'
+import HTTP_STATUS from '../../constants/statusCodeServer.const'
 
 export class UserService {
   constructor (private readonly userRepository: UserRepository) {}
   async createUser (data: CreateUserSchema): Promise<Omit<Users, 'password'>> {
     const dataParseUser = { ...data, password: AuthService.hashPassword(data.password) }
     const user = await this.userRepository.createUser(dataParseUser)
+    return user
+  }
+
+  async updateUser (userId: string, data: CreateUserSchema): Promise<Omit<Users, 'password'>> {
+    const existUser = await this.userRepository.findUserById(userId)
+    if (existUser === null) {
+      throw new NotFoundError('User not found', HTTP_STATUS.NOT_FOUND)
+    }
+    const user = await this.userRepository.updateUser(userId, data)
     return user
   }
 

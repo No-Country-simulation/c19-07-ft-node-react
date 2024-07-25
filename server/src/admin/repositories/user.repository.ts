@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient, Users } from '@prisma/client'
 import { IUserRepository } from './interface/user.interface'
-import { CreateUserSchema } from '../schemas/user.schema'
+import { CreateUserSchema, UpdateUserSchema } from '../schemas/user.schema'
 
 export class UserRepository implements IUserRepository {
   constructor (private readonly prisma: PrismaClient) {}
@@ -27,6 +27,32 @@ export class UserRepository implements IUserRepository {
     return user
   }
 
+  async updateUser (
+    userId: string,
+    data: UpdateUserSchema
+  ): Promise<Omit<Users, 'password'>> {
+    const user = await this.prisma.users.update({
+      where: {
+        user_id: userId
+      },
+      data: {
+        name: data.name,
+        email: data.email,
+        type_user: data.typeUser
+      },
+      select: {
+        name: true,
+        type_user: true,
+        user_id: true,
+        email: true,
+        state: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    })
+    return user
+  }
+
   async findUserByName (name: string): Promise<Users[]> {
     const user = await this.prisma.users.findMany({
       where: {
@@ -34,6 +60,15 @@ export class UserRepository implements IUserRepository {
           contains: name,
           mode: 'insensitive'
         }
+      }
+    })
+    return user
+  }
+
+  async findUserById (userId: string): Promise<Users | null> {
+    const user = await this.prisma.users.findUnique({
+      where: {
+        user_id: userId
       }
     })
     return user
