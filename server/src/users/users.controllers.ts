@@ -21,7 +21,7 @@ export const createUsersControllers = async (req: Request, res: Response, next: 
     const { name, email, password, type_user: typeUser } = req.body
 
     // Crear el objeto de datos del usuario con las propiedades requeridas
-    const userData: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt'> = {
+    const userData: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> = {
       name,
       email,
       password,

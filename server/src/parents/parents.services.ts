@@ -73,37 +73,6 @@ interface StudentDetails {
 // GET ALL
 export const getStudentsWithDetailsService = async (): Promise<StudentDetails[]> => {
   const students = await parentRepository.getAllStudentsWithDetailsRepository()
-  // return students.map((student: any) => ({
-  //   studentId: student.student_id,
-  //   studentName: student.user.name,
-  //   parentId: student.parent?.parent_id || null,
-  //   parentName: student.parent?.user.name || null,
-  //   courses: student.courses.map((course: any) => ({
-  //     courseId: course.cursos_id,
-  //     courseName: course.nombre,
-  //     professorId: course.professor?.professor_id || '', // Verifica que `professor` no sea `undefined`
-  //     professorName: course.professor?.user?.name || 'No Name', // Accede al nombre del profesor      academicAreaId: course.academic_area_id,
-  //     academicAreaName: course.academic_area.name,
-  //     academicRecords: course.academic_record.map((record: any) => ({
-  //       recordId: record.historial_id,
-  //       mark: record.mark,
-  //       comment: record.comment,
-  //       date: record.date
-  //     })),
-  //     evaluations: course.evaluations.map((evaluation: any) => ({
-  //       evaluationId: evaluation.evaluation_id,
-  //       name: evaluation.name,
-  //       description: evaluation.description,
-  //       date: evaluation.date,
-  //       results: evaluation.evaluation_result.map((result: any) => ({
-  //         resultId: result.result_id,
-  //         studentId: result.student_id,
-  //         mark: result.mark,
-  //         comment: result.comment
-  //       }))
-  //     }))
-  //   }))
-  // }))
 
   return students.map((student: any) => ({
     studentId: student.student_id,
@@ -184,4 +153,13 @@ export const getStudentByIdService = async (id: string): Promise<StudentDetails 
       }))
     }))
   }
+}
+
+// GET all parents | nombreEstudiante|nombredelPadre|emaildelPadre
+
+export const getStudentParentDetailsServices = async () => {
+  const data = await parentRepository.getStudentParentDetailsRepository()
+  
+  return data
+
 }
