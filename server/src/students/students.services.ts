@@ -1,5 +1,5 @@
 // src/modules/students/services/student.service.ts
-import { Academic_records, PrismaClient, Students } from '@prisma/client'
+import { Academic_records, Educational_levels, PrismaClient, Students } from '@prisma/client'
 import * as studentRepository from '../students/students.repository'
 import { CreateStudent } from './schemas/student.schema'
 import { UserRepository } from '../auth/repositories/user.repository'
@@ -36,4 +36,12 @@ export const getFeedback = async (id: string): Promise<Academic_records[]> => {
 
 export const studentsFromCourse = async (id: string): Promise<Students[]> => {
   return await studentRepository.getStudentsByCourse(id)
+}
+
+export const getStudentMarksByCourse = async (courseId: string, studentId: string): Promise<Academic_records[]> => {
+  return await studentRepository.getAcademicRecordsByCourse(courseId, studentId)
+}
+
+export const getStudentEducationalLevel = async (id: string): Promise<Educational_levels | null> => {
+  return await studentRepository.getStudentEducationalLevel(id)
 }

@@ -1,4 +1,4 @@
-import { Courses, Students } from '@prisma/client'
+import { Courses, Students, Users } from '@prisma/client'
 export interface CreateProfessor {
   academicAreaId: string
   hireDate: Date
@@ -17,5 +17,7 @@ export interface CreateEvaluationAndResults {
 }
 export interface StudentsAndCourse {
   course: Courses
-  students: Students[]
+  students: StudentsWithData[]
+}
+export interface StudentsWithData extends Students, Partial<Pick<Users, 'name'>> {
 }

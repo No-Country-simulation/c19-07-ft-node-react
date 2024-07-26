@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // src/modules/professors/services/professor.service.ts
-import { Courses, Evaluation_results, Evaluations, Professors } from '@prisma/client'
+import { Courses, Evaluation_results, Evaluations, Professors, Students, Users } from '@prisma/client'
 import * as professorRepository from '../professors/professors.repository'
-import { CreateEvaluationAndResults, CreateProfessor, StudentsAndCourse } from '../types/professors.type'
+import { CreateEvaluationAndResults, CreateProfessor, StudentsAndCourse, StudentsWithData } from '../types/professors.type'
 import z from 'zod'
-import { studentsFromCourse } from '../students/students.services'
+import { getStudentEducationalLevel, getStudentMarksByCourse, studentsFromCourse } from '../students/students.services'
 import { DatabaseError } from '../errors/databaseError'
 import { LogicError } from '../errors/logicError'
+import { getUserByIdServices } from '../users/users.services'
 
 export const getAllProfessors = async (): Promise<Professors[]> => {
   return await professorRepository.getAllProfessors()
@@ -78,9 +79,10 @@ export const studentsFromCourses = async (courses: Courses[]): Promise<StudentsA
   try {
     for (const course of courses) {
       const students = await studentsFromCourse(course.cursos_id)
+      const studentsWithData = await getStudentData(students, course.cursos_id)
       const courseAndStudents = {
         course,
-        students
+        students: studentsWithData
       }
       coursesAndStudents.push(courseAndStudents)
     }
@@ -96,6 +98,46 @@ export const studentsFromCourses = async (courses: Courses[]): Promise<StudentsA
 }
 
 
+const getStudentData = async (students: Students[], courseId: string): Promise<StudentsWithData[]> => {
+  try {
+    const studentsWithData: StudentsWithData[] = []
+    for (const student of students) {
+      const user: Users | null = await getUserByIdServices(student.user_id)
+      if (user === null) throw new DatabaseError('User not found')
+
+      const mark = await getStudentMark(courseId, student.student_id)
+      if (typeof mark !== 'number') throw new LogicError('Error cannot calculate mark for student')
+
+      const educationalLevel = await getStudentEducationalLevel(student.educational_level_id)
+      const studentWithData = {
+        ...student,
+        name: user?.name,
+        mark,
+        educationalLevel: educationalLevel?.name
+      }
+
+      studentsWithData.push(studentWithData)
+    }
+    return await new Promise((resolve, reject) => {
+      if (studentsWithData.length <= 0) throw new LogicError('Cannot relation students with users')
+      resolve(studentsWithData)
+    })
+  } catch (e: any) {
+    if (e instanceof LogicError) throw new LogicError(e.message)
+    throw new DatabaseError(e.message)
+  }
+}
+
+const getStudentMark = async (courseId: string, studentId: string): Promise<number> => {
+  try {
+    const records = await getStudentMarksByCourse(courseId, studentId)
+    if (records.length <= 0) throw new DatabaseError('Marks not found')
+    const sumMarks = records.reduce((total, record) => total + record.mark, 0)
+    return sumMarks / records.length
+  } catch (e: any) {
+    throw new DatabaseError(e)
+  }
+}
 
 
 //New
