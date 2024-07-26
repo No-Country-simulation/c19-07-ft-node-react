@@ -13,7 +13,6 @@ import {
 import { useAxiosPrivate } from "../../../hooks";
 import { AddButton, UserForm } from "../components";
 import { User, UsersResponse } from "../../../interfaces";
-import { useFormVisivility } from "../components/hooks/useFormVisivility";
 
 const userTableColumns = [
   { id: "name", label: "Name" },
@@ -46,13 +45,12 @@ export default function AdminUsersPage() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
   const [roleFilter, setRoleFilter] = useState("");
   const [nameFilter, setNameFilter] = useState("");
-  
+
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -63,8 +61,6 @@ export default function AdminUsersPage() {
     userId: string;
     userName: string;
   } | null>(null);
-  
-  // const { isVisible } = useFormVisivility(!!userToEdit);
 
   // const [isDeleting, setIsDeleting] = useState(false);
   // const [isLoadingUserToEdit, setIsLoadingUserToEdit] = useState(false);
@@ -85,22 +81,14 @@ export default function AdminUsersPage() {
 
   const handleUpdateOrCreateUser = (userData: any) => {
     if (userToEdit) {
-      api
-        .put(`/admin/update-user/${userToEdit.user_id}`, userData)
-        .then((res) => {
-          setUsers((prev) =>
-            prev.map((user) =>
-              user.user_id === res.data.user_id ? { ...res.data } : user
-            )
-          );
-          enqueueSnackbar("User successfully updated!", { variant: "success" });
-          setOpenDialog(false);
-        });
+      api.put(`/admin/update-user/${userToEdit.user_id}`, userData).then(() => {
+        getUsers();
+        enqueueSnackbar("User successfully updated!", { variant: "success" });
+        setOpenDialog(false);
+      });
     } else {
       console.log(userData);
       api.post("/admin/create-user", userData).then(() => {
-        // setUsers([...users, res.data]);
-        // setTotalItems((prev) => prev + 1);
         getUsers();
         enqueueSnackbar("User successfully created!", { variant: "success" });
         setOpenDialog(false);
@@ -199,10 +187,7 @@ export default function AdminUsersPage() {
         title={userToEdit ? "Edit User" : "Create User"}
       >
         {/* {userToEdit !== undefined &&  */}
-          <UserForm
-            userToEdit={{ ...userToEdit }}
-            onSubmit={handleUpdateOrCreateUser}
-          />
+        <UserForm userToEdit={userToEdit} onSubmit={handleUpdateOrCreateUser} />
         {/* } */}
       </CustomDialog>
 
