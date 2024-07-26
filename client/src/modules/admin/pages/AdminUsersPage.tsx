@@ -1,6 +1,7 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import { Box } from "@mui/material";
+import { useSnackbar } from "notistack";
 
 import {
   CustomTable,
@@ -9,9 +10,10 @@ import {
   CustomSelect,
   ConfirmModal,
 } from "../../../components";
-import { AddButton, UserForm } from "../components";
 import { useAxiosPrivate } from "../../../hooks";
+import { AddButton, UserForm } from "../components";
 import { User, UsersResponse } from "../../../interfaces";
+import { useFormVisivility } from "../components/hooks/useFormVisivility";
 
 const userTableColumns = [
   { id: "name", label: "Name" },
@@ -42,41 +44,69 @@ const filterItems = [
 export default function AdminUsersPage() {
   const api = useAxiosPrivate();
 
-  const debounceRef = useRef<NodeJS.Timeout>();
+  const { enqueueSnackbar } = useSnackbar();
 
+  
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
   const [roleFilter, setRoleFilter] = useState("");
   const [nameFilter, setNameFilter] = useState("");
-
+  
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
-  const [userToEdit, setUserToEdit] = useState<User | null>(null);
+  const [userToEdit, setUserToEdit] = useState<User | undefined>(undefined);
   const [userToDelete, setUserToDelete] = useState<{
     userId: string;
     userName: string;
   } | null>(null);
+  
+  // const { isVisible } = useFormVisivility(!!userToEdit);
+
+  // const [isDeleting, setIsDeleting] = useState(false);
+  // const [isLoadingUserToEdit, setIsLoadingUserToEdit] = useState(false);
 
   // ? User creation or update
   const handleSetUserToEdit = (user: User) => {
     setOpenDialog(true);
-    setUserToEdit(user);
+
+    api.get(`/users/${user.user_id}`).then((res) => {
+      setUserToEdit(res.data);
+    });
   };
 
   const handleCloseUserDialog = () => {
     setOpenDialog(false);
-    setUserToEdit(null);
+    setUserToEdit(undefined);
   };
 
-  // const handleUpdateOrCreateUser = (userData: any) => {
-  //   api.post("/users", userData).then((res) => {
-  //     setUsers([...users, res.data]);
-  //     setOpenDialog(false
-  // };
+  const handleUpdateOrCreateUser = (userData: any) => {
+    if (userToEdit) {
+      api
+        .put(`/admin/update-user/${userToEdit.user_id}`, userData)
+        .then((res) => {
+          setUsers((prev) =>
+            prev.map((user) =>
+              user.user_id === res.data.user_id ? { ...res.data } : user
+            )
+          );
+          enqueueSnackbar("User successfully updated!", { variant: "success" });
+          setOpenDialog(false);
+        });
+    } else {
+      console.log(userData);
+      api.post("/admin/create-user", userData).then(() => {
+        // setUsers([...users, res.data]);
+        // setTotalItems((prev) => prev + 1);
+        getUsers();
+        enqueueSnackbar("User successfully created!", { variant: "success" });
+        setOpenDialog(false);
+      });
+    }
+  };
 
   // ? User deletion
   const handleDeleteUser = (user: any) => {
@@ -85,11 +115,12 @@ export default function AdminUsersPage() {
   };
 
   const handleConfirmDeletion = () => {
-    console.log(userToDelete?.userId);
-    // api.delete(`/users/${userToDelete?.userId}`).then(() => {
-    //   setUsers(users.filter((user) => user.id !== userToDelete?.userId));
-    //   setOpenModal(false);
-    // });
+    api.delete(`/admin/delete-user/${userToDelete?.userId}`).then(() => {
+      setUsers(users.filter((user) => user.user_id !== userToDelete?.userId));
+      setTotalItems((prev) => prev - 1);
+      enqueueSnackbar("User successfully deleted!", { variant: "success" });
+      setOpenModal(false);
+    });
   };
 
   // ? Table pagination
@@ -102,29 +133,26 @@ export default function AdminUsersPage() {
     setPage(0);
   };
 
-  // ? Filtering
-  const handleQueryChange = (value: string) => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-
-    debounceRef.current = setTimeout(() => {
-      setNameFilter(value);
-    }, 500);
-  };
-
-  // ? Data fetching
-  useEffect(() => {
+  const getUsers = async () => {
     setIsLoading(true);
 
     api
       .get<UsersResponse>(
-        `/admin/users?page=${page + 1}&limit=${rowsPerPage}&name=${nameFilter}`
+        `/admin/users?page=${
+          page + 1
+        }&limit=${rowsPerPage}&name=${nameFilter}&type-user=${roleFilter}`
       )
       .then((res) => {
         setUsers(res.data.data.items);
         setTotalItems(res.data.data.meta.totalItems);
         setIsLoading(false);
       });
-  }, [api, page, rowsPerPage, roleFilter, nameFilter]);
+  };
+
+  // ? Data fetching
+  useEffect(() => {
+    getUsers();
+  }, [page, rowsPerPage, roleFilter, nameFilter]);
 
   return (
     <Box
@@ -141,7 +169,7 @@ export default function AdminUsersPage() {
         pb={2}
         gap={2}
       >
-        <SearchInput onChange={handleQueryChange} />
+        <SearchInput onChange={setNameFilter} />
 
         <CustomSelect
           label="Select a role"
@@ -169,9 +197,13 @@ export default function AdminUsersPage() {
         open={openDialog}
         onClose={handleCloseUserDialog}
         title={userToEdit ? "Edit User" : "Create User"}
-        btnLabel={userToEdit ? "Update" : "Create"}
       >
-        <UserForm onSubmit={(data) => console.log(data)} />
+        {/* {userToEdit !== undefined &&  */}
+          <UserForm
+            userToEdit={{ ...userToEdit }}
+            onSubmit={handleUpdateOrCreateUser}
+          />
+        {/* } */}
       </CustomDialog>
 
       <ConfirmModal

@@ -1,4 +1,4 @@
-import { User } from "./user.interface";
+import { User } from ".";
 
 export interface UsersResponse {
   success: boolean;

@@ -81,6 +81,13 @@ export const CustomTable = ({
                   </TableCell>
                 </TableRow>
               ))}
+            {!isLoading && rows.length <= 0 && (
+              <TableRow>
+                <TableCell colSpan={columns.length + 1} align="center">
+                  No results found.
+                </TableCell>
+              </TableRow>
+            )}
             {isLoading && (
               <TableRow>
                 <TableCell colSpan={columns.length + 1} align="center">

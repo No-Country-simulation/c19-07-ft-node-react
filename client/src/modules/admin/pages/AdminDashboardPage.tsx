@@ -9,26 +9,26 @@ export default function AdminDashboardPage() {
       <Grid item xs={12} sm={4}>
         <CustomCard
           topText="Overall Cumulative Average"
-          heading="3.5"
+          heading="8.5"
           headingVariant="h2"
         />
       </Grid>
       <Grid item xs={12} sm={4}>
         <CustomCard
-          topText="Overall Cumulative Average"
-          heading="3.5"
+          topText="Acrive Students"
+          heading="1000"
           headingVariant="h2"
         />
       </Grid>
       <Grid item xs={12} sm={4}>
         <CustomCard
-          topText="Overall Cumulative Average"
-          heading="3.5"
+          topText="No. of Teachers"
+          heading="50"
           headingVariant="h2"
         />
       </Grid>
       <Grid item xs={12}>
-        <CustomCard heading="Some Chart">
+        <CustomCard heading="Top Students">
           <DashboardChart />
         </CustomCard>
       </Grid>

@@ -8,6 +8,8 @@ import { Provider } from "react-redux";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
 
+import { SnackbarProvider } from "notistack";
+
 import { store } from "./store/store";
 import appTheme from "./themes/app-theme.ts";
 
@@ -20,7 +22,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <Provider store={store}>
       <ThemeProvider theme={appTheme}>
         <CssBaseline />
-        <App />
+        <SnackbarProvider maxSnack={3}>
+          <App />
+        </SnackbarProvider>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>

@@ -1,33 +1,57 @@
-import { Grid, MenuItem, TextField } from "@mui/material";
+import { useState } from "react";
+
+import {
+  Grid,
+  Button,
+  MenuItem,
+  TextField,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const userFormSchema = z.object({
-  name: z.string(),
-  email: z.string(),
-  password: z.string(),
-  type_user: z.string(),
+  name: z.string().min(1, "Name is required"),
+  email: z.string().min(1, "Email is required").email("Invalid email"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
+  typeUser: z.string().refine((value) => {
+    return ["STUDENT", "PARENTS", "PROFESSOR", "AMDMIN"].includes(value);
+  }),
 });
 
+type UserFormData = z.infer<typeof userFormSchema>;
+
 interface UserFormProps {
-  onSubmit: (data: z.infer<typeof userFormSchema>) => void;
+  userToEdit?: UserFormData;
+  onSubmit: (data: UserFormData) => void;
 }
 
-export const UserForm = ({ onSubmit }: UserFormProps) => {
+export const UserForm = ({ userToEdit, onSubmit }: UserFormProps) => {
+  console.log({userToEdit});
+
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
   const {
+    watch,
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<z.infer<typeof userFormSchema>>({
+  } = useForm<UserFormData>({
     resolver: zodResolver(userFormSchema),
-    defaultValues: {},
+    defaultValues: { ...userToEdit },
   });
+
+  const typeUserValue = watch("typeUser");
 
   return (
     <Grid
       container
+      columns={{ xs: 6, sm: 12 }}
       spacing={3}
       component="form"
       onSubmit={handleSubmit(onSubmit)}
@@ -56,32 +80,56 @@ export const UserForm = ({ onSubmit }: UserFormProps) => {
         />
       </Grid>
 
-      <Grid item xs={6}>
-        <TextField
-          fullWidth
-          label="Password"
-          type="password"
-          variant="standard"
-          {...register("password")}
-          error={!!errors.password}
-          helperText={errors.password?.message}
-        />
-      </Grid>
+      {!userToEdit && (
+        <>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              variant="standard"
+              {...register("password")}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleClickShowPassword}
+                      onMouseDown={(e) => e.preventDefault()}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
 
-      <Grid item xs={6}>
-        <TextField
-          fullWidth
-          select
-          label="Role"
-          variant="standard"
-          {...register("type_user")}
-          error={!!errors.type_user}
-          helperText={errors.type_user?.message}
-        >
-          <MenuItem value="STUDENT">Student</MenuItem>
-          <MenuItem value="PARENTS">Parent</MenuItem>
-          <MenuItem value="PROFESSOR">Teacher</MenuItem>
-        </TextField>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              select
+              label="Role"
+              variant="standard"
+              value={typeUserValue}
+              {...register("typeUser")}
+              error={!!errors.typeUser}
+              helperText={errors.typeUser?.message}
+            >
+              <MenuItem value="STUDENT">Student</MenuItem>
+              <MenuItem value="PARENTS">Parent</MenuItem>
+              <MenuItem value="PROFESSOR">Teacher</MenuItem>
+            </TextField>
+          </Grid>
+        </>
+      )}
+
+      <Grid item xs={12} sm={3}>
+        <Button fullWidth type="submit" variant="contained">
+          {userToEdit ? "Update" : "Create"}
+        </Button>
       </Grid>
     </Grid>
   );

@@ -1,5 +1,5 @@
 import "chart.js/auto";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 
 const data = {
   labels: ["January", "February", "March", "April", "May", "June", "July"],
@@ -24,7 +24,7 @@ const data = {
 export const DashboardChart = () => {
   return (
     <div>
-      <Line data={data} />
+      <Bar data={data} />
     </div>
   );
 };
