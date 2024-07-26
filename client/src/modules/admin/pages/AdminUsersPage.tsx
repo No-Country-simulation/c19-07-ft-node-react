@@ -56,7 +56,16 @@ export default function AdminUsersPage() {
   const [openModal, setOpenModal] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
-  const [userToEdit, setUserToEdit] = useState<User | undefined>(undefined);
+  const [userToEdit, setUserToEdit] = useState<
+    | {
+        user_id?: string;
+        name: string;
+        email: string;
+        type_user: string;
+        password: string;
+      }
+    | undefined
+  >(undefined);
   const [userToDelete, setUserToDelete] = useState<{
     userId: string;
     userName: string;
@@ -70,7 +79,8 @@ export default function AdminUsersPage() {
     setOpenDialog(true);
 
     api.get(`/users/${user.user_id}`).then((res) => {
-      setUserToEdit(res.data);
+      const { user_id, name, email, password, type_user } = res.data;
+      setUserToEdit({ user_id, name, email, password, type_user });
     });
   };
 
@@ -80,6 +90,8 @@ export default function AdminUsersPage() {
   };
 
   const handleUpdateOrCreateUser = (userData: any) => {
+    console.log(userData);
+
     if (userToEdit) {
       api.put(`/admin/update-user/${userToEdit.user_id}`, userData).then(() => {
         getUsers();
@@ -87,7 +99,6 @@ export default function AdminUsersPage() {
         setOpenDialog(false);
       });
     } else {
-      console.log(userData);
       api.post("/admin/create-user", userData).then(() => {
         getUsers();
         enqueueSnackbar("User successfully created!", { variant: "success" });
