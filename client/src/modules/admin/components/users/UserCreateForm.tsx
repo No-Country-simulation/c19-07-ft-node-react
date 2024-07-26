@@ -30,9 +30,7 @@ interface UserFormProps {
   onSubmit: (data: UserFormData) => void;
 }
 
-export const UserForm = ({ userToEdit, onSubmit }: UserFormProps) => {
-  console.log({ userToEdit });
-
+export const UserCreateForm = ({ userToEdit, onSubmit }: UserFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 

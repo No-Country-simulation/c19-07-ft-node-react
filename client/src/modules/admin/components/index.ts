@@ -5,4 +5,4 @@ export { AddButton } from "./common/AddButton";
 export { DashboardChart } from "./dashboard/DashboardChart";
 
 // Users
-export { UserForm } from "./users/UserForm";
+export { UserCreateForm } from "./users/UserCreateForm";

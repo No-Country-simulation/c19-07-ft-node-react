@@ -4,6 +4,7 @@ export { Chat } from "./chat/Chat";
 // UI
 export { NavBar } from "./ui/NavBar";
 export { SideBar } from "./ui/SideBar";
+export { CustomForm } from "./ui/CustomForm";
 export { CustomCard } from "./ui/CustomCard";
 export { SearchInput } from "./ui/SearchInput";
 export { CustomTable } from "./ui/CustomTable";

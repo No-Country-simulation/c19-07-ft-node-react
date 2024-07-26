@@ -3,15 +3,20 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { useSnackbar } from "notistack";
 
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type SubmitHandler, useForm } from "react-hook-form";
+
 import {
+  CustomForm,
   CustomTable,
   SearchInput,
   CustomDialog,
   CustomSelect,
   ConfirmModal,
 } from "../../../components";
+import { AddButton } from "../components";
 import { useAxiosPrivate } from "../../../hooks";
-import { AddButton, UserForm } from "../components";
 import { User, UsersResponse } from "../../../interfaces";
 
 const userTableColumns = [
@@ -40,6 +45,45 @@ const filterItems = [
   },
 ];
 
+const createFormFields = [
+  { name: "name", label: "Name", type: "text" },
+  { name: "email", label: "Email", type: "email" },
+  { name: "password", label: "Password", type: "password" },
+  {
+    name: "typeUser",
+    label: "Role",
+    // type: "select",
+    select: [
+      { value: "STUDENT", label: "Student" },
+      { value: "PARENTS", label: "Parent" },
+      { value: "PROFESSOR", label: "Teacher" },
+      { value: "ADMIN", label: "Admin" },
+    ],
+  },
+];
+
+const editFormFields = [
+  { name: "name", label: "Name", type: "text" },
+  { name: "email", label: "Email", type: "email" },
+];
+
+const createUserFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().min(1, "Email is required").email("Invalid email"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
+  typeUser: z.string().refine((value) => {
+    return ["STUDENT", "PARENTS", "PROFESSOR", "AMDMIN"].includes(value);
+  }),
+});
+
+const editUserFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().min(1, "Email is required").email("Invalid email"),
+});
+
+type CreateUserFormData = z.infer<typeof createUserFormSchema>;
+type EditUserFormData = z.infer<typeof editUserFormSchema>;
+
 export default function AdminUsersPage() {
   const api = useAxiosPrivate();
 
@@ -54,55 +98,71 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openEditUserDialog, setOpenEditUserDialog] = useState(false);
+  const [openCreateUserDialog, setOpenCreateUserDialog] = useState(false);
 
-  const [userToEdit, setUserToEdit] = useState<
-    | {
-        user_id?: string;
-        name: string;
-        email: string;
-        type_user: string;
-        password: string;
-      }
-    | undefined
-  >(undefined);
+  const [userToEdit, setUserToEdit] = useState<User | undefined>(undefined);
   const [userToDelete, setUserToDelete] = useState<{
     userId: string;
     userName: string;
   } | null>(null);
 
   // const [isDeleting, setIsDeleting] = useState(false);
-  // const [isLoadingUserToEdit, setIsLoadingUserToEdit] = useState(false);
+
+  // ? Hook Forms
+  const {
+    register: registerCreateForm,
+    handleSubmit: handleSubmitCreateForm,
+    formState: {
+      errors: errorsCreateForm,
+      isSubmitting: isSubmittingCreateForm,
+    },
+  } = useForm<CreateUserFormData>({
+    resolver: zodResolver(createUserFormSchema),
+  });
+
+  const {
+    register: registerEditForm,
+    handleSubmit: handleSubmitEditForm,
+    formState: { errors: errorsEditForm },
+  } = useForm<EditUserFormData>({
+    resolver: zodResolver(editUserFormSchema),
+    defaultValues: {},
+  });
 
   // ? User creation or update
   const handleSetUserToEdit = (user: User) => {
-    setOpenDialog(true);
+    // setUserToEdit(user);
+    setOpenEditUserDialog(true);
 
     api.get(`/users/${user.user_id}`).then((res) => {
-      const { user_id, name, email, password, type_user } = res.data;
-      setUserToEdit({ user_id, name, email, password, type_user });
+      setUserToEdit(res.data);
     });
   };
 
-  const handleCloseUserDialog = () => {
-    setOpenDialog(false);
+  const handleCloseEditUserDialog = () => {
     setUserToEdit(undefined);
+    setOpenEditUserDialog(false);
   };
 
-  const handleUpdateOrCreateUser = (userData: any) => {
-    console.log(userData);
+  const onSubmitCreateForm: SubmitHandler<CreateUserFormData> = async (
+    data
+  ) => {
+    console.log({ data });
 
+    api.post("/admin/create-user", data).then(() => {
+      getUsers();
+      enqueueSnackbar("User successfully created!", { variant: "success" });
+      setOpenCreateUserDialog(false);
+    });
+  };
+
+  const onSubmitEditForm: SubmitHandler<EditUserFormData> = (data) => {
     if (userToEdit) {
-      api.put(`/admin/update-user/${userToEdit.user_id}`, userData).then(() => {
+      api.put(`/admin/update-user/${userToEdit.user_id}`, data).then(() => {
         getUsers();
         enqueueSnackbar("User successfully updated!", { variant: "success" });
-        setOpenDialog(false);
-      });
-    } else {
-      api.post("/admin/create-user", userData).then(() => {
-        getUsers();
-        enqueueSnackbar("User successfully created!", { variant: "success" });
-        setOpenDialog(false);
+        setOpenEditUserDialog(false);
       });
     }
   };
@@ -176,7 +236,7 @@ export default function AdminUsersPage() {
           onChange={setRoleFilter}
         />
 
-        <AddButton onClick={() => setOpenDialog(true)} />
+        <AddButton onClick={() => setOpenCreateUserDialog(true)} />
       </Box>
 
       <CustomTable
@@ -192,14 +252,35 @@ export default function AdminUsersPage() {
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
 
+      {/* User creation form dialog */}
       <CustomDialog
-        open={openDialog}
-        onClose={handleCloseUserDialog}
-        title={userToEdit ? "Edit User" : "Create User"}
+        open={openCreateUserDialog}
+        onClose={() => setOpenCreateUserDialog(false)}
+        title="Create User"
       >
-        {/* {userToEdit !== undefined &&  */}
-        <UserForm userToEdit={userToEdit} onSubmit={handleUpdateOrCreateUser} />
-        {/* } */}
+        <CustomForm
+          formFields={createFormFields}
+          submitButtonLabel="Create"
+          register={registerCreateForm}
+          errors={errorsCreateForm}
+          onSubmit={handleSubmitCreateForm(onSubmitCreateForm)}
+          isSubmitting={isSubmittingCreateForm}
+        />
+      </CustomDialog>
+
+      {/* User edition form dialog */}
+      <CustomDialog
+        open={openEditUserDialog}
+        onClose={handleCloseEditUserDialog}
+        title="Edit User"
+      >
+        <CustomForm
+          formFields={editFormFields}
+          submitButtonLabel="Update"
+          register={registerEditForm}
+          errors={errorsEditForm}
+          onSubmit={handleSubmitEditForm(onSubmitEditForm)}
+        />
       </CustomDialog>
 
       <ConfirmModal
