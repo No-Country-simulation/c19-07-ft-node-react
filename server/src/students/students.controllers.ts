@@ -9,6 +9,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { z } from 'zod'
 import { formattedErrorsZod } from '../libs/formatedErrorsZod'
 import { CustomError } from '../errors/customError'
+import { getErrorMessageAndStatus } from '../utils/getErrorMessageAndStatus'
 export const getAllStudents = async (req: Request, res: Response): Promise<void> => {
   try {
     const students = await studentService.getAllStudents()
@@ -79,9 +80,12 @@ export const getFeedback = async (req: Request, res: Response): Promise<void> =>
 
     const { id } = req.params
     const academicRecords: Academic_records[] = await studentService.getFeedback(id)
-    if (academicRecords.length === 0) res.status(204).send({ data: 'User dont have any feedback' })
-    res.status(200).send({ data: academicRecords })
+    const academicRecordsWithCourseName = await studentService.getCourseNameFromAcademicRecords(academicRecords)
+
+    if (academicRecords.length === 0) res.status(204).send({ data: 'User dont have any academic record' })
+    res.status(200).send({ data: academicRecordsWithCourseName })
   } catch (e: any) {
-    res.status(500).send({ err: 'Server error' })
+    const { status, message } = getErrorMessageAndStatus(e)
+    res.status(status).send({ err: message, err_details: e })
   }
 }

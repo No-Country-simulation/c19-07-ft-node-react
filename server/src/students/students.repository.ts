@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // src/modules/students/repositories/student.repository.ts
-import { Academic_records, Educational_levels, PrismaClient, Students } from '@prisma/client'
+import { Academic_records, Courses, Educational_levels, PrismaClient, Students } from '@prisma/client'
 import { CreateStudent } from './schemas/student.schema'
 import { DatabaseError } from '../errors/databaseError'
 const prisma = new PrismaClient()
@@ -63,6 +63,14 @@ export const getAcademicRecordsByCourse = async (curso_id: string, student_id: s
 export const getStudentEducationalLevel = async (educational_level_id: string): Promise<Educational_levels | null> => {
   try {
     return await prisma.educational_levels.findFirst({ where: { level_id: educational_level_id } })
+  } catch (e: any) {
+    throw new DatabaseError(e)
+  }
+}
+
+export const getCoursesById = async (cursos_id: string): Promise<Courses | null> => {
+  try {
+    return await prisma.courses.findFirst({ where: { cursos_id } })
   } catch (e: any) {
     throw new DatabaseError(e)
   }
