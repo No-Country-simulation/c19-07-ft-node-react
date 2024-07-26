@@ -94,3 +94,99 @@ export const studentsFromCourses = async (courses: Courses[]): Promise<StudentsA
     throw new Error(e.message)
   }
 }
+
+
+
+
+//New
+//New Routes for Reports
+
+export const getAllStudentsWithDetailsService = async () => {
+  const data = await professorRepository.getAllStudentsWithDetailsRepository()
+
+  // const data2 = data.map((student) => ({
+  //     studentId: student.student_id,
+  //     studentName: student.user.name,
+  //     grade: student.grade,
+  //     section: student.section,
+  //     parentId: student.parent?.user.name,
+  //     contact: {
+  //       email: student.user.email,
+  //       phone: student.telephone
+  //     }
+  //     ,
+  //     courses: student.courses.map ((course: any) => ({
+  //       courseId: course.cursos_id,
+  //       courseName: course.nombre,
+  //       professorId: course.professor.user_id,
+  //       professorName: course.professor.user.name,
+  //       academicAreaName: course.academic_area.name,
+  //       academicRecords: course.academic_record
+  //       .filter((record: any) => record.student_id === student.student_id) // Filtra por student_id
+  //       .map((record: any) => ({
+  //         recordId: record.historial_id,
+  //         Comment: record.comment,
+  //         date: record.date,
+  //         mark: record.mark
+  //       }))
+  //       ,
+  //       evaluaions: course.evaluations.map((evaluation: any) => ({
+  //         evaluationId: evaluation.evaluation_id,
+  //         name: evaluation.name,
+  //         description: evaluation.description,
+  //         date: evaluation.date,
+  //         // results: evaluation.
+  //       }))
+
+
+  //     }))
+  //   })
+  // )
+
+  const data2 = data.map((student) => ({
+    studentId: student.student_id,
+    studentName: student.user.name,
+    grade: student.grade,
+    section: student.section,
+    parentId: student.parent?.user.name,
+    contact: {
+      email: student.user.email,
+      phone: student.telephone
+    },
+    courses: student.courses.map(course => {
+      const academicRecords = course.academic_record
+        .filter(record => record.student_id === student.student_id) // Filtra por student_id
+        .map(record => ({
+        recordId: record.historial_id,
+        comment: record.comment,
+        date: record.date,
+        mark: record.mark // Asegúrate de que este campo esté disponible y asignado correctamente
+      }))
+
+      const evaluations = course.evaluations.map(evaluation => {
+        const marks = academicRecords.map(record => record.mark).filter(mark => mark !== undefined)
+        const averageMark = marks.length > 0 ? marks.reduce((a, b) => a + b, 0) / marks.length : null
+
+        return {
+          evaluationId: evaluation.evaluation_id,
+          name: evaluation.name,
+          description: evaluation.description,
+          date: evaluation.date,
+          averageMark
+        }
+      })
+
+      return {
+        courseId: course.cursos_id,
+        courseName: course.nombre,
+        professorId: course.professor.user_id,
+        professorName: course.professor.user.name,
+        academicAreaName: course.academic_area.name,
+        academicRecords,
+        evaluations
+      }
+    })
+  }))
+
+  return data2
+}
