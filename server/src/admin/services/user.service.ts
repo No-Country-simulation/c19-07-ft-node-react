@@ -57,4 +57,9 @@ export class UserService {
     const listUsers = ResponseHandler.paginate(users, totalUser, page, limit, baseUrl)
     return listUsers
   }
+
+  async countActiveUsersByTypeUser (typeUser:Users['type_user']):Promise<number> {
+    const totalActiveStudets = await this.userRepository.countActiveUsersByTypeUser(typeUser)
+    return totalActiveStudets
+  }
 }

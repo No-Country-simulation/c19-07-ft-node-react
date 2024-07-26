@@ -12,4 +12,5 @@ export interface IUserRepository {
   getAllUser: (page: number, limit: number, filtros: { name?: string, typeUser?: Users['type_user'], includeDeleted?: boolean, onlyDeleted?: boolean }) => Promise<Array<Omit<Users, 'password' | 'deletedAt'>>>
   countAllusers: () => Promise<number>
   countFilteredUsers: (filtros: IUserFilter) => Promise<number>
+  countActiveUsersByTypeUser: (typeUser: Users['type_user']) => Promise<number>
 }
