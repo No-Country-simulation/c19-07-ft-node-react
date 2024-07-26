@@ -29,9 +29,9 @@ export const getAllStudentsWithDetailsRepository = async () => {
 
     include: {
       user: true,
-      parent: {
-        include: {
-          user: true
+        parent: {
+          include: {
+            user: true
         }
       },
       courses: {
