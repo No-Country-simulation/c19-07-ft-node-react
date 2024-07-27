@@ -1,33 +1,39 @@
+export type Role = "ADMIN" | "STUDENT" | "PARENTS" | "PROFESSOR";
+
 export interface ProfileResponse {
   success: boolean;
   statusCode: number;
   message: string;
-  data: Data;
+  data: User;
 }
 
-export interface Data {
+export interface User {
   user_id: string;
   name: string;
   email: string;
   password: string;
-  type_user: "ADMIN" | "STUDENT" | "PARENTS" | "PROFESSOR";
+  type_user: Role;
   state: string;
   createdAt: Date;
   updatedAt: Date;
-  Students?: Student[];
-  Parents?: Parent[];
+  deletedAt: Date | null;
+  Students?: Student;
+  Parents?: Parent;
   Professors?: Professor[];
 }
 
 export interface Student {
   student_id: string;
   user_id: string;
+  telephone: null;
+  age: null;
   grade: string;
   section: string;
   createdAt: Date;
   updatedAt: Date;
   parentId: string;
   educational_level_id: string;
+  feedback: string;
 }
 
 export interface Parent {
