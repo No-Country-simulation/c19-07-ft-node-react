@@ -97,7 +97,6 @@ export const studentsFromCourses = async (courses: Courses[]): Promise<StudentsA
   }
 }
 
-
 const getStudentData = async (students: Students[], courseId: string): Promise<StudentsWithData[]> => {
   try {
     const studentsWithData: StudentsWithData[] = []
@@ -139,9 +138,8 @@ const getStudentMark = async (courseId: string, studentId: string): Promise<numb
   }
 }
 
-
-//New
-//New Routes for Reports
+// New
+// New Routes for Reports
 
 export const getAllStudentsWithDetailsService = async () => {
   const data = await professorRepository.getAllStudentsWithDetailsRepository()
@@ -180,7 +178,6 @@ export const getAllStudentsWithDetailsService = async () => {
   //         // results: evaluation.
   //       }))
 
-
   //     }))
   //   })
   // )
@@ -199,11 +196,11 @@ export const getAllStudentsWithDetailsService = async () => {
       const academicRecords = course.academic_record
         .filter(record => record.student_id === student.student_id) // Filtra por student_id
         .map(record => ({
-        recordId: record.historial_id,
-        comment: record.comment,
-        date: record.date,
-        mark: record.mark // Asegúrate de que este campo esté disponible y asignado correctamente
-      }))
+          recordId: record.historial_id,
+          comment: record.comment,
+          date: record.date,
+          mark: record.mark // Asegúrate de que este campo esté disponible y asignado correctamente
+        }))
 
       const evaluations = course.evaluations.map(evaluation => {
         const marks = academicRecords.map(record => record.mark).filter(mark => mark !== undefined)

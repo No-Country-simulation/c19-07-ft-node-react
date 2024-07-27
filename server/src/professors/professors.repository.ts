@@ -86,35 +86,33 @@ export const getAssignedCourses = async (professor_id: string): Promise<Courses[
   }
 }
 
-
-
-//New
-//New Routes for Reports
+// New
+// New Routes for Reports
 export const getAllStudentsWithDetailsRepository = async () => {
   const data = await prisma.students.findMany({
-      include: {
-                user: true,
-                  parent: {
-                    include: {
-                      user: true
-                    }
-                },
-                courses: {
-                    include: {
-                      academic_area: true,
-                      academic_record: {
-                        include: {
-                          student: true
-                        }
-                      },
-                      evaluations: true,
-                      professor: {
-                        include: {
-                          user: true
-                        }
-                      }
-                  }
-                }
+    include: {
+      user: true,
+      parent: {
+        include: {
+          user: true
+        }
+      },
+      courses: {
+        include: {
+          academic_area: true,
+          academic_record: {
+            include: {
+              student: true
+            }
+          },
+          evaluations: true,
+          professor: {
+            include: {
+              user: true
+            }
+          }
+        }
+      }
     }
   })
 
