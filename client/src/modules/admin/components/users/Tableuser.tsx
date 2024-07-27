@@ -1,19 +1,16 @@
 import { TablePagination } from "@mui/material";
 import {
-  ConfirmModal,
-  CustomDialog,
-  CustomTable,
+    ConfirmModal,
+    CustomDialog,
+    CustomTable,
 } from "../../../../components";
 import { useContextUser } from "../../components/hooks/useContextUser";
 import { userTableColumns } from "../../pages/AdminUsersPage";
-import { usePaginate } from "../hooks/usePaginate";
 import { useModal } from "../hooks/useModal";
 import { UserForm } from "./UserForm";
 export const TableUser = () => {
-  const { user, deleteUser } = useContextUser();
+  const { user, deleteUser, filter, setFilter } = useContextUser();
   const { closeModal, openModal, modalState } = useModal();
-  const { handleChangePage, handleChangeRowsPerPage, page, rowsPerPage } =
-    usePaginate(1, 2);
   const handleDeleteUser = (row: { user_id: string; name: string }) => {
     openModal("delete", row);
   };
@@ -23,8 +20,21 @@ export const TableUser = () => {
   const handleUpdateOrCreateUser = (row: string) => {
     console.log("esty aca en update o create-->", row);
   };
+  const handleChangePage = (_: any, newPage: number) => {
+    setFilter((prev) => ({
+      ...prev,
+      page:String(newPage + 1),
+    }));
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilter((prev) => ({
+      ...prev,
+      limit: event.target.value,
+      page: '1', 
+    }));
+  };
   if (user === null) return <p>...cargando</p>;
-  console.log("table,user", {rowsPerPage,page});
   return (
     <>
       <CustomTable
@@ -35,12 +45,12 @@ export const TableUser = () => {
         isLoading={false}
       >
         <TablePagination
-          rowsPerPageOptions={[1, 2, 3, 4, 5]}
+          rowsPerPageOptions={[10,20,30,40,50]}
           component="div"
           count={user.data.meta.totalItems}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={(e, newPage) => handleChangePage(e, newPage)}
+          rowsPerPage={Number(filter.limit)}
+          page={Number(filter.page) - 1}
+          onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
         <CustomDialog
