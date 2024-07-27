@@ -9,6 +9,6 @@ studentRoutes.post('/', studentController.createStudent)
 studentRoutes.get('/:id', studentController.getStudentById)
 studentRoutes.put('/:id', studentController.updateStudent)
 studentRoutes.delete('/:id', studentController.deleteStudent)
-studentRoutes.get('/academic-records/:id', studentController.getFeedback)
+studentRoutes.get('/academic-records/:id', studentController.getAcademicRecords)
 
 export default studentRoutes

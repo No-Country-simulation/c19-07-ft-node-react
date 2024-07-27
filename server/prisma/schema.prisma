@@ -35,6 +35,7 @@ model Users {
   state        type_state     @default(ACTIVE)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
+  deletedAt    DateTime?
   Students     Students?
   Parents      Parents?
   Professors   Professors[]
@@ -59,7 +60,8 @@ model Students {
   evaluations_results    Evaluation_results[]
   educational_level_id   String
   educational_level      Educational_levels?  @relation(fields: [educational_level_id], references: [level_id])
-  courses Courses[] 
+  courses                Courses[]
+  feedback String
 }
 
 model Messages {
@@ -108,6 +110,7 @@ model Professors {
   user                 Users              @relation(fields: [user_id], references: [user_id])
   educational_level    Educational_levels @relation(fields: [educational_level_id], references: [level_id])
   academic_area        Academic_areas     @relation(fields: [area_academica_id], references: [academic_area_id])
+  courses              Courses[]          @relation("CourseProfessor") // Relación opuesta definida aquí //se agrego 
 }
 
 model Academic_areas {
@@ -130,7 +133,8 @@ model Courses {
   academic_area     Academic_areas     @relation(fields: [area_academica_id], references: [academic_area_id])
   academic_record   Academic_records[]
   evaluations       Evaluations[]
-  students Students[]
+  students          Students[]
+  professor         Professors         @relation("CourseProfessor", fields: [professor_id], references: [professor_id]) // Relación con el modelo `Professors`  //se agrego 
 }
 
 model Academic_records {

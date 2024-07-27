@@ -32,7 +32,7 @@ const drawerBackgroundColor = "#abd1c6";
 const parentOptions = [
   {
     text: "Performance",
-    path: "/parents",
+    path: "/parents/performance",
     icon: <AutoGraph></AutoGraph>,
   },
   {

@@ -1,5 +1,20 @@
 import { Response as ExpressResponse } from 'express'
 
+interface PaginationMeta {
+  totalItems: number
+  itemCount: number
+  itemsPerPage: number
+  totalPages: number
+  currentPage: number
+  nextPage: string | null
+  prevPage: string | null
+}
+
+export interface PaginatedResponse<T> {
+  items: T[]
+  meta: PaginationMeta
+}
+
 interface ISuccessResponse {
   success: boolean
   statusCode: number
@@ -39,5 +54,32 @@ export class ResponseHandler {
     }
 
     this.res.status(statusCode).json(responseData)
+  }
+
+  static paginate<T>(
+    items: T[],
+    totalItems: number,
+    page: number,
+    limit: number,
+    baseUrl: string
+  ): PaginatedResponse<T> {
+    const itemCount = items.length
+    const totalPages = Math.ceil(totalItems / limit)
+    const currentPage = page
+    const nextPage = page < totalPages ? `${baseUrl}?page=${page + 1}&limit=${limit}` : null
+    const prevPage = page > 1 ? `${baseUrl}?page=${page - 1}&limit=${limit}` : null
+
+    return {
+      items,
+      meta: {
+        totalItems,
+        itemCount,
+        itemsPerPage: limit,
+        totalPages,
+        currentPage,
+        nextPage,
+        prevPage
+      }
+    }
   }
 }

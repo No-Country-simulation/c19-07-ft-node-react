@@ -50,7 +50,9 @@ export const createParents = async (req: Request, res: Response, next: NextFunct
 export const getParentsById = async (req: Request, res: Response): Promise<void> => {
   try {
     const parents = await parentsService.getParentsById(req.params.id)
-    if (parents == null) res.status(404).send({ data: 'Parent not found' })
+    if (parents == null){
+       res.status(404).send({ data: 'Parent not found' })
+    } 
 
     res.json(parents)
   } catch (err: any) {
@@ -79,5 +81,49 @@ export const deleteParents = async (req: Request, res: Response): Promise<void> 
   } catch (err: any) {
     console.error(err) // Log para ver el error
     res.status(500).send({ error: 'Server Error', details: err.message })
+  }
+}
+
+// rutas especificas:
+// GET ALL
+export const getStudentsWithDetailsController = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const students = await parentsService.getStudentsWithDetailsService()
+    res.json(students)
+  } catch (error) {
+    console.error('Error getting student details:', error)
+    res.status(500).json({ error: 'An error occurred while fetching student details' })
+  }
+}
+
+// GET BY ID
+export const getStudentByIdController = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params
+  try {
+    const student = await parentsService.getStudentByIdService(id)
+    if (student == null) {
+      res.status(404).json({ error: 'Student not found' })
+      return
+    }
+    res.json(student)
+  } catch (error) {
+    console.error('Error getting student details:', error)
+    res.status(500).json({ error: 'An error occurred while fetching student details' })
+  }
+}
+
+
+// GET all parents | nombreEstudiante|nombredelPadre|emaildelPadre
+export const getStudentParentDetailsControllers = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const parents = await parentsService.getStudentParentDetailsServices()
+    res.json(parents)
+  } catch (error) {
+    // console.error('Error getting student details:', error)
+    // res.status(500).json({ error: 'An error occurred while fetching student details' })
+  
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Failed to fetch student-parent details' })
+    }
   }
 }

@@ -6,7 +6,7 @@ export const getAllUsersRepository = async (): Promise<Users[]> => {
   return await prisma.users.findMany()
 }
 
-export const createUserRepository = async (data: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt'>): Promise<Users> => {
+export const createUserRepository = async (data: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt' | 'deletedAt'>): Promise<Users> => {
   const user = await prisma.users.create({
     data: {
       ...data,

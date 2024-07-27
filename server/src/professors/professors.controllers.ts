@@ -3,6 +3,7 @@ import { Request, Response } from 'express'
 import * as professorService from '../professors/professors.services'
 import { Courses } from '@prisma/client'
 import { getErrorMessageAndStatus } from '../utils/getErrorMessageAndStatus'
+import { any } from 'zod'
 
 export const getAllProfessors = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -39,7 +40,9 @@ export const createProfessor = async (req: Request, res: Response): Promise<any>
 export const getProfessorById = async (req: Request, res: Response): Promise<any> => {
   try {
     const professor = await professorService.getProfessorById(req.params.id)
-    if (professor == null) return res.status(404).send({ err: 'Professor not found' })
+    if (professor == null) {
+      return res.status(404).send({ err: 'Professor not found' })
+    }
     res.status(200).send({ data: professor })
   } catch (err: any) {
     const { status, message } = getErrorMessageAndStatus(err)
@@ -130,5 +133,21 @@ export const getAssignedStudents = async (req: Request, res: Response): Promise<
   } catch (err: any) {
     const { status, message } = getErrorMessageAndStatus(err)
     res.status(status).send({ err: message, error_details: err })
+  }
+}
+
+
+
+//New
+//New Routes for Report
+export const getAllStudentsWithDetailsController = async (req: Request, res: Response)=> {
+  try {
+    const data = await professorService.getAllStudentsWithDetailsService();
+    res.status(200).json({ data });
+    // if (students.length === 0) {
+    //   return res.status(404).json({ err: 'Students  not found' });
+    // }
+  } catch (error:any) {
+    res.status(500).json({ error: error.message });
   }
 }
