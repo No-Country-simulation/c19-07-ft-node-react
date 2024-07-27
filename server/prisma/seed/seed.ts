@@ -25,6 +25,7 @@ const prisma = new PrismaClient()
 //
 
 const main = async (): Promise<void> => {
+  await ramdonUsers()// recibe como parametro el total de usuarios q deseas tener en el sitema por default es 10
   await seederAreaAcademic()
   await seederEducationalLevel()
   await seederUsers()

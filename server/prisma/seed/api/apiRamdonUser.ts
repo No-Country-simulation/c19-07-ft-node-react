@@ -1,8 +1,7 @@
 import { IApiRandomUser } from "../apiRandomUser.type";
 import bcrypt from "bcrypt";
 import fs from "fs";
-const APIRANDOMUSER =
-  "https://randomuser.me/api/?inc=name,login,picture,email&password=upper,lower,number,8&nat=es&results=300";
+
 interface IUserDb {
   name: string;
   password: string;
@@ -11,7 +10,8 @@ interface IUserDb {
   state: "ACTIVE" | "INACTIVE" | "SUSPENDED";
 }
 
-const getApiRandomUser = async (): Promise<IApiRandomUser["results"]> => {
+const getApiRandomUser = async (cant:number): Promise<IApiRandomUser["results"]> => {
+  const APIRANDOMUSER = `https://randomuser.me/api/?inc=name,login,picture,email&password=upper,lower,number,8&nat=es&results=${cant}`
   const response = await fetch(APIRANDOMUSER);
   const { results }: IApiRandomUser = await response.json();
   return results;
@@ -61,8 +61,8 @@ const insertTypeUser = async (
 const saveUsersToJsonFile = async (users: IUserDb[]): Promise<void> => {
 fs.writeFileSync("./prisma/seed/users.json", JSON.stringify(users));
 };
-const main = async () =>{
-  const ramdonUsers =  await getApiRandomUser();
+const main = async (cant:number=10) =>{
+  const ramdonUsers =  await getApiRandomUser(cant);
   await transformUser(ramdonUsers);
 
 }
