@@ -1,4 +1,4 @@
-import { type ChangeEvent, useRef } from "react";
+/* import { type ChangeEvent, useRef } from "react";
 
 import { Search } from "@mui/icons-material";
 import { InputAdornment, TextField } from "@mui/material";
@@ -10,7 +10,7 @@ interface SearchInputProps {
 export const SearchInput = ({ onChange }: SearchInputProps) => {
   const debounceRef = useRef<NodeJS.Timeout>();
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeSelect = (event: ChangeEvent<HTMLInputElement>) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     debounceRef.current = setTimeout(() => {
@@ -22,7 +22,7 @@ export const SearchInput = ({ onChange }: SearchInputProps) => {
     <TextField
       label="Search"
       placeholder="Filter by name..."
-      onChange={handleChange}
+      onChange={handleChangeSelect}
       sx={{ width: { xs: "100%", sm: "40%" } }}
       InputProps={{
         startAdornment: (
@@ -32,5 +32,52 @@ export const SearchInput = ({ onChange }: SearchInputProps) => {
         ),
       }}
     ></TextField>
+  );
+};
+ */
+
+import { type ChangeEvent, useRef } from "react";
+import { Search } from "@mui/icons-material";
+import { InputAdornment, TextField } from "@mui/material";
+
+interface SearchInputProps {
+  onChange: (value: string) => void;
+  placeholder?: string;
+  label?: string;
+  debounceTime?: number;
+  sx?: object;
+}
+
+export const SearchInput = ({
+  onChange,
+  placeholder = "Filter by name...",
+  label = "Search",
+  debounceTime = 500,
+  sx = { width: { xs: "100%", sm: "40%" } },
+}: SearchInputProps) => {
+  const debounceRef = useRef<NodeJS.Timeout>();
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(() => {
+      onChange(event.target.value);
+    }, debounceTime);
+  };
+
+  return (
+    <TextField
+      label={label}
+      placeholder={placeholder}
+      onChange={handleChange}
+      sx={sx}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <Search />
+          </InputAdornment>
+        ),
+      }}
+    />
   );
 };

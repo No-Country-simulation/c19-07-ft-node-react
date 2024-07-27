@@ -18,12 +18,12 @@ const userFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().min(1, "Email is required").email("Invalid email"),
   password: z.string().min(8, "Password must be at least 8 characters long").optional(),
-  type_user: z.string().refine((value) => {
+  typeUser: z.string().refine((value) => {
     return ["STUDENT", "PARENTS", "PROFESSOR", "AMDMIN"].includes(value);
   }).optional(),
 });
 
-type UserFormData = z.infer<typeof userFormSchema>;
+export type UserFormData = z.infer<typeof userFormSchema>;
 
 interface UserFormProps {
   userToEdit?: UserFormData;
@@ -44,7 +44,8 @@ export const UserCreateForm = ({ userToEdit, onSubmit }: UserFormProps) => {
     defaultValues: { ...userToEdit },
   });
 
-  const typeUserValue = watch("type_user");
+  console.log(userToEdit)
+  const typeUserValue = watch("typeUser");
 
   return (
     <Grid
@@ -78,7 +79,7 @@ export const UserCreateForm = ({ userToEdit, onSubmit }: UserFormProps) => {
         />
       </Grid>
 
-      {!userToEdit && (
+      {userToEdit == undefined && (
         <>
           <Grid item xs={6}>
             <TextField
@@ -112,9 +113,9 @@ export const UserCreateForm = ({ userToEdit, onSubmit }: UserFormProps) => {
               label="Role"
               variant="standard"
               value={typeUserValue}
-              {...register("type_user")}
-              error={!!errors.type_user}
-              helperText={errors.type_user?.message}
+              {...register("typeUser")}
+              error={!!errors.typeUser}
+              helperText={errors.typeUser?.message}
             >
               <MenuItem value="STUDENT">Student</MenuItem>
               <MenuItem value="PARENTS">Parent</MenuItem>
