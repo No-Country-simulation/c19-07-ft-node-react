@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Users } from '@prisma/client'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { NextFunction, Response } from 'express'
 import { z } from 'zod'
@@ -7,10 +7,11 @@ import { formattedErrorsZod } from '../../libs/formatedErrorsZod'
 import { ResponseHandler } from '../../libs/response.lib'
 import { ICustomRequest } from '../../types'
 import { UserRepository } from '../repositories/user.repository'
-import { TypeUserSchemaOptional, typeUserSchemaOptional, CreateUserSchema, createUserSchema, UpdateUserSchema, updateUserSchema, QueryNameSchema, queryNameSchema } from '../schemas/user.schema'
+import { TypeUserSchemaOptional, typeUserSchemaOptional, CreateUserSchema, createUserSchema, UpdateUserSchema, updateUserSchema, QueryNameSchema, queryNameSchema, queryParamsSchema } from '../schemas/user.schema'
 import { UserService } from '../services/user.service'
 import { CustomError } from '../../errors/customError'
-import { IUserFilter } from '../repositories/interface/user.interface'
+import { IUserFilter } from '../interface/usertInterface'
+
 const userService = new UserService(new UserRepository(new PrismaClient()))
 export class UserCtrl {
   async createUser (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
@@ -95,6 +96,23 @@ export class UserCtrl {
       const filtros = { name, typeUser, viewDeleted }
       console.log(filtros)
       const user = await userService.getAllUsers(page, limit, filtros as IUserFilter)
+      new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'User retrieved successfully', user)
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        return new ResponseHandler(res).sendError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'server error')
+      }
+      if (error instanceof z.ZodError) {
+        const errors = formattedErrorsZod(error)
+        return new ResponseHandler(res).sendError(HTTP_STATUS.BAD_REQUEST, 'Validation error', errors)
+      }
+      next(error)
+    }
+  }
+
+  async getActiveUsersByTypeUser (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const typeUser = queryParamsSchema.parse(req.query)['type-user']
+      const user = await userService.countActiveUsersByTypeUser(typeUser as Users['type_user'])
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'User retrieved successfully', user)
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {

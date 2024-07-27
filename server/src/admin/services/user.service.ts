@@ -2,10 +2,10 @@ import { Users } from '@prisma/client'
 import { UserRepository } from '../repositories/user.repository'
 import { PaginatedResponse, ResponseHandler } from '../../libs/response.lib'
 import { AuthService } from '../../auth/auth.service'
-import { CreateUserSchema } from '../schemas/user.schema'
+import { CreateUserSchema, UpdateUserSchema } from '../schemas/user.schema'
 import { NotFoundError } from '../../errors/notFoundError'
 import HTTP_STATUS from '../../constants/statusCodeServer.const'
-import { IUserFilter } from '../repositories/interface/user.interface'
+import { IUserFilter } from '../interface/usertInterface'
 
 export class UserService {
   constructor (private readonly userRepository: UserRepository) {}
@@ -15,7 +15,7 @@ export class UserService {
     return user
   }
 
-  async updateUser (userId: string, data: CreateUserSchema): Promise<Omit<Users, 'password' | 'deletedAt'>> {
+  async updateUser (userId: string, data: UpdateUserSchema): Promise<Omit<Users, 'password' | 'deletedAt'>> {
     const existUser = await this.userRepository.findUserById(userId)
     if (existUser === null) {
       throw new NotFoundError('User not found', HTTP_STATUS.NOT_FOUND)
@@ -56,5 +56,10 @@ export class UserService {
     const users = await this.userRepository.getAllUser(page, limit, filtro)
     const listUsers = ResponseHandler.paginate(users, totalUser, page, limit, baseUrl)
     return listUsers
+  }
+
+  async countActiveUsersByTypeUser (typeUser:Users['type_user']):Promise<number> {
+    const totalActiveStudets = await this.userRepository.countActiveUsersByTypeUser(typeUser)
+    return totalActiveStudets
   }
 }
