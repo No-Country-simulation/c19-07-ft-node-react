@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
-
-import { Box } from "@mui/material";
+import { UserProvider } from "../context/userContext";
+import { Box, ExtendButton } from "@mui/material";
 import { useSnackbar } from "notistack";
 
 import {
@@ -13,15 +13,19 @@ import {
 import { useAxiosPrivate } from "../../../hooks";
 import { AddButton, UserForm } from "../components";
 import { User, UsersResponse } from "../../../interfaces";
+import { UserFormData } from "../components/users/UserForm";
+import { usePaginate } from "../components/hooks/usePaginate";
+import { TableUser } from "../components/users/Tableuser";
+import { SearchBarUser } from "../components/users/SearchBarUser";
+import { useModal } from "../components/hooks/useModal";
 
-const userTableColumns = [
+export const userTableColumns = [
   { id: "name", label: "Name" },
   { id: "email", label: "Email" },
   { id: "type_user", label: "Role" },
   { id: "state", label: "State" },
 ];
-
-const filterItems = [
+export const filterItems = [
   {
     value: "",
     label: "All",
@@ -39,61 +43,69 @@ const filterItems = [
     label: "Tearcher",
   },
 ];
-
+interface IUserToEdit extends UserFormData {
+  userId: string;
+}
 export default function AdminUsersPage() {
   const api = useAxiosPrivate();
-
+  const [typeForm, setTypeForm] = useState<{
+    create: boolean;
+    update: boolean;
+    delete: boolean;
+  }>({
+    create: false,
+    update: false,
+    delete: false,
+  });
   const { enqueueSnackbar } = useSnackbar();
-
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const { closeModal, openModal, modalState } = useModal();
+  const { handleChangePage, handleChangeRowsPerPage, page, rowsPerPage } =
+    usePaginate(1, 1);
   const [totalItems, setTotalItems] = useState(0);
   const [roleFilter, setRoleFilter] = useState("");
   const [nameFilter, setNameFilter] = useState("");
 
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  /* const [openModal, setOpenModal] = useState(false); */
   const [openDialog, setOpenDialog] = useState(false);
 
-  const [userToEdit, setUserToEdit] = useState<
-    | {
-        user_id?: string;
-        name: string;
-        email: string;
-        type_user: string;
-        password: string;
-      }
-    | undefined
-  >(undefined);
+  const [userToEdit, setUserToEdit] = useState<IUserToEdit | null>(null);
   const [userToDelete, setUserToDelete] = useState<{
     userId: string;
     userName: string;
   } | null>(null);
 
-  // const [isDeleting, setIsDeleting] = useState(false);
-  // const [isLoadingUserToEdit, setIsLoadingUserToEdit] = useState(false);
-
   // ? User creation or update
   const handleSetUserToEdit = (user: User) => {
+    setTypeForm((prev) => ({
+      ...prev,
+      update: !prev.update,
+    }));
     setOpenDialog(true);
 
     api.get(`/users/${user.user_id}`).then((res) => {
       const { user_id, name, email, password, type_user } = res.data;
-      setUserToEdit({ user_id, name, email, password, type_user });
+      setUserToEdit({
+        name,
+        email,
+        password,
+        typeUser: type_user,
+        userId: user_id,
+      });
     });
   };
 
   const handleCloseUserDialog = () => {
     setOpenDialog(false);
-    setUserToEdit(undefined);
+    setUserToEdit(null);
   };
 
   const handleUpdateOrCreateUser = (userData: any) => {
     console.log(userData);
 
     if (userToEdit) {
-      api.put(`/admin/update-user/${userToEdit.user_id}`, userData).then(() => {
+      api.put(`/admin/update-user/${userToEdit.userId}`, userData).then(() => {
         getUsers();
         enqueueSnackbar("User successfully updated!", { variant: "success" });
         setOpenDialog(false);
@@ -123,14 +135,6 @@ export default function AdminUsersPage() {
   };
 
   // ? Table pagination
-  const handleChangePage = (event: any, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
 
   const getUsers = async () => {
     setIsLoading(true);
@@ -147,39 +151,85 @@ export default function AdminUsersPage() {
         setIsLoading(false);
       });
   };
-
+  const handleTyPeForm = (typeForm: {
+    create: boolean;
+    update: boolean;
+    delete: boolean;
+  }) => {
+    if (typeForm.create) {
+      return (
+        <UserForm userToEdit={undefined} onSubmit={handleUpdateOrCreateUser} />
+      );
+    }
+    if (typeForm.update && userToEdit !== null) {
+      return (
+        <UserForm userToEdit={userToEdit} onSubmit={handleUpdateOrCreateUser} />
+      );
+    }
+  };
   // ? Data fetching
-  useEffect(() => {
+  /*  useEffect(() => {
     getUsers();
-  }, [page, rowsPerPage, roleFilter, nameFilter]);
-
+  }, [page, rowsPerPage, roleFilter, nameFilter]); */
+  console.log("modalState userPage------>", modalState);
   return (
-    <Box
-      p={2}
-      height="auto"
-      maxHeight="100%"
-      bgcolor="#e8e4e6"
-      borderRadius={1}
-    >
+    <UserProvider>
       <Box
-        display="flex"
-        flexDirection={{ xs: "column", sm: "row" }}
-        justifyContent="space-between"
-        pb={2}
-        gap={2}
+        p={2}
+        height="auto"
+        maxHeight="100%"
+        bgcolor="#e8e4e6"
+        borderRadius={1}
       >
-        <SearchInput onChange={setNameFilter} />
+        <Box
+          display="flex"
+          flexDirection={{ xs: "column", sm: "row" }}
+          justifyContent="space-between"
+          pb={2}
+          gap={2}
+        >
+          <SearchBarUser />
+          <AddButton
+            onClick={() => {
+              console.log("estoy en el add button");
+              openModal("create");
+            }}
+          />
+        </Box>
+        {/* <Box
+        p={2}
+        height="auto"
+        maxHeight="100%"
+        bgcolor="#e8e4e6"
+        borderRadius={1}
+      >
+        <Box
+          display="flex"
+          flexDirection={{ xs: "column", sm: "row" }}
+          justifyContent="space-between"
+          pb={2}
+          gap={2}
+        >
+          <SearchInput onChange={setNameFilter} />
 
-        <CustomSelect
-          label="Select a role"
-          items={filterItems}
-          onChange={setRoleFilter}
-        />
+          <CustomSelect
+            label="Select a role"
+            items={filterItems}
+            onChange={setRoleFilter}
+          />
 
-        <AddButton onClick={() => setOpenDialog(true)} />
-      </Box>
-
-      <CustomTable
+          <AddButton
+            onClick={() => {
+              setTypeForm((prev) => ({
+                ...prev,
+                create: !prev.create,
+              })),
+                setOpenDialog(true);
+            }}
+          />
+        </Box> */}
+        <TableUser />
+        {/* <CustomTable
         count={totalItems}
         rows={users}
         page={page}
@@ -190,24 +240,30 @@ export default function AdminUsersPage() {
         onDelete={handleDeleteUser}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
+      /> */}
 
-      <CustomDialog
-        open={openDialog}
-        onClose={handleCloseUserDialog}
-        title={userToEdit ? "Edit User" : "Create User"}
-      >
-        {/* {userToEdit !== undefined &&  */}
-        <UserForm userToEdit={userToEdit} onSubmit={handleUpdateOrCreateUser} />
-        {/* } */}
-      </CustomDialog>
+        {/* <CustomDialog
+          open={openDialog}
+          onClose={handleCloseUserDialog}
+          title={userToEdit ? "Edit User" : "Create User"}
+        >
+          {handleTyPeForm(typeForm)}
+        </CustomDialog> */}
+        <CustomDialog
+          open={modalState.type === "create"}
+          onClose={closeModal}
+          title={"Create User"}
+        >
+          <UserForm onSubmit={() => {}} />
+        </CustomDialog>
 
-      <ConfirmModal
+        {/* <ConfirmModal
         open={openModal}
         onClose={() => setOpenModal(false)}
         confirmText={`Are you sure to delete the user "${userToDelete?.userName}"?`}
         onConfirmDeletion={handleConfirmDeletion}
-      />
-    </Box>
+      /> */}
+      </Box>
+    </UserProvider>
   );
 }

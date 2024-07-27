@@ -10,35 +10,26 @@ import {
   TableHead,
   IconButton,
   TableContainer,
-  TablePagination,
   CircularProgress,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
 interface CustomTableProps {
   rows: any[];
-  page: number;
-  rowsPerPage: number;
   columns: { id: string; label: string }[];
   isLoading: boolean;
-  count: number;
   onEdit: (row: any) => void;
   onDelete: (row: any) => void;
-  onChangePage: (event: any, newPage: number) => void;
-  onChangeRowsPerPage: (event: ChangeEvent<HTMLInputElement>) => void;
+  children?: React.ReactNode;
 }
 
 export const CustomTable = ({
   rows,
-  page,
-  count,
   onEdit,
   columns,
   onDelete,
   isLoading,
-  rowsPerPage,
-  onChangePage,
-  onChangeRowsPerPage,
+  children,
 }: CustomTableProps) => {
   return (
     <Paper sx={{ bgcolor: "secondary.main", width: "100%" }}>
@@ -98,16 +89,7 @@ export const CustomTable = ({
           </TableBody>
         </Table>
       </TableContainer>
-
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={count}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={onChangePage}
-        onRowsPerPageChange={onChangeRowsPerPage}
-      />
+      {children}
     </Paper>
   );
 };

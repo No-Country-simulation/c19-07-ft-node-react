@@ -2,6 +2,7 @@ import { type ChangeEvent, useRef } from "react";
 
 import { Search } from "@mui/icons-material";
 import { InputAdornment, TextField } from "@mui/material";
+import { useContextUser } from "../../modules/admin/components/hooks/useContextUser";
 
 interface SearchInputProps {
   onChange: (value: string) => void;
