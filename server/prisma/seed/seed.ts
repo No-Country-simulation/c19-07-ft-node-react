@@ -15,9 +15,6 @@ import seederEducationalLevel from './seederEducationalLevel'
 import seederParents from  './seederParents'
 import seederStudents from './seederStudent'
 const prisma = new PrismaClient()
-const APIRANDOMUSER =
-  'https://randomuser.me/api/?inc=name,login,picture,email&password=upper,lower,number,8&nat=es&results=300'
-//
  export interface IUserDb {
   name: string
   password: string
@@ -33,8 +30,10 @@ const main = async (): Promise<void> => {
   await seederUsers()
    await seederParents()
    await seederStudents()
-  /* const professorsdb = */ await seederProfessors()
-
+   await seederProfessors()
+  await seederCourses()
+  await mainAcademicRecords()
+/* const professorsdb = */
  /*  fs.writeFileSync(
     './prisma/seed/professors.json',
     JSON.stringify(professorsdb)
@@ -45,7 +44,7 @@ const main = async (): Promise<void> => {
   )
   await prisma.professors.createMany({ data: PROFESSOR }) */
 
-   await seederCourses()
+   
   /* fs.writeFileSync('./prisma/seed/courses.json', JSON.stringify(coursesDb))
 
   JSON.parse(fs.readFileSync('./prisma/seed/courses.json', 'utf8'))
@@ -62,7 +61,7 @@ const main = async (): Promise<void> => {
     })
     console.log('Courses created', result)
   } */
-  await mainAcademicRecords()
+  
 }
 main()
   .then(async () => {

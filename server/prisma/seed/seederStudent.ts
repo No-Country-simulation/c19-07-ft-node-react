@@ -38,9 +38,4 @@ const main = async () => {
   await prisma.students.createMany({ data: studentsDb })
 }
 
-main().catch(e => {
-  console.error(e)
-  prisma.$disconnect()
-})
-
 export default main

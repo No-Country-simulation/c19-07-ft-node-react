@@ -2,361 +2,361 @@
   {
     "nombre": "Curso 1",
     "descripcion": "Descripción del curso 1",
-    "professor_id": "clz4mymda00f8aqpb6oqwnlpx",
-    "area_academica_id": "clz4my3l40000aqpb25sf1iq5"
+    "professor_id": "clz4o3hw700f84iv551c4i5j9",
+    "area_academica_id": "clz4o2zge00004iv5wwehumuo"
   },
   {
     "nombre": "Curso 2",
     "descripcion": "Descripción del curso 2",
-    "professor_id": "clz4mymda00f9aqpbte3uniy9",
-    "area_academica_id": "clz4my3l40001aqpb6innfiwo"
+    "professor_id": "clz4o3hw700f94iv53uiw4da0",
+    "area_academica_id": "clz4o2zge00014iv5y4mrbwvl"
   },
   {
     "nombre": "Curso 3",
     "descripcion": "Descripción del curso 3",
-    "professor_id": "clz4mymda00faaqpbo9bptb15",
-    "area_academica_id": "clz4my3l40002aqpbya67j4ye"
+    "professor_id": "clz4o3hw700fa4iv5cmd6u1ha",
+    "area_academica_id": "clz4o2zge00024iv5m4s1yxmi"
   },
   {
     "nombre": "Curso 4",
     "descripcion": "Descripción del curso 4",
-    "professor_id": "clz4mymda00fbaqpbth26jdxq",
-    "area_academica_id": "clz4my3l40003aqpb5axw8wbg"
+    "professor_id": "clz4o3hw700fb4iv55j500of6",
+    "area_academica_id": "clz4o2zge00034iv5yqjq5ptb"
   },
   {
     "nombre": "Curso 5",
     "descripcion": "Descripción del curso 5",
-    "professor_id": "clz4mymda00fcaqpb2y6xqgyj",
-    "area_academica_id": "clz4my3l40004aqpb7li7jo1b"
+    "professor_id": "clz4o3hw700fc4iv50vk39paa",
+    "area_academica_id": "clz4o2zge00044iv5bvhxh4jc"
   },
   {
     "nombre": "Curso 6",
     "descripcion": "Descripción del curso 6",
-    "professor_id": "clz4mymda00fdaqpbzkhjjcud",
-    "area_academica_id": "clz4my3l40000aqpb25sf1iq5"
+    "professor_id": "clz4o3hw700fd4iv5gyjvtt7r",
+    "area_academica_id": "clz4o2zge00004iv5wwehumuo"
   },
   {
     "nombre": "Curso 7",
     "descripcion": "Descripción del curso 7",
-    "professor_id": "clz4mymda00feaqpbtfhgn8lg",
-    "area_academica_id": "clz4my3l40001aqpb6innfiwo"
+    "professor_id": "clz4o3hw700fe4iv50lzuqe7b",
+    "area_academica_id": "clz4o2zge00014iv5y4mrbwvl"
   },
   {
     "nombre": "Curso 8",
     "descripcion": "Descripción del curso 8",
-    "professor_id": "clz4mymda00ffaqpbprccz7gq",
-    "area_academica_id": "clz4my3l40002aqpbya67j4ye"
+    "professor_id": "clz4o3hw700ff4iv5xlao3zr8",
+    "area_academica_id": "clz4o2zge00024iv5m4s1yxmi"
   },
   {
     "nombre": "Curso 9",
     "descripcion": "Descripción del curso 9",
-    "professor_id": "clz4mymda00fgaqpbl399tbou",
-    "area_academica_id": "clz4my3l40003aqpb5axw8wbg"
+    "professor_id": "clz4o3hw700fg4iv5ob7k3m6a",
+    "area_academica_id": "clz4o2zge00034iv5yqjq5ptb"
   },
   {
     "nombre": "Curso 10",
     "descripcion": "Descripción del curso 10",
-    "professor_id": "clz4mymda00fhaqpbknb1f20o",
-    "area_academica_id": "clz4my3l40004aqpb7li7jo1b"
+    "professor_id": "clz4o3hw700fh4iv51l62mejk",
+    "area_academica_id": "clz4o2zge00044iv5bvhxh4jc"
   },
   {
     "nombre": "Curso 11",
     "descripcion": "Descripción del curso 11",
-    "professor_id": "clz4mymda00fiaqpbgcrou8nc",
-    "area_academica_id": "clz4my3l40000aqpb25sf1iq5"
+    "professor_id": "clz4o3hw700fi4iv5vxkg3ib2",
+    "area_academica_id": "clz4o2zge00004iv5wwehumuo"
   },
   {
     "nombre": "Curso 12",
     "descripcion": "Descripción del curso 12",
-    "professor_id": "clz4mymda00fjaqpbo50d1jbo",
-    "area_academica_id": "clz4my3l40001aqpb6innfiwo"
+    "professor_id": "clz4o3hw700fj4iv57sur5edq",
+    "area_academica_id": "clz4o2zge00014iv5y4mrbwvl"
   },
   {
     "nombre": "Curso 13",
     "descripcion": "Descripción del curso 13",
-    "professor_id": "clz4mymda00fkaqpbe21wc19c",
-    "area_academica_id": "clz4my3l40002aqpbya67j4ye"
+    "professor_id": "clz4o3hw700fk4iv5xx83n1q5",
+    "area_academica_id": "clz4o2zge00024iv5m4s1yxmi"
   },
   {
     "nombre": "Curso 14",
     "descripcion": "Descripción del curso 14",
-    "professor_id": "clz4mymda00flaqpbzdyvr9wy",
-    "area_academica_id": "clz4my3l40003aqpb5axw8wbg"
+    "professor_id": "clz4o3hw700fl4iv54zhm662s",
+    "area_academica_id": "clz4o2zge00034iv5yqjq5ptb"
   },
   {
     "nombre": "Curso 15",
     "descripcion": "Descripción del curso 15",
-    "professor_id": "clz4mymda00fmaqpbb58t7bzc",
-    "area_academica_id": "clz4my3l40004aqpb7li7jo1b"
+    "professor_id": "clz4o3hw700fm4iv5e7a4mwbh",
+    "area_academica_id": "clz4o2zge00044iv5bvhxh4jc"
   },
   {
     "nombre": "Curso 16",
     "descripcion": "Descripción del curso 16",
-    "professor_id": "clz4mymda00fnaqpb6270xsyh",
-    "area_academica_id": "clz4my3l40000aqpb25sf1iq5"
+    "professor_id": "clz4o3hw700fn4iv5843flvkd",
+    "area_academica_id": "clz4o2zge00004iv5wwehumuo"
   },
   {
     "nombre": "Curso 17",
     "descripcion": "Descripción del curso 17",
-    "professor_id": "clz4mymda00foaqpb9p6qbghw",
-    "area_academica_id": "clz4my3l40001aqpb6innfiwo"
+    "professor_id": "clz4o3hw700fo4iv55oa5tezf",
+    "area_academica_id": "clz4o2zge00014iv5y4mrbwvl"
   },
   {
     "nombre": "Curso 18",
     "descripcion": "Descripción del curso 18",
-    "professor_id": "clz4mymda00fpaqpb1zydr4r8",
-    "area_academica_id": "clz4my3l40002aqpbya67j4ye"
+    "professor_id": "clz4o3hw700fp4iv5tcsceah1",
+    "area_academica_id": "clz4o2zge00024iv5m4s1yxmi"
   },
   {
     "nombre": "Curso 19",
     "descripcion": "Descripción del curso 19",
-    "professor_id": "clz4mymda00fqaqpb8js8kuk0",
-    "area_academica_id": "clz4my3l40003aqpb5axw8wbg"
+    "professor_id": "clz4o3hw700fq4iv5jqydk90o",
+    "area_academica_id": "clz4o2zge00034iv5yqjq5ptb"
   },
   {
     "nombre": "Curso 20",
     "descripcion": "Descripción del curso 20",
-    "professor_id": "clz4mymda00fraqpbzl3mbj2l",
-    "area_academica_id": "clz4my3l40004aqpb7li7jo1b"
+    "professor_id": "clz4o3hw700fr4iv53ggwhdh6",
+    "area_academica_id": "clz4o2zge00044iv5bvhxh4jc"
   },
   {
     "nombre": "Curso 21",
     "descripcion": "Descripción del curso 21",
-    "professor_id": "clz4mymda00fsaqpbggjzm0mr",
-    "area_academica_id": "clz4my3l40000aqpb25sf1iq5"
+    "professor_id": "clz4o3hw700fs4iv50le6u561",
+    "area_academica_id": "clz4o2zge00004iv5wwehumuo"
   },
   {
     "nombre": "Curso 22",
     "descripcion": "Descripción del curso 22",
-    "professor_id": "clz4mymda00ftaqpb1x6qssta",
-    "area_academica_id": "clz4my3l40001aqpb6innfiwo"
+    "professor_id": "clz4o3hw700ft4iv5j3ra2huf",
+    "area_academica_id": "clz4o2zge00014iv5y4mrbwvl"
   },
   {
     "nombre": "Curso 23",
     "descripcion": "Descripción del curso 23",
-    "professor_id": "clz4mymda00fuaqpb6u2l1grh",
-    "area_academica_id": "clz4my3l40002aqpbya67j4ye"
+    "professor_id": "clz4o3hw700fu4iv5k1d448ds",
+    "area_academica_id": "clz4o2zge00024iv5m4s1yxmi"
   },
   {
     "nombre": "Curso 24",
     "descripcion": "Descripción del curso 24",
-    "professor_id": "clz4mymda00fvaqpb4hr24t58",
-    "area_academica_id": "clz4my3l40003aqpb5axw8wbg"
+    "professor_id": "clz4o3hw700fv4iv5is2ouwu5",
+    "area_academica_id": "clz4o2zge00034iv5yqjq5ptb"
   },
   {
     "nombre": "Curso 25",
     "descripcion": "Descripción del curso 25",
-    "professor_id": "clz4mymdb00fwaqpbqprtwq23",
-    "area_academica_id": "clz4my3l40004aqpb7li7jo1b"
+    "professor_id": "clz4o3hw700fw4iv58uwgzite",
+    "area_academica_id": "clz4o2zge00044iv5bvhxh4jc"
   },
   {
     "nombre": "Curso 26",
     "descripcion": "Descripción del curso 26",
-    "professor_id": "clz4mymdb00fxaqpbk5ntq8oz",
-    "area_academica_id": "clz4my3l40000aqpb25sf1iq5"
+    "professor_id": "clz4o3hw700fx4iv5i8gikgmc",
+    "area_academica_id": "clz4o2zge00004iv5wwehumuo"
   },
   {
     "nombre": "Curso 27",
     "descripcion": "Descripción del curso 27",
-    "professor_id": "clz4mymdb00fyaqpb7av6vggz",
-    "area_academica_id": "clz4my3l40001aqpb6innfiwo"
+    "professor_id": "clz4o3hw700fy4iv5wbhl0pys",
+    "area_academica_id": "clz4o2zge00014iv5y4mrbwvl"
   },
   {
     "nombre": "Curso 28",
     "descripcion": "Descripción del curso 28",
-    "professor_id": "clz4mymdb00fzaqpbesdmh0cv",
-    "area_academica_id": "clz4my3l40002aqpbya67j4ye"
+    "professor_id": "clz4o3hw700fz4iv5y3lo62xf",
+    "area_academica_id": "clz4o2zge00024iv5m4s1yxmi"
   },
   {
     "nombre": "Curso 29",
     "descripcion": "Descripción del curso 29",
-    "professor_id": "clz4mymdb00g0aqpb33kqwu6h",
-    "area_academica_id": "clz4my3l40003aqpb5axw8wbg"
+    "professor_id": "clz4o3hw700g04iv5hyhwbrzs",
+    "area_academica_id": "clz4o2zge00034iv5yqjq5ptb"
   },
   {
     "nombre": "Curso 30",
     "descripcion": "Descripción del curso 30",
-    "professor_id": "clz4mymdb00g1aqpb92fo7wgh",
-    "area_academica_id": "clz4my3l40004aqpb7li7jo1b"
+    "professor_id": "clz4o3hw700g14iv5l2to3ofm",
+    "area_academica_id": "clz4o2zge00044iv5bvhxh4jc"
   },
   {
     "nombre": "Curso 31",
     "descripcion": "Descripción del curso 31",
-    "professor_id": "clz4mymdb00g2aqpbkl5pn90q",
-    "area_academica_id": "clz4my3l40000aqpb25sf1iq5"
+    "professor_id": "clz4o3hw700g24iv5omg0ja3t",
+    "area_academica_id": "clz4o2zge00004iv5wwehumuo"
   },
   {
     "nombre": "Curso 32",
     "descripcion": "Descripción del curso 32",
-    "professor_id": "clz4mymdb00g3aqpb0wgq8sii",
-    "area_academica_id": "clz4my3l40001aqpb6innfiwo"
+    "professor_id": "clz4o3hw700g34iv5sajj4nxn",
+    "area_academica_id": "clz4o2zge00014iv5y4mrbwvl"
   },
   {
     "nombre": "Curso 33",
     "descripcion": "Descripción del curso 33",
-    "professor_id": "clz4mymdb00g4aqpbqhj9e8r8",
-    "area_academica_id": "clz4my3l40002aqpbya67j4ye"
+    "professor_id": "clz4o3hw700g44iv5suyfhy9k",
+    "area_academica_id": "clz4o2zge00024iv5m4s1yxmi"
   },
   {
     "nombre": "Curso 34",
     "descripcion": "Descripción del curso 34",
-    "professor_id": "clz4mymdb00g5aqpbevq618h3",
-    "area_academica_id": "clz4my3l40003aqpb5axw8wbg"
+    "professor_id": "clz4o3hw700g54iv5qrl4vew6",
+    "area_academica_id": "clz4o2zge00034iv5yqjq5ptb"
   },
   {
     "nombre": "Curso 35",
     "descripcion": "Descripción del curso 35",
-    "professor_id": "clz4mymdb00g6aqpbqqhtogkg",
-    "area_academica_id": "clz4my3l40004aqpb7li7jo1b"
+    "professor_id": "clz4o3hw700g64iv5jpckndks",
+    "area_academica_id": "clz4o2zge00044iv5bvhxh4jc"
   },
   {
     "nombre": "Curso 36",
     "descripcion": "Descripción del curso 36",
-    "professor_id": "clz4mymdb00g7aqpbpy9dirul",
-    "area_academica_id": "clz4my3l40000aqpb25sf1iq5"
+    "professor_id": "clz4o3hw700g74iv5bln5wnmg",
+    "area_academica_id": "clz4o2zge00004iv5wwehumuo"
   },
   {
     "nombre": "Curso 37",
     "descripcion": "Descripción del curso 37",
-    "professor_id": "clz4mymdb00g8aqpb72gcs9eq",
-    "area_academica_id": "clz4my3l40001aqpb6innfiwo"
+    "professor_id": "clz4o3hw700g84iv50wtohrlz",
+    "area_academica_id": "clz4o2zge00014iv5y4mrbwvl"
   },
   {
     "nombre": "Curso 38",
     "descripcion": "Descripción del curso 38",
-    "professor_id": "clz4mymdb00g9aqpb2vptch6q",
-    "area_academica_id": "clz4my3l40002aqpbya67j4ye"
+    "professor_id": "clz4o3hw700g94iv5nthcs0ub",
+    "area_academica_id": "clz4o2zge00024iv5m4s1yxmi"
   },
   {
     "nombre": "Curso 39",
     "descripcion": "Descripción del curso 39",
-    "professor_id": "clz4mymdb00gaaqpby1olofn8",
-    "area_academica_id": "clz4my3l40003aqpb5axw8wbg"
+    "professor_id": "clz4o3hw700ga4iv5q4o0lsc6",
+    "area_academica_id": "clz4o2zge00034iv5yqjq5ptb"
   },
   {
     "nombre": "Curso 40",
     "descripcion": "Descripción del curso 40",
-    "professor_id": "clz4mymdb00gbaqpb6ptawkn7",
-    "area_academica_id": "clz4my3l40004aqpb7li7jo1b"
+    "professor_id": "clz4o3hw700gb4iv5jpzz4kwk",
+    "area_academica_id": "clz4o2zge00044iv5bvhxh4jc"
   },
   {
     "nombre": "Curso 41",
     "descripcion": "Descripción del curso 41",
-    "professor_id": "clz4mymdb00gcaqpbpbgvqopi",
-    "area_academica_id": "clz4my3l40000aqpb25sf1iq5"
+    "professor_id": "clz4o3hw700gc4iv5ahu25u3n",
+    "area_academica_id": "clz4o2zge00004iv5wwehumuo"
   },
   {
     "nombre": "Curso 42",
     "descripcion": "Descripción del curso 42",
-    "professor_id": "clz4mymdb00gdaqpbubu1rg4s",
-    "area_academica_id": "clz4my3l40001aqpb6innfiwo"
+    "professor_id": "clz4o3hw700gd4iv5xhmvebjg",
+    "area_academica_id": "clz4o2zge00014iv5y4mrbwvl"
   },
   {
     "nombre": "Curso 43",
     "descripcion": "Descripción del curso 43",
-    "professor_id": "clz4mymdb00geaqpbwh1egmvw",
-    "area_academica_id": "clz4my3l40002aqpbya67j4ye"
+    "professor_id": "clz4o3hw700ge4iv5qyzt2a4p",
+    "area_academica_id": "clz4o2zge00024iv5m4s1yxmi"
   },
   {
     "nombre": "Curso 44",
     "descripcion": "Descripción del curso 44",
-    "professor_id": "clz4mymdb00gfaqpbih3iwtm7",
-    "area_academica_id": "clz4my3l40003aqpb5axw8wbg"
+    "professor_id": "clz4o3hw700gf4iv5fjy6llpd",
+    "area_academica_id": "clz4o2zge00034iv5yqjq5ptb"
   },
   {
     "nombre": "Curso 45",
     "descripcion": "Descripción del curso 45",
-    "professor_id": "clz4mymdb00ggaqpb5zucm09g",
-    "area_academica_id": "clz4my3l40004aqpb7li7jo1b"
+    "professor_id": "clz4o3hw700gg4iv5uln77ok7",
+    "area_academica_id": "clz4o2zge00044iv5bvhxh4jc"
   },
   {
     "nombre": "Curso 46",
     "descripcion": "Descripción del curso 46",
-    "professor_id": "clz4mymdb00ghaqpbi0cspi9l",
-    "area_academica_id": "clz4my3l40000aqpb25sf1iq5"
+    "professor_id": "clz4o3hw700gh4iv5rqiw4m46",
+    "area_academica_id": "clz4o2zge00004iv5wwehumuo"
   },
   {
     "nombre": "Curso 47",
     "descripcion": "Descripción del curso 47",
-    "professor_id": "clz4mymdb00giaqpbbykclued",
-    "area_academica_id": "clz4my3l40001aqpb6innfiwo"
+    "professor_id": "clz4o3hw700gi4iv5pvgjwm8m",
+    "area_academica_id": "clz4o2zge00014iv5y4mrbwvl"
   },
   {
     "nombre": "Curso 48",
     "descripcion": "Descripción del curso 48",
-    "professor_id": "clz4mymdb00gjaqpbw441x3wc",
-    "area_academica_id": "clz4my3l40002aqpbya67j4ye"
+    "professor_id": "clz4o3hw700gj4iv59nyel4wz",
+    "area_academica_id": "clz4o2zge00024iv5m4s1yxmi"
   },
   {
     "nombre": "Curso 49",
     "descripcion": "Descripción del curso 49",
-    "professor_id": "clz4mymdb00gkaqpb54wq7qs1",
-    "area_academica_id": "clz4my3l40003aqpb5axw8wbg"
+    "professor_id": "clz4o3hw700gk4iv52zets3h4",
+    "area_academica_id": "clz4o2zge00034iv5yqjq5ptb"
   },
   {
     "nombre": "Curso 50",
     "descripcion": "Descripción del curso 50",
-    "professor_id": "clz4mymdb00glaqpb9yk4a5t5",
-    "area_academica_id": "clz4my3l40004aqpb7li7jo1b"
+    "professor_id": "clz4o3hw700gl4iv5hlzrgkqz",
+    "area_academica_id": "clz4o2zge00044iv5bvhxh4jc"
   },
   {
     "nombre": "Curso 51",
     "descripcion": "Descripción del curso 51",
-    "professor_id": "clz4mymdb00gmaqpbvwv5jegb",
-    "area_academica_id": "clz4my3l40000aqpb25sf1iq5"
+    "professor_id": "clz4o3hw700gm4iv5lirfyrmv",
+    "area_academica_id": "clz4o2zge00004iv5wwehumuo"
   },
   {
     "nombre": "Curso 52",
     "descripcion": "Descripción del curso 52",
-    "professor_id": "clz4mymdb00gnaqpbhstamot0",
-    "area_academica_id": "clz4my3l40001aqpb6innfiwo"
+    "professor_id": "clz4o3hw700gn4iv5m2qthx16",
+    "area_academica_id": "clz4o2zge00014iv5y4mrbwvl"
   },
   {
     "nombre": "Curso 53",
     "descripcion": "Descripción del curso 53",
-    "professor_id": "clz4mymdb00goaqpby94oxqxe",
-    "area_academica_id": "clz4my3l40002aqpbya67j4ye"
+    "professor_id": "clz4o3hw700go4iv57uoosm1i",
+    "area_academica_id": "clz4o2zge00024iv5m4s1yxmi"
   },
   {
     "nombre": "Curso 54",
     "descripcion": "Descripción del curso 54",
-    "professor_id": "clz4mymdb00gpaqpbp8yal5w8",
-    "area_academica_id": "clz4my3l40003aqpb5axw8wbg"
+    "professor_id": "clz4o3hw700gp4iv557f7m3jl",
+    "area_academica_id": "clz4o2zge00034iv5yqjq5ptb"
   },
   {
     "nombre": "Curso 55",
     "descripcion": "Descripción del curso 55",
-    "professor_id": "clz4mymdb00gqaqpb92si5njx",
-    "area_academica_id": "clz4my3l40004aqpb7li7jo1b"
+    "professor_id": "clz4o3hw700gq4iv5wbbfzcq7",
+    "area_academica_id": "clz4o2zge00044iv5bvhxh4jc"
   },
   {
     "nombre": "Curso 56",
     "descripcion": "Descripción del curso 56",
-    "professor_id": "clz4mymdb00graqpbwuxz05yt",
-    "area_academica_id": "clz4my3l40000aqpb25sf1iq5"
+    "professor_id": "clz4o3hw700gr4iv5obvm0o22",
+    "area_academica_id": "clz4o2zge00004iv5wwehumuo"
   },
   {
     "nombre": "Curso 57",
     "descripcion": "Descripción del curso 57",
-    "professor_id": "clz4mymdb00gsaqpbq3epmvu1",
-    "area_academica_id": "clz4my3l40001aqpb6innfiwo"
+    "professor_id": "clz4o3hw700gs4iv5h230pcl2",
+    "area_academica_id": "clz4o2zge00014iv5y4mrbwvl"
   },
   {
     "nombre": "Curso 58",
     "descripcion": "Descripción del curso 58",
-    "professor_id": "clz4mymdb00gtaqpbq96fnjrp",
-    "area_academica_id": "clz4my3l40002aqpbya67j4ye"
+    "professor_id": "clz4o3hw700gt4iv56fz5p3mc",
+    "area_academica_id": "clz4o2zge00024iv5m4s1yxmi"
   },
   {
     "nombre": "Curso 59",
     "descripcion": "Descripción del curso 59",
-    "professor_id": "clz4mymdb00guaqpbhz0uuzyi",
-    "area_academica_id": "clz4my3l40003aqpb5axw8wbg"
+    "professor_id": "clz4o3hw700gu4iv5zz5e13yi",
+    "area_academica_id": "clz4o2zge00034iv5yqjq5ptb"
   },
   {
     "nombre": "Curso 60",
     "descripcion": "Descripción del curso 60",
-    "professor_id": "clz4mymdb00gvaqpb1cf2poxn",
-    "area_academica_id": "clz4my3l40004aqpb7li7jo1b"
+    "professor_id": "clz4o3hw700gv4iv5ljsbult6",
+    "area_academica_id": "clz4o2zge00044iv5bvhxh4jc"
   }
 ]

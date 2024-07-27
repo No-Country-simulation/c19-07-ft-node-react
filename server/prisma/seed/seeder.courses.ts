@@ -125,7 +125,6 @@ const main = async () => {
 
   JSON.parse(fs.readFileSync('./prisma/seed/courses.json', 'utf8'))
   const createdStudents = await prisma.students.findMany()
-  console.log(createdStudents[0])
   for (const course of coursesData) {
     const result = await prisma.courses.create({
       data: {
@@ -135,8 +134,6 @@ const main = async () => {
         }
       }
     })
-    console.log('Courses created', result)
-  console.log('Cursos creados y guardados en courses.json')
 }
 }
 export default main
