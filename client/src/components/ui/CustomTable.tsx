@@ -41,17 +41,25 @@ export const CustomTable = ({
   onChangeRowsPerPage,
 }: CustomTableProps) => {
   return (
-    <Paper sx={{ bgcolor: "secondary.main", width: "100%" }}>
-      <TableContainer>
-        <Table sx={{ minWidth: 650 }} aria-label="users table">
+    <Paper
+      sx={{ bgcolor: "secondary.main", width: "100%", overflow: "hidden" }}
+    >
+      <TableContainer
+        sx={{
+          maxHeight: { xs: "calc(100vh - 376.5px)", sm: "calc(100vh - 268px)" },
+        }}
+      >
+        <Table stickyHeader sx={{ minWidth: 650 }} aria-label="users table">
           <TableHead>
             <TableRow>
               {columns.map(({ id, label }) => (
-                <TableCell key={id} sx={{ fontWeight: "bold" }}>
+                <TableCell key={id} sx={{ fontWeight: "bold", color: "white" }}>
                   {label}
                 </TableCell>
               ))}
-              <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
+              <TableCell sx={{ fontWeight: "bold", color: "white" }}>
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

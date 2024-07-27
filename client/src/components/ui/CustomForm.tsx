@@ -9,8 +9,9 @@ import type { UseFormRegister, FieldErrors } from "react-hook-form";
 
 type FormField = {
   name: string;
-  label: string;
+  label?: string;
   type?: string;
+  placeholder?: string;
   select?: { value: string; label: string }[];
 };
 
@@ -41,14 +42,15 @@ export const CustomForm = ({
       component="form"
       onSubmit={onSubmit}
     >
-      {formFields.map(({ label, type, name, select }) => (
-        <Grid item xs={6}>
+      {formFields.map(({ label, type, name, select, placeholder }) => (
+        <Grid key={name} item xs={6}>
           <TextField
             fullWidth
             select={!!select}
             label={label}
             type={type}
             variant="standard"
+            placeholder={placeholder}
             {...register(name)}
             error={!!errors[name]}
             helperText={errors[name]?.message as string}

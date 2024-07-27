@@ -63,8 +63,8 @@ const createFormFields = [
 ];
 
 const editFormFields = [
-  { name: "name", label: "Name", type: "text" },
-  { name: "email", label: "Email", type: "email" },
+  { name: "name", placeholder: "Name", type: "text" },
+  { name: "email", placeholder: "Email", type: "email" },
 ];
 
 const createUserFormSchema = z.object({
@@ -111,6 +111,7 @@ export default function AdminUsersPage() {
 
   // ? Hook Forms
   const {
+    reset: resetCreateForm,
     register: registerCreateForm,
     handleSubmit: handleSubmitCreateForm,
     formState: {
@@ -122,27 +123,29 @@ export default function AdminUsersPage() {
   });
 
   const {
+    reset: resetEditForm,
     register: registerEditForm,
+    setValue: setEditFormValues,
     handleSubmit: handleSubmitEditForm,
     formState: { errors: errorsEditForm },
   } = useForm<EditUserFormData>({
     resolver: zodResolver(editUserFormSchema),
-    defaultValues: {},
   });
 
   // ? User creation or update
   const handleSetUserToEdit = (user: User) => {
-    // setUserToEdit(user);
+    setUserToEdit(user);
     setOpenEditUserDialog(true);
-
     api.get(`/users/${user.user_id}`).then((res) => {
-      setUserToEdit(res.data);
+      setEditFormValues("name", res.data.name, { shouldDirty: true });
+      setEditFormValues("email", res.data.email, { shouldDirty: true });
     });
   };
 
   const handleCloseEditUserDialog = () => {
     setUserToEdit(undefined);
     setOpenEditUserDialog(false);
+    resetEditForm();
   };
 
   const onSubmitCreateForm: SubmitHandler<CreateUserFormData> = async (
@@ -150,14 +153,15 @@ export default function AdminUsersPage() {
   ) => {
     console.log({ data });
 
-    api.post("/admin/create-user", data).then(() => {
+    await api.post("/admin/create-user", data).then(() => {
       getUsers();
       enqueueSnackbar("User successfully created!", { variant: "success" });
       setOpenCreateUserDialog(false);
+      resetCreateForm();
     });
   };
 
-  const onSubmitEditForm: SubmitHandler<EditUserFormData> = (data) => {
+  const onSubmitEditForm: SubmitHandler<EditUserFormData> = async (data) => {
     if (userToEdit) {
       api.put(`/admin/update-user/${userToEdit.user_id}`, data).then(() => {
         getUsers();
@@ -214,13 +218,7 @@ export default function AdminUsersPage() {
   }, [page, rowsPerPage, roleFilter, nameFilter]);
 
   return (
-    <Box
-      p={2}
-      height="auto"
-      maxHeight="100%"
-      bgcolor="#e8e4e6"
-      borderRadius={1}
-    >
+    <Box p={2} height="auto" bgcolor="#e8e4e6" borderRadius={1}>
       <Box
         display="flex"
         flexDirection={{ xs: "column", sm: "row" }}
@@ -239,6 +237,7 @@ export default function AdminUsersPage() {
         <AddButton onClick={() => setOpenCreateUserDialog(true)} />
       </Box>
 
+      {/* <Box height="100%" overflow="auto"> */}
       <CustomTable
         count={totalItems}
         rows={users}
@@ -251,6 +250,7 @@ export default function AdminUsersPage() {
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
+      {/* </Box> */}
 
       {/* User creation form dialog */}
       <CustomDialog
