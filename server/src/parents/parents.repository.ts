@@ -29,9 +29,9 @@ export const getAllStudentsWithDetailsRepository = async () => {
 
     include: {
       user: true,
-        parent: {
-          include: {
-            user: true
+      parent: {
+        include: {
+          user: true
         }
       },
       courses: {
@@ -93,7 +93,7 @@ export const getStudentByIdRepository = async (id: string) => {
 // GET all parents | nombreEstudiante|nombredelPadre|emaildelPadre
 // repositorio
 
-export const getStudentParentDetailsRepository = async (): Promise<{ studentName: string, parentName: string, parentEmail: string }[]> => {
+export const getStudentParentDetailsRepository = async (): Promise<Array<{ studentName: string, parentName: string, parentEmail: string }>> => {
   const students = await prisma.students.findMany({
     select: {
       user: {
@@ -116,11 +116,10 @@ export const getStudentParentDetailsRepository = async (): Promise<{ studentName
 
   const data = students.map(student => ({
     studentName: student.user.name,
-    parentName: student.parent?.user.name || "",
-    parentEmail: student.parent?.user.email || ""
+    parentName: student.parent?.user.name || '',
+    parentEmail: student.parent?.user.email || ''
 
   }))
 
   return data
 }
-

@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient } from '@prisma/client'
 import { faker } from '@faker-js/faker'
-import fs from "fs"
+import fs from 'fs'
 
 const prisma = new PrismaClient()
 
@@ -19,10 +19,10 @@ const main = async () => {
   const students = userTypeStudents.map((user, i) => {
     const grade = grades[i % grades.length]
     const section = sections[i % sections.length]
-    
+
     return {
-      grade: grade,
-      section: section,
+      grade,
+      section,
       user_id: user.user_id,
       educational_level_id: educationalLevels[0].level_id,
       parentId: parentsId[i % parentsId.length].parent_id,

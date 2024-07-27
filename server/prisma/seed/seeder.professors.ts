@@ -1,4 +1,4 @@
-/* 
+/*
 import { PrismaClient } from '@prisma/client'
 import fs from 'fs'
 
@@ -74,48 +74,48 @@ main().catch(e => {
 export default main
  */
 
-import { PrismaClient } from "@prisma/client";
-import fs from "fs";
+import { PrismaClient } from '@prisma/client'
+import fs from 'fs'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 const main = async () => {
   const userTypeProfessors = await prisma.users.findMany({
-    where: { type_user: "PROFESSOR" },
-  });
-  const areaAcademics = await prisma.academic_areas.findMany({});
-  const educationalLevels = await prisma.educational_levels.findMany({});
+    where: { type_user: 'PROFESSOR' }
+  })
+  const areaAcademics = await prisma.academic_areas.findMany({})
+  const educationalLevels = await prisma.educational_levels.findMany({})
 
   // Divide los profesores en dos grupos para los dos niveles educativos
-  const half = Math.ceil(userTypeProfessors.length / 2);
-  const professorsPrimary = userTypeProfessors.slice(0, half);
-  const professorsSecondary = userTypeProfessors.slice(half);
+  const half = Math.ceil(userTypeProfessors.length / 2)
+  const professorsPrimary = userTypeProfessors.slice(0, half)
+  const professorsSecondary = userTypeProfessors.slice(half)
 
   // Asignar profesores a niveles educativos y áreas académicas
   const professorsData = [...professorsPrimary, ...professorsSecondary].map(
     (professor, index) => {
       const educationalLevel =
-        index < half ? educationalLevels[0] : educationalLevels[1]; // Alternar niveles educativos
-      const areaAcademica = areaAcademics[index % areaAcademics.length]; // Asignar áreas académicas cíclicamente
+        index < half ? educationalLevels[0] : educationalLevels[1] // Alternar niveles educativos
+      const areaAcademica = areaAcademics[index % areaAcademics.length] // Asignar áreas académicas cíclicamente
 
       return {
         user_id: professor.user_id,
         fecha_contratacion: new Date().toISOString(),
-        estado_empleado: "ACTIVE",
+        estado_empleado: 'ACTIVE',
         educational_level_id: educationalLevel.level_id,
-        area_academica_id: areaAcademica.academic_area_id,
-      };
+        area_academica_id: areaAcademica.academic_area_id
+      }
     }
-  );
+  )
   fs.writeFileSync(
-    "./prisma/seed/professors.json",
+    './prisma/seed/professors.json',
     JSON.stringify(professorsData, null, 2),
-    "utf-8"
-  );
+    'utf-8'
+  )
   // Insertar datos en la tabla Professors
-  await prisma.professors.createMany({ data: professorsData });
+  await prisma.professors.createMany({ data: professorsData })
 
-  console.log("Profesores asignados exitosamente");
-};
+  console.log('Profesores asignados exitosamente')
+}
 
 export default main

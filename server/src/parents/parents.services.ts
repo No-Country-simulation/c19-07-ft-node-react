@@ -94,7 +94,7 @@ interface StudentDetails {
 //           comment: record.comment,
 //           date: record.date
 //         })),
-        
+
 //       evaluations: course.evaluations.map((evaluation: any) => ({
 //         evaluationId: evaluation.evaluation_id,
 //         name: evaluation.name,
@@ -110,8 +110,7 @@ interface StudentDetails {
 //           }))
 //       }))
 //     }))
-  
-  
+
 //   }))
 
 //   return data2
@@ -134,9 +133,9 @@ export const getStudentsWithDetailsService = async (): Promise<StudentDetails[]>
           comment: record.comment,
           date: record.date
         }))
-      
+
       const marks = academicRecords.map((record: any) => record.mark).filter((mark: any) => mark !== undefined)
-      const averageMark = marks.length > 0 ? marks.reduce((a:number, b:number) => a + b, 0) / marks.length : null
+      const averageMark = marks.length > 0 ? marks.reduce((a: number, b: number) => a + b, 0) / marks.length : null
 
       return {
         courseId: course.cursos_id,
@@ -215,7 +214,6 @@ export const getStudentByIdService = async (id: string): Promise<StudentDetails 
 
 export const getStudentParentDetailsServices = async () => {
   const data = await parentRepository.getStudentParentDetailsRepository()
-  
-  return data
 
+  return data
 }

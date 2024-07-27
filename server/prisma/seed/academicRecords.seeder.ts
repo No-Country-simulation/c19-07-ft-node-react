@@ -1,8 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 
 import { faker } from '@faker-js/faker'
-/* 
-
+/*
 
 const seedAcademicRecords = async (): Promise<void> => {
   const students: IStudents[] = await prisma.students.findMany()
@@ -105,7 +104,7 @@ interface IEvaluations {
 const prisma = new PrismaClient()
 
 const seedAcademicRecords = async (): Promise<void> => {
-  console.log("Empezando a cargar notas de evaluaciones en la base de datos")
+  console.log('Empezando a cargar notas de evaluaciones en la base de datos')
   const students: IStudents[] = await prisma.students.findMany()
   const courses: ICourses[] = await prisma.courses.findMany()
   for (const student of students) {
@@ -123,9 +122,9 @@ const seedAcademicRecords = async (): Promise<void> => {
 
 const seedEvaluations = async (): Promise<void> => {
   const courses: ICourses[] = await prisma.courses.findMany()
-  const evaluationNames = ["Examen Parcial", "Examen Final", "Trabajo en Clase", "Proyecto", "Presentación"]
+  const evaluationNames = ['Examen Parcial', 'Examen Final', 'Trabajo en Clase', 'Proyecto', 'Presentación']
   for (const course of courses) {
-    const evaluationCount = faker.number.int({ min: 1, max: 5 })  // Número de evaluaciones por curso
+    const evaluationCount = faker.number.int({ min: 1, max: 5 }) // Número de evaluaciones por curso
     for (let i = 0; i < evaluationCount; i++) {
       await prisma.evaluations.create({
         data: {
@@ -162,7 +161,5 @@ export const mainAcademicRecords = async (): Promise<void> => {
   await seedEvaluationResults()
   console.log('Datos de registros académicos, evaluaciones y resultados de evaluaciones creados.')
 }
-
-
 
 export default mainAcademicRecords

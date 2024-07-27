@@ -117,9 +117,6 @@ const main = async () => {
     }
   })
 
- 
-  
-
   // Guardar cursos en un archivo JSON
   fs.writeFileSync('./prisma/seed/courses.json', JSON.stringify(coursesData, null, 2))
 
@@ -134,6 +131,6 @@ const main = async () => {
         }
       }
     })
-}
+  }
 }
 export default main
