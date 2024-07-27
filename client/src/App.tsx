@@ -86,7 +86,7 @@ const router = createBrowserRouter([
             element: <TeacherChatPage />,
           },
           {
-            path: "class/student/report",
+            path: "class/student/report/:studentId",
             element: <TeacherReport />,
           },
           // {

@@ -238,6 +238,322 @@
 
 // export default ClassRoomStudents;
 
+// import { useState } from "react";
+// import {
+//   Box,
+//   Container,
+//   Grid,
+//   Button,
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableContainer,
+//   TableHead,
+//   TableRow,
+//   Paper,
+//   Dialog,
+//   DialogTitle,
+//   DialogContent,
+//   DialogActions,
+//   TextField,
+//   IconButton,
+// } from "@mui/material";
+// import { Add, Remove } from "@mui/icons-material";
+// import { useNavigate } from "react-router-dom";
+
+// type Subject = "Math" | "Science" | "English" | "History";
+
+// interface GradeDetail {
+//   name: string;
+//   grade: number;
+// }
+
+// interface Student {
+//   student_id: string;
+//   user_id: string;
+//   grades: {
+//     [key in Subject]: GradeDetail[];
+//   };
+// }
+
+// const headers: { name: string; align: "left" | "right" | "center" }[] = [
+//   { name: "No.", align: "left" },
+//   { name: "Student", align: "left" },
+//   { name: "Math", align: "right" },
+//   { name: "Science", align: "right" },
+//   { name: "English", align: "right" },
+//   { name: "History", align: "right" },
+//   { name: "Average", align: "right" },
+//   { name: "Report", align: "right" },
+// ];
+
+// const initialStudents: Student[] = [
+//   {
+//     student_id: "1",
+//     user_id: "student1",
+//     grades: {
+//       Math: [
+//         { name: "Taller 1", grade: 8 },
+//         { name: "Taller 2", grade: 9 },
+//       ],
+//       Science: [
+//         { name: "Taller 1", grade: 7 },
+//         { name: "Taller 2", grade: 6 },
+//       ],
+//       English: [
+//         { name: "Taller 1", grade: 9 },
+//         { name: "Taller 2", grade: 10 },
+//       ],
+//       History: [
+//         { name: "Taller 1", grade: 8 },
+//         { name: "Taller 2", grade: 7 },
+//       ],
+//     },
+//   },
+//   {
+//     student_id: "2",
+//     user_id: "student2",
+//     grades: {
+//       Math: [
+//         { name: "Taller 1", grade: 7 },
+//         { name: "Taller 2", grade: 8 },
+//       ],
+//       Science: [
+//         { name: "Taller 1", grade: 6 },
+//         { name: "Taller 2", grade: 7 },
+//       ],
+//       English: [
+//         { name: "Taller 1", grade: 8 },
+//         { name: "Taller 2", grade: 9 },
+//       ],
+//       History: [
+//         { name: "Taller 1", grade: 7 },
+//         { name: "Taller 2", grade: 6 },
+//       ],
+//     },
+//   },
+// ];
+
+// const calculateAverage = (grades: GradeDetail[]) => {
+//   const total = grades.reduce((sum, gradeDetail) => sum + gradeDetail.grade, 0);
+//   return (total / grades.length).toFixed(2);
+// };
+
+// const ClassRoomStudents = () => {
+//   const navigate = useNavigate();
+//   const [students, setStudents] = useState<Student[]>(initialStudents);
+//   const [dialogOpen, setDialogOpen] = useState(false);
+//   const [currentGrades, setCurrentGrades] = useState<GradeDetail[]>([]);
+//   const [currentStudentId, setCurrentStudentId] = useState<string>("");
+//   const [currentSubject, setCurrentSubject] = useState<Subject>("Math");
+
+
+//   const handleReportButtonClick = () => {
+//     navigate(`/teacher/class/student/report`);
+//   };
+
+//   const handleGradeClick = (studentId: string, subject: Subject) => {
+//     const student = students.find((s) => s.student_id === studentId);
+//     if (student) {
+//       setCurrentGrades(student.grades[subject]);
+//       setCurrentStudentId(studentId);
+//       setCurrentSubject(subject);
+//       setDialogOpen(true);
+//     }
+//   };
+
+//   const handleGradeChange = (
+//     index: number,
+//     field: "name" | "grade",
+//     value: string | number
+//   ) => {
+//     const newGrades = [...currentGrades];
+//     newGrades[index] = { ...newGrades[index], [field]: value };
+//     setCurrentGrades(newGrades);
+//   };
+
+//   const handleAddGrade = () => {
+//     setCurrentGrades([...currentGrades, { name: "", grade: 0 }]);
+//   };
+
+//   const handleRemoveGrade = (index: number) => {
+//     setCurrentGrades(currentGrades.filter((_, i) => i !== index));
+//   };
+
+//   const handleSaveGrades = () => {
+//     setStudents((prevStudents) =>
+//       prevStudents.map((student) => {
+//         if (student.student_id === currentStudentId) {
+//           return {
+//             ...student,
+//             grades: {
+//               ...student.grades,
+//               [currentSubject]: currentGrades,
+//             },
+//           };
+//         }
+//         return student;
+//       })
+//     );
+//     setDialogOpen(false);
+//   };
+
+//   return (
+//     <Container disableGutters>
+//       <Grid container spacing={3}>
+//         <Grid item xs={12}>
+//           <Grid container spacing={3}>
+//             <Grid
+//               item
+//               xs={12}
+//               sx={{
+//                 backgroundColor: "#004643",
+//                 padding: "4vh",
+//               }}
+//             >
+//               <Box
+//                 sx={{
+//                   display: "flex",
+//                   alignItems: "center",
+//                   justifyContent: "space-between",
+//                   marginBottom: "4vh",
+//                 }}
+//               >
+//               </Box>
+//               <TableContainer component={Paper}>
+//                 <Table
+//                   sx={{ minWidth: 650, backgroundColor: "#f9bc60" }}
+//                   aria-label="simple table"
+//                 >
+//                   <TableHead>
+//                     <TableRow>
+//                       {headers.map((header) => (
+//                         <TableCell
+//                           key={header.name}
+//                           align={header.align}
+//                           sx={{ color: "black", fontWeight: "bold" }}
+//                         >
+//                           {header.name}
+//                         </TableCell>
+//                       ))}
+//                     </TableRow>
+//                   </TableHead>
+//                   <TableBody>
+//                     {students.map((student, index) => (
+//                       <TableRow key={student.student_id}>
+//                         <TableCell
+//                           align="left"
+//                           sx={{ color: "black", fontWeight: "bold" }}
+//                         >
+//                           {index + 1}
+//                         </TableCell>
+//                         <TableCell
+//                           component="th"
+//                           scope="row"
+//                           sx={{ color: "black", fontWeight: "bold" }}
+//                         >
+//                           {student.user_id}
+//                         </TableCell>
+//                         {(
+//                           ["Math", "Science", "English", "History"] as Subject[]
+//                         ).map((subject) => (
+//                           <TableCell
+//                             key={subject}
+//                             align="right"
+//                             sx={{ color: "black", cursor: "pointer" }}
+//                             onClick={() =>
+//                               handleGradeClick(student.student_id, subject)
+//                             }
+//                           >
+//                             {calculateAverage(student.grades[subject])}
+//                           </TableCell>
+//                         ))}
+//                         <TableCell align="right" sx={{ color: "black" }}>
+//                           {calculateAverage(
+//                             ([] as GradeDetail[]).concat(
+//                               ...Object.values(student.grades)
+//                             )
+//                           )}
+//                         </TableCell>
+//                         <TableCell align="right">
+//                           <Button
+//                             variant="contained"
+//                             onClick={handleReportButtonClick}
+//                             sx={{
+//                               backgroundColor: "#f9bc60",
+//                               color: "white",
+//                               "&:hover": {
+//                                 backgroundColor: "#e16162",
+//                               },
+//                             }}
+//                           >
+//                             Report
+//                           </Button>
+//                         </TableCell>
+//                       </TableRow>
+//                     ))}
+//                   </TableBody>
+//                 </Table>
+//               </TableContainer>
+//             </Grid>
+//           </Grid>
+//         </Grid>
+//       </Grid>
+//       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+//         <DialogTitle>Edit or Add Notes</DialogTitle>
+//         <DialogContent>
+//           <Box
+//             sx={{
+//               maxHeight: 300,
+//               overflowY: "auto",
+//               marginBottom: "16px",
+//             }}
+//           >
+//             {currentGrades.map((gradeDetail, index) => (
+//               <Box key={index} display="flex" alignItems="center" mb={2}>
+//                 <TextField
+//                   label="Workshop Name"
+//                   value={gradeDetail.name}
+//                   onChange={(e) =>
+//                     handleGradeChange(index, "name", e.target.value)
+//                   }
+//                   sx={{ marginRight: 2 }}
+//                 />
+//                 <TextField
+//                   type="number"
+//                   label="Note"
+//                   value={gradeDetail.grade}
+//                   onChange={(e) =>
+//                     handleGradeChange(index, "grade", Number(e.target.value))
+//                   }
+//                   sx={{ marginRight: 2 }}
+//                 />
+//                 <IconButton onClick={() => handleRemoveGrade(index)}>
+//                   <Remove />
+//                 </IconButton>
+//               </Box>
+//             ))}
+//             <Button
+//               variant="contained"
+//               startIcon={<Add />}
+//               onClick={handleAddGrade}
+//               sx={{ marginBottom: "16px" }}
+//             >
+//               Add Workshop
+//             </Button>
+//           </Box>
+//         </DialogContent>
+//         <DialogActions>
+//           <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+//           <Button onClick={handleSaveGrades}>Keep</Button>
+//         </DialogActions>
+//       </Dialog>
+//     </Container>
+//   );
+// };
+
+// export default ClassRoomStudents;
+
 import { useState } from "react";
 import {
   Box,
@@ -251,21 +567,26 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
-  IconButton,
 } from "@mui/material";
-import { Add, Remove } from "@mui/icons-material";
+import { Add, Remove, ExpandMore } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
-type Subject = "Math" | "Science" | "English" | "History";
+type Subject = "Math" | "Science";
 
 interface GradeDetail {
   name: string;
   grade: number;
+  period: number;
 }
 
 interface Student {
@@ -279,10 +600,7 @@ interface Student {
 const headers: { name: string; align: "left" | "right" | "center" }[] = [
   { name: "No.", align: "left" },
   { name: "Student", align: "left" },
-  { name: "Math", align: "right" },
-  { name: "Science", align: "right" },
-  { name: "English", align: "right" },
-  { name: "History", align: "right" },
+  { name: "Subject", align: "center" },
   { name: "Average", align: "right" },
   { name: "Report", align: "right" },
 ];
@@ -293,20 +611,21 @@ const initialStudents: Student[] = [
     user_id: "student1",
     grades: {
       Math: [
-        { name: "Taller 1", grade: 8 },
-        { name: "Taller 2", grade: 9 },
+        { name: "Taller 1", grade: 8, period: 1 },
+        { name: "Taller 2", grade: 9, period: 1 },
+        { name: "Taller 1", grade: 8, period: 2 },
+        { name: "Taller 2", grade: 9, period: 2 },
+        { name: "Taller 1", grade: 8, period: 3 },
+        { name: "Taller 2", grade: 9, period: 3 },
+        
       ],
       Science: [
-        { name: "Taller 1", grade: 7 },
-        { name: "Taller 2", grade: 6 },
-      ],
-      English: [
-        { name: "Taller 1", grade: 9 },
-        { name: "Taller 2", grade: 10 },
-      ],
-      History: [
-        { name: "Taller 1", grade: 8 },
-        { name: "Taller 2", grade: 7 },
+        { name: "Taller 1", grade: 7, period: 1 },
+        { name: "Taller 2", grade: 6, period: 1 },
+        { name: "Taller 1", grade: 8, period: 2 },
+        { name: "Taller 2", grade: 9, period: 2 },
+        { name: "Taller 1", grade: 8, period: 3 },
+        { name: "Taller 2", grade: 9, period: 3 },
       ],
     },
   },
@@ -315,20 +634,19 @@ const initialStudents: Student[] = [
     user_id: "student2",
     grades: {
       Math: [
-        { name: "Taller 1", grade: 7 },
-        { name: "Taller 2", grade: 8 },
+        { name: "Taller 1", grade: 7, period: 1 },
+        { name: "Taller 1", grade: 8, period: 1 },
+        { name: "Taller 2", grade: 9, period: 2 },
+        { name: "Taller 2", grade: 9, period: 3 },
+        { name: "Taller 2", grade: 8, period: 3 },
       ],
       Science: [
-        { name: "Taller 1", grade: 6 },
-        { name: "Taller 2", grade: 7 },
-      ],
-      English: [
-        { name: "Taller 1", grade: 8 },
-        { name: "Taller 2", grade: 9 },
-      ],
-      History: [
-        { name: "Taller 1", grade: 7 },
-        { name: "Taller 2", grade: 6 },
+        { name: "Taller 1", grade: 6, period: 1 },
+        { name: "Taller 2", grade: 7, period: 1 },
+        { name: "Taller 1", grade: 8, period: 2 },
+        { name: "Taller 2", grade: 9, period: 2 },
+        { name: "Taller 1", grade: 8, period: 3 },
+        { name: "Taller 2", grade: 9, period: 3 },
       ],
     },
   },
@@ -339,6 +657,11 @@ const calculateAverage = (grades: GradeDetail[]) => {
   return (total / grades.length).toFixed(2);
 };
 
+const calculatePeriodGrades = (grades: GradeDetail[], period: number) => {
+  const periodGrades = grades.filter((grade) => grade.period === period);
+  return calculateAverage(periodGrades.map((grade) => ({ ...grade, grade: Number(grade.grade) })));
+};
+
 const ClassRoomStudents = () => {
   const navigate = useNavigate();
   const [students, setStudents] = useState<Student[]>(initialStudents);
@@ -346,7 +669,7 @@ const ClassRoomStudents = () => {
   const [currentGrades, setCurrentGrades] = useState<GradeDetail[]>([]);
   const [currentStudentId, setCurrentStudentId] = useState<string>("");
   const [currentSubject, setCurrentSubject] = useState<Subject>("Math");
-
+  const [currentPeriod, setCurrentPeriod] = useState<number>(10); // Assume the last period for editing
 
   const handleReportButtonClick = () => {
     navigate(`/teacher/class/student/report`);
@@ -355,7 +678,7 @@ const ClassRoomStudents = () => {
   const handleGradeClick = (studentId: string, subject: Subject) => {
     const student = students.find((s) => s.student_id === studentId);
     if (student) {
-      setCurrentGrades(student.grades[subject]);
+      setCurrentGrades(student.grades[subject].filter(grade => grade.period === currentPeriod));
       setCurrentStudentId(studentId);
       setCurrentSubject(subject);
       setDialogOpen(true);
@@ -373,7 +696,7 @@ const ClassRoomStudents = () => {
   };
 
   const handleAddGrade = () => {
-    setCurrentGrades([...currentGrades, { name: "", grade: 0 }]);
+    setCurrentGrades([...currentGrades, { name: "", grade: 0, period: currentPeriod }]);
   };
 
   const handleRemoveGrade = (index: number) => {
@@ -388,7 +711,12 @@ const ClassRoomStudents = () => {
             ...student,
             grades: {
               ...student.grades,
-              [currentSubject]: currentGrades,
+              [currentSubject]: [
+                ...student.grades[currentSubject].filter(
+                  (grade) => grade.period !== currentPeriod
+                ),
+                ...currentGrades,
+              ],
             },
           };
         }
@@ -454,24 +782,69 @@ const ClassRoomStudents = () => {
                         >
                           {student.user_id}
                         </TableCell>
-                        {(
-                          ["Math", "Science", "English", "History"] as Subject[]
-                        ).map((subject) => (
+                        {(["Math", "Science"] as Subject[]).map((subject) => (
                           <TableCell
                             key={subject}
                             align="right"
-                            sx={{ color: "black", cursor: "pointer" }}
-                            onClick={() =>
-                              handleGradeClick(student.student_id, subject)
-                            }
+                            sx={{ color: "black" }}
                           >
-                            {calculateAverage(student.grades[subject])}
+                            <Accordion>
+                              <AccordionSummary expandIcon={<ExpandMore />}>
+                                <Typography>{subject}</Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                {Array.from({ length: 3 }, (_, period) => (
+                                  <Box key={period} mb={2}>
+                                    <Typography variant="h6">
+                                      Period {period + 1}
+                                    </Typography>
+                                    <Table>
+                                      <TableBody>
+                                        {student.grades[subject]
+                                          .filter(
+                                            (grade) => grade.period === period + 1
+                                          )
+                                          .map((grade, i) => (
+                                            <TableRow key={i}>
+                                              <TableCell>{grade.name}</TableCell>
+                                              <TableCell align="right">
+                                                {grade.grade}
+                                              </TableCell>
+                                            </TableRow>
+                                          ))}
+                                        <TableRow>
+                                          <TableCell sx={{color:"red"}}><strong>Average</strong></TableCell>
+                                          <TableCell align="right">
+                                            {calculatePeriodGrades(
+                                              student.grades[subject],
+                                              period + 1
+                                            )}
+                                          </TableCell>
+                                        </TableRow>
+                                      </TableBody>
+                                    </Table>
+                                    {period === 2 && ( // Only allow editing for the last period
+                                      <Button
+                                        variant="contained"
+                                        startIcon={<Add />}
+                                        onClick={() => {
+                                          setCurrentPeriod(period + 1);
+                                          handleGradeClick(student.student_id, subject);
+                                        }}
+                                      >
+                                        Add Workshop
+                                      </Button>
+                                    )}
+                                  </Box>
+                                ))}
+                              </AccordionDetails>
+                            </Accordion>
                           </TableCell>
                         ))}
-                        <TableCell align="right" sx={{ color: "black" }}>
+                        <TableCell align="right">
                           {calculateAverage(
                             ([] as GradeDetail[]).concat(
-                              ...Object.values(student.grades)
+                              ...Object.values(student.grades).flat()
                             )
                           )}
                         </TableCell>

@@ -1,13 +1,16 @@
+import { useParams } from "react-router-dom";
 import ButtonArrowBack from "../components/ButtonArrowBack";
 import ClassRoomChart from "../components/ClassRoomChart";
-import ClassRoomFeedback from "../components/ClassRoomFeedback";
 
 export const TeacherReport = () => {
-    return (
-      <div>
-        <ButtonArrowBack/>
-        <ClassRoomChart/>
-        <ClassRoomFeedback/>
-      </div>
-    );
-  }
+  const { studentId } = useParams();
+
+  return (
+    <div>
+      <ButtonArrowBack />
+      <h2>{studentId ? `Report for Student ID: ${studentId}` : "Loading student details..."}</h2>
+      <ClassRoomChart />
+      {/* <ClassRoomFeedback /> */}
+    </div>
+  );
+};
