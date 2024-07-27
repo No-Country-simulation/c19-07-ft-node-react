@@ -22,7 +22,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <Provider store={store}>
       <ThemeProvider theme={appTheme}>
         <CssBaseline />
-        <SnackbarProvider maxSnack={3}>
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        >
           <App />
         </SnackbarProvider>
       </ThemeProvider>

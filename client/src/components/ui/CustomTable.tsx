@@ -1,5 +1,3 @@
-import type { ChangeEvent } from "react";
-
 import {
   Paper,
   Table,
@@ -28,8 +26,8 @@ export const CustomTable = ({
   onEdit,
   columns,
   onDelete,
-  isLoading,
   children,
+  isLoading,
 }: CustomTableProps) => {
   return (
     <Paper

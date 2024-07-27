@@ -5,4 +5,5 @@ export { AddButton } from "./common/AddButton";
 export { DashboardChart } from "./dashboard/DashboardChart";
 
 // Users
-export { UserCreateForm } from "./users/UserCreateForm";
+export { UserTable } from "./users/UserTable";
+export { UserSearchBar } from "./users/UserSearchBar";

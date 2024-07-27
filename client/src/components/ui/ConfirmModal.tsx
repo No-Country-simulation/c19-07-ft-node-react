@@ -1,4 +1,12 @@
-import { Modal, Backdrop, Fade, Box, Typography, Button } from "@mui/material";
+import {
+  Box,
+  Fade,
+  Modal,
+  Button,
+  Backdrop,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -14,23 +22,25 @@ const style = {
 
 interface ConfirmModalProps {
   open: boolean;
+  isLoading?: boolean;
   confirmText: string;
   onClose: () => void;
-  onConfirmDeletion: () => void;
+  onConfirm: () => Promise<void>;
 }
 
 export const ConfirmModal = ({
   open,
   onClose,
+  isLoading,
+  onConfirm,
   confirmText,
-  onConfirmDeletion,
 }: ConfirmModalProps) => {
   return (
     <Modal
       aria-labelledby="transition-modal-title"
       aria-describedby="transition-modal-description"
       open={open}
-      onClose={onClose}
+      onClose={!isLoading ? onClose : undefined}
       closeAfterTransition
       slots={{ backdrop: Backdrop }}
       slotProps={{
@@ -46,14 +56,23 @@ export const ConfirmModal = ({
           </Typography>
 
           <Box mt={2} display="flex" justifyContent="end" gap={1}>
-            <Button variant="contained" color="info" onClick={onClose}>
+            <Button
+              color="info"
+              variant="contained"
+              onClick={onClose}
+              disabled={isLoading}
+            >
               No
             </Button>
             <Button
-              variant="contained"
               color="error"
-              onClick={onConfirmDeletion}
+              variant="contained"
+              onClick={onConfirm}
+              disabled={isLoading}
             >
+              {isLoading && (
+                <CircularProgress color="error" size={15} sx={{ mr: 1 }} />
+              )}
               Yes
             </Button>
           </Box>
