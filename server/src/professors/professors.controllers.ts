@@ -136,18 +136,16 @@ export const getAssignedStudents = async (req: Request, res: Response): Promise<
   }
 }
 
-
-
-//New
-//New Routes for Report
-export const getAllStudentsWithDetailsController = async (req: Request, res: Response)=> {
+// New
+// New Routes for Report
+export const getAllStudentsWithDetailsController = async (req: Request, res: Response) => {
   try {
-    const data = await professorService.getAllStudentsWithDetailsService();
-    res.status(200).json({ data });
+    const data = await professorService.getAllStudentsWithDetailsService()
+    res.status(200).json({ data })
     // if (students.length === 0) {
     //   return res.status(404).json({ err: 'Students  not found' });
     // }
-  } catch (error:any) {
-    res.status(500).json({ error: error.message });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message })
   }
 }

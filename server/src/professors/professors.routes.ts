@@ -8,7 +8,7 @@ import * as professorController from './professors.controllers'
 const professorRoutes = Router()
 
 // professorRoutes.get('/', checkRole([ROLES.ADMIN, ROLES.PROFESSOR, ROLES.PARENTS]), professorController.getAllProfessors)
-professorRoutes.get('/details', professorController.getAllStudentsWithDetailsController) //se agrego esta ruta
+professorRoutes.get('/details', professorController.getAllStudentsWithDetailsController) // se agrego esta ruta
 
 professorRoutes.get('/', professorController.getAllProfessors)
 professorRoutes.post('/', professorController.createProfessor)
