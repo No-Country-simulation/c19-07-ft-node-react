@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient, Users } from '@prisma/client'
 import { IUserRepository } from './interface/user.interface'
 import { CreateUserSchema, UpdateUserSchema } from '../schemas/user.schema'
+import { IUserFilter } from '../interface/usertInterface'
 
 export class UserRepository implements IUserRepository {
   constructor (private readonly prisma: PrismaClient) {}
@@ -103,22 +104,43 @@ export class UserRepository implements IUserRepository {
     return count
   }
 
+  async countFilteredUsers (filtros: IUserFilter): Promise<number> {
+    const whereConditions: Prisma.UsersWhereInput = {}
+
+    if (filtros?.name !== undefined) {
+      whereConditions.name = {
+        contains: filtros.name,
+        mode: 'insensitive'
+      }
+    }
+
+    if (filtros?.typeUser !== undefined) {
+      whereConditions.type_user = filtros.typeUser
+    }
+
+    if (filtros?.viewDeleted === 'only') {
+      whereConditions.deletedAt = { not: null }
+    } else if (filtros?.viewDeleted !== 'include') {
+      whereConditions.deletedAt = null
+    }
+
+    return await this.prisma.users.count({
+      where: whereConditions
+    })
+  }
+
   async getAllUser (
     page: number,
     limit: number,
-    filtros: { name?: string, typeUser?: Users['type_user'] | undefined, includeDeleted?: boolean }
+    filtros: IUserFilter
   ): Promise<Array<Omit<Users, 'password' | 'deletedAt'>>> {
-    // Construye el objeto de filtros de manera condicional
     const whereConditions: Prisma.UsersWhereInput = {}
-    if (filtros?.includeDeleted === true) {
+    if (filtros?.viewDeleted === 'only') {
       whereConditions.deletedAt = { not: null }
-    } else if (filtros?.includeDeleted === false) {
-      whereConditions.deletedAt = null // Incluir solo los no eliminados
-    } else {
-    // Si no se especifica includeDeleted, por defecto, incluir solo los no eliminados
+    } else if (filtros?.viewDeleted !== 'include') {
       whereConditions.deletedAt = null
     }
-    console.log('-->', whereConditions, filtros)
+
     if (filtros?.name !== undefined) {
       whereConditions.name = {
         contains: filtros.name,
@@ -146,5 +168,15 @@ export class UserRepository implements IUserRepository {
     })
 
     return users
+  }
+
+  async countActiveUsersByTypeUser (typeUSer: Users['type_user']): Promise<number> {
+    const count = await this.prisma.users.count({
+      where: {
+        type_user: typeUSer,
+        state: 'ACTIVE'
+      }
+    })
+    return count
   }
 }

@@ -18,7 +18,7 @@ export const useUiStore = () => {
     // * Properties
     isSideBarOpen,
 
-    // * Methods
+    // * Functions
     handleOpenSideBar,
     handleCloseSideBar,
   };

@@ -20,7 +20,7 @@ export default function HomePage() {
           overflow="auto"
           sx={{
             height: "calc(100% - 64px)",
-            padding: 3,
+            padding: { xs: 2, sm: 3 },
           }}
         >
           <Outlet />

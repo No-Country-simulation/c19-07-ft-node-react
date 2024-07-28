@@ -1,1 +1,14 @@
-[{"nombre":"MATEMÁTICAS","descripcion":"Estudio de los números, formas y patrones.","professor_id":"clz0sk2ap000hkqttyhqr3bk2","area_academica_id":"clz0sk299000ckqttkijl3tvq"}]
+[
+  {
+    "nombre": "Curso 1",
+    "descripcion": "Descripción del curso 1",
+    "professor_id": "clz5q3j60000qqfhcmexnf0jn",
+    "area_academica_id": "clz5q3iio0000qfhca87oyyti"
+  },
+  {
+    "nombre": "Curso 2",
+    "descripcion": "Descripción del curso 2",
+    "professor_id": "clz5q3j60000rqfhcczup8j3n",
+    "area_academica_id": "clz5q3iio0001qfhc1yzqdl54"
+  }
+]

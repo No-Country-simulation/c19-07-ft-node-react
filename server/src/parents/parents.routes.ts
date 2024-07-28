@@ -5,12 +5,16 @@ import * as parentController from './parents.controllers'
 
 const parentRoutes = Router()
 
-parentRoutes.get('/', parentController.getAllParents)
-parentRoutes.get('/details', parentController.getStudentsWithDetailsController)
+// Rutas más específicas primero
 parentRoutes.get('/details/:id', parentController.getStudentByIdController)
-parentRoutes.post('/', parentController.createParents)
+parentRoutes.get('/details', parentController.getStudentsWithDetailsController)
+parentRoutes.get('/info', parentController.getStudentParentDetailsControllers)
+
+// Rutas menos específicas después
 parentRoutes.get('/:id', parentController.getParentsById)
 parentRoutes.put('/:id', parentController.updateParents)
 parentRoutes.delete('/:id', parentController.deleteParents)
+parentRoutes.get('/', parentController.getAllParents)
+parentRoutes.post('/', parentController.createParents)
 
 export default parentRoutes

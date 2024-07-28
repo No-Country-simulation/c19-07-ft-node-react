@@ -71,76 +71,100 @@ interface StudentDetails {
 }
 
 // GET ALL
+// export const getStudentsWithDetailsService = async (): Promise<StudentDetails[]> => {
+//   const students = await parentRepository.getAllStudentsWithDetailsRepository()
+
+//   const data2 = students.map((student: any) => ({
+//     studentId: student.student_id,
+//     studentName: student.user.name,
+//     parentId: student.parent?.parent_id || null,
+//     parentName: student.parent?.user.name || null,
+//     courses: student.courses.map((course: any) => ({
+//       courseId: course.cursos_id,
+//       courseName: course.nombre,
+//       professorId: course.professor_id,
+//       professorName: course.professor.user.name,
+//       academicAreaId: course.academic_area_id,
+//       academicAreaName: course.academic_area.name,
+//       academicRecords: course.academic_record
+//         .filter((record: any) => record.student_id === student.student_id) // Filtra por student_id
+//         .map((record: any) => ({
+//           recordId: record.historial_id,
+//           mark: record.mark,
+//           comment: record.comment,
+//           date: record.date
+//         })),
+
+//       evaluations: course.evaluations.map((evaluation: any) => ({
+//         evaluationId: evaluation.evaluation_id,
+//         name: evaluation.name,
+//         description: evaluation.description,
+//         date: evaluation.date,
+//         results: evaluation.evaluation_result
+//           .filter((result: any) => result.student_id === student.student_id) // Filtra por student_id
+//           .map((result: any) => ({
+//             resultId: result.result_id,
+//             studentId: result.student_id,
+//             mark: result.mark,
+//             comment: result.comment
+//           }))
+//       }))
+//     }))
+
+//   }))
+
+//   return data2
+// }
+
 export const getStudentsWithDetailsService = async (): Promise<StudentDetails[]> => {
   const students = await parentRepository.getAllStudentsWithDetailsRepository()
-  // return students.map((student: any) => ({
-  //   studentId: student.student_id,
-  //   studentName: student.user.name,
-  //   parentId: student.parent?.parent_id || null,
-  //   parentName: student.parent?.user.name || null,
-  //   courses: student.courses.map((course: any) => ({
-  //     courseId: course.cursos_id,
-  //     courseName: course.nombre,
-  //     professorId: course.professor?.professor_id || '', // Verifica que `professor` no sea `undefined`
-  //     professorName: course.professor?.user?.name || 'No Name', // Accede al nombre del profesor      academicAreaId: course.academic_area_id,
-  //     academicAreaName: course.academic_area.name,
-  //     academicRecords: course.academic_record.map((record: any) => ({
-  //       recordId: record.historial_id,
-  //       mark: record.mark,
-  //       comment: record.comment,
-  //       date: record.date
-  //     })),
-  //     evaluations: course.evaluations.map((evaluation: any) => ({
-  //       evaluationId: evaluation.evaluation_id,
-  //       name: evaluation.name,
-  //       description: evaluation.description,
-  //       date: evaluation.date,
-  //       results: evaluation.evaluation_result.map((result: any) => ({
-  //         resultId: result.result_id,
-  //         studentId: result.student_id,
-  //         mark: result.mark,
-  //         comment: result.comment
-  //       }))
-  //     }))
-  //   }))
-  // }))
 
-  return students.map((student: any) => ({
+  const data2 = students.map((student: any) => ({
     studentId: student.student_id,
     studentName: student.user.name,
     parentId: student.parent?.parent_id || null,
     parentName: student.parent?.user.name || null,
-    courses: student.courses.map((course: any) => ({
-      courseId: course.cursos_id,
-      courseName: course.nombre,
-      professorId: course.professor_id,
-      professorName: course.professor.user.name,
-      academicAreaId: course.academic_area_id,
-      academicAreaName: course.academic_area.name,
-      academicRecords: course.academic_record
-        .filter((record: any) => record.student_id === student.student_id) // Filtra por student_id
+    courses: student.courses.map((course: any) => {
+      const academicRecords = course.academic_record
+        .filter((record: any) => record.student_id === student.student_id)
         .map((record: any) => ({
           recordId: record.historial_id,
           mark: record.mark,
           comment: record.comment,
           date: record.date
-        })),
-      evaluations: course.evaluations.map((evaluation: any) => ({
-        evaluationId: evaluation.evaluation_id,
-        name: evaluation.name,
-        description: evaluation.description,
-        date: evaluation.date,
-        results: evaluation.evaluation_result
-          .filter((result: any) => result.student_id === student.student_id) // Filtra por student_id
-          .map((result: any) => ({
-            resultId: result.result_id,
-            studentId: result.student_id,
-            mark: result.mark,
-            comment: result.comment
-          }))
-      }))
-    }))
+        }))
+
+      const marks = academicRecords.map((record: any) => record.mark).filter((mark: any) => mark !== undefined)
+      const averageMark = marks.length > 0 ? marks.reduce((a: number, b: number) => a + b, 0) / marks.length : null
+
+      return {
+        courseId: course.cursos_id,
+        courseName: course.nombre,
+        professorId: course.professor_id,
+        professorName: course.professor.user.name,
+        academicAreaId: course.academic_area_id,
+        academicAreaName: course.academic_area.name,
+        academicRecords,
+        evaluations: course.evaluations.map((evaluation: any) => ({
+          evaluationId: evaluation.evaluation_id,
+          name: evaluation.name,
+          description: evaluation.description,
+          date: evaluation.date,
+          // results: evaluation.evaluation_result
+          //   .filter((result: any) => result.student_id === student.student_id)
+          //   .map((result: any) => ({
+          //     resultId: result.result_id,
+          //     studentId: result.student_id,
+          //     mark: result.mark,
+          //     comment: result.comment
+          //   })),
+          averageMark
+        }))
+      }
+    })
   }))
+
+  return data2
 }
 
 // GET BY ID
@@ -184,4 +208,12 @@ export const getStudentByIdService = async (id: string): Promise<StudentDetails 
       }))
     }))
   }
+}
+
+// GET all parents | nombreEstudiante|nombredelPadre|emaildelPadre
+
+export const getStudentParentDetailsServices = async () => {
+  const data = await parentRepository.getStudentParentDetailsRepository()
+
+  return data
 }

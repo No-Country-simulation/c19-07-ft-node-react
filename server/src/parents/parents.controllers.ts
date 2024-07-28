@@ -50,7 +50,9 @@ export const createParents = async (req: Request, res: Response, next: NextFunct
 export const getParentsById = async (req: Request, res: Response): Promise<void> => {
   try {
     const parents = await parentsService.getParentsById(req.params.id)
-    if (parents == null) res.status(404).send({ data: 'Parent not found' })
+    if (parents == null) {
+      res.status(404).send({ data: 'Parent not found' })
+    }
 
     res.json(parents)
   } catch (err: any) {
@@ -107,5 +109,20 @@ export const getStudentByIdController = async (req: Request, res: Response): Pro
   } catch (error) {
     console.error('Error getting student details:', error)
     res.status(500).json({ error: 'An error occurred while fetching student details' })
+  }
+}
+
+// GET all parents | nombreEstudiante|nombredelPadre|emaildelPadre
+export const getStudentParentDetailsControllers = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const parents = await parentsService.getStudentParentDetailsServices()
+    res.json(parents)
+  } catch (error) {
+    // console.error('Error getting student details:', error)
+    // res.status(500).json({ error: 'An error occurred while fetching student details' })
+
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Failed to fetch student-parent details' })
+    }
   }
 }

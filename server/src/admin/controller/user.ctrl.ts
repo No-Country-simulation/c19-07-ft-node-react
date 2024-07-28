@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Users } from '@prisma/client'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { NextFunction, Response } from 'express'
 import { z } from 'zod'
@@ -7,9 +7,8 @@ import { formattedErrorsZod } from '../../libs/formatedErrorsZod'
 import { ResponseHandler } from '../../libs/response.lib'
 import { ICustomRequest } from '../../types'
 import { UserRepository } from '../repositories/user.repository'
-import { TypeUserSchemaOptional, typeUserSchemaOptional, CreateUserSchema, createUserSchema, UpdateUserSchema, updateUserSchema } from '../schemas/user.schema'
+import { TypeUserSchemaOptional, typeUserSchemaOptional, CreateUserSchema, createUserSchema, UpdateUserSchema, updateUserSchema, QueryNameSchema, queryNameSchema, queryParamsSchema } from '../schemas/user.schema'
 import { UserService } from '../services/user.service'
-import { CustomError } from '../../errors/customError'
 const userService = new UserService(new UserRepository(new PrismaClient()))
 export class UserCtrl {
   async createUser (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
@@ -87,9 +86,9 @@ export class UserCtrl {
       const page = isNaN(Number(req.query.page)) ? 1 : Number(req.query.page)
       const limit = isNaN(Number(req.query.limit)) ? 10 : Number(req.query.limit)
       const name = req.query.name as string
-      const includeDeleted = req.body.includeDeleted as boolean
-      const typeUser = typeUserSchemaOptional.parse(req.query['type-user'] as TypeUserSchemaOptional)
-      const filtros = { name, typeUser, includeDeleted }
+
+      const typeUser = typeUserSchema.parse(req.query['type-user'] as TypeUser)
+      const filtros = { name, typeUser }
 
       const user = await userService.getAllUsers(page, limit, filtros)
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'User retrieved successfully', user)
