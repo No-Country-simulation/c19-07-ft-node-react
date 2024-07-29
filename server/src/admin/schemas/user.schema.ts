@@ -35,8 +35,8 @@ export const createUserSchema = z.object({
 export type CreateUserSchema = z.infer<typeof createUserSchema>
 
 export const updateUserSchema = z.object({
-  name: z.string(),
-  email: z.string().email({ message: 'Invalid email' }),
-  typeUser: z.enum(['ADMIN', 'PARENTS', 'STUDENT', 'PROFESSOR'])
+  name: z.string().optional(),
+  email: z.string().email({ message: 'Invalid email' }).optional(),
+  typeUser: z.enum(['ADMIN', 'PARENTS', 'STUDENT', 'PROFESSOR']).optional()
 })
 export type UpdateUserSchema = z.infer<typeof updateUserSchema>

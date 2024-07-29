@@ -1,15 +1,14 @@
 import {
-  Close,
-  AutoGraph,
-  People,
   Chat,
-  Campaign,
+  Close,
+  People,
   School,
+  Campaign,
+  AutoGraph,
   Dashboard,
-  Person,
+  SquareFoot,
+  BorderColor,
   FamilyRestroom,
-  Work,
-  Class,
 } from "@mui/icons-material";
 import {
   Box,
@@ -76,28 +75,33 @@ const professorOptions = [
 const adminOptions = [
   {
     text: "Dashboard",
-    path: "/",
+    path: "/admin/dashboard",
     icon: <Dashboard></Dashboard>,
   },
   {
     text: "Users",
-    path: "/admin",
-    icon: <Person></Person>,
+    path: "/admin/users",
+    icon: <People></People>,
   },
   {
     text: "Students",
-    path: "",
+    path: "/admin/students",
     icon: <School></School>,
   },
   {
+    text: "Teachers",
+    path: "/admin/teachers",
+    icon: <BorderColor></BorderColor>,
+  },
+  {
     text: "Parents",
-    path: "",
+    path: "/admin/parents",
     icon: <FamilyRestroom></FamilyRestroom>,
   },
   {
-    text: "professors",
-    path: "",
-    icon: <Work></Work>,
+    text: "Academic Areas",
+    path: "/admin/academic-areas",
+    icon: <SquareFoot></SquareFoot>,
   },
 ];
 

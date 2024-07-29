@@ -58,7 +58,7 @@ export class UserService {
     return listUsers
   }
 
-  async countActiveUsersByTypeUser (typeUser:Users['type_user']):Promise<number> {
+  async countActiveUsersByTypeUser (typeUser: Users['type_user']): Promise<number> {
     const totalActiveStudets = await this.userRepository.countActiveUsersByTypeUser(typeUser)
     return totalActiveStudets
   }

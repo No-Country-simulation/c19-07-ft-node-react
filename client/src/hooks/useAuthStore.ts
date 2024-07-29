@@ -1,7 +1,7 @@
 import { ProfileResponse } from "../interfaces";
 
 import { AxiosError } from "axios";
-import axios, { schoolMetricsApi } from "../apis/schoolMetricsApi";
+import { schoolMetricsApi } from "../apis/schoolMetricsApi";
 
 import { useAppDispatch, useAppSelector } from "./reduxTypedHooks";
 import {
@@ -25,7 +25,7 @@ export const useAuthStore = () => {
     dispatch(clearErrorMessage());
 
     try {
-      await axios.post("/auth/login", { email, password });
+      await schoolMetricsApi.post("/auth/login", { email, password });
 
       const data = await getUserProfile();
 
@@ -49,7 +49,7 @@ export const useAuthStore = () => {
     dispatch(checkingCredentials());
 
     try {
-      await axios.post("/auth/logout");
+      await schoolMetricsApi.post("/auth/logout");
 
       dispatch(logout(null));
     } catch (error) {
@@ -59,7 +59,7 @@ export const useAuthStore = () => {
 
   const startRefreshToken = async () => {
     try {
-      await axios.post("/auth/refresh-token");
+      await schoolMetricsApi.post("/auth/refresh-token");
 
       const data = await getUserProfile();
 

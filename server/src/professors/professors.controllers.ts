@@ -136,18 +136,30 @@ export const getAssignedStudents = async (req: Request, res: Response): Promise<
   }
 }
 
-
-
-//New
-//New Routes for Report
-export const getAllStudentsWithDetailsController = async (req: Request, res: Response)=> {
+export const updateEvaluationById = async (req: Request, res: Response): Promise<any> => {
   try {
-    const data = await professorService.getAllStudentsWithDetailsService();
-    res.status(200).json({ data });
+    const { id } = req.params
+    if (!professorService.isValidId(id)) return res.status(400).send({ err: 'Invalid Id' })
+    if (!professorService.isValidBody(req.body)) return res.status(400).send({ err: 'Invalid body' })
+
+    await professorService.updateStudentEvaluations(id, req.body)
+    res.status(204).send()
+  } catch (err: any) {
+    const { status, message } = getErrorMessageAndStatus(err)
+    res.status(status).send({ err: message, error_details: err })
+  }
+}
+
+// New
+// New Routes for Report
+export const getAllStudentsWithDetailsController = async (req: Request, res: Response) => {
+  try {
+    const data = await professorService.getAllStudentsWithDetailsService()
+    res.status(200).json({ data })
     // if (students.length === 0) {
     //   return res.status(404).json({ err: 'Students  not found' });
     // }
-  } catch (error:any) {
-    res.status(500).json({ error: error.message });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message })
   }
 }

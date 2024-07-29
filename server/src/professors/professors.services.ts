@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // src/modules/professors/services/professor.service.ts
-import { Courses, Evaluation_results, Evaluations, Professors, Students, Users } from '@prisma/client'
+import { Academic_records, Courses, Evaluation_results, Evaluations, Professors, Students, Users } from '@prisma/client'
 import * as professorRepository from '../professors/professors.repository'
 import { CreateEvaluationAndResults, CreateProfessor, StudentsAndCourse, StudentsWithData } from '../types/professors.type'
 import z from 'zod'
@@ -97,7 +97,6 @@ export const studentsFromCourses = async (courses: Courses[]): Promise<StudentsA
   }
 }
 
-
 const getStudentData = async (students: Students[], courseId: string): Promise<StudentsWithData[]> => {
   try {
     const studentsWithData: StudentsWithData[] = []
@@ -139,9 +138,8 @@ const getStudentMark = async (courseId: string, studentId: string): Promise<numb
   }
 }
 
-
-//New
-//New Routes for Reports
+// New
+// New Routes for Reports
 
 export const getAllStudentsWithDetailsService = async () => {
   const data = await professorRepository.getAllStudentsWithDetailsRepository()
@@ -180,7 +178,6 @@ export const getAllStudentsWithDetailsService = async () => {
   //         // results: evaluation.
   //       }))
 
-
   //     }))
   //   })
   // )
@@ -199,11 +196,11 @@ export const getAllStudentsWithDetailsService = async () => {
       const academicRecords = course.academic_record
         .filter(record => record.student_id === student.student_id) // Filtra por student_id
         .map(record => ({
-        recordId: record.historial_id,
-        comment: record.comment,
-        date: record.date,
-        mark: record.mark // Asegúrate de que este campo esté disponible y asignado correctamente
-      }))
+          recordId: record.historial_id,
+          comment: record.comment,
+          date: record.date,
+          mark: record.mark // Asegúrate de que este campo esté disponible y asignado correctamente
+        }))
 
       const evaluations = course.evaluations.map(evaluation => {
         const marks = academicRecords.map(record => record.mark).filter(mark => mark !== undefined)
@@ -231,4 +228,22 @@ export const getAllStudentsWithDetailsService = async () => {
   }))
 
   return data2
+}
+
+const updateEvaluationObject = z.object({
+  mark: z.optional(z.number()),
+  comment: z.optional(z.string()),
+  date: z.optional(z.date())
+})
+
+export const isValidId = (id: string): boolean => {
+  return typeof id === 'string' && id.length > 0
+}
+
+export const isValidBody = (body: Partial<Academic_records>): boolean => {
+  return updateEvaluationObject.safeParse(body).success
+}
+
+export const updateStudentEvaluations = async (id: string, body: Partial<Academic_records>): Promise<Academic_records> => {
+  return await professorRepository.updateStudentEvaluations(id, body)
 }
