@@ -49,6 +49,23 @@ export class ParentRepository implements IParentRepository {
     return parent
   }
 
+  async deleteParent (data: DeleteParentSchema): Promise<Parents> {
+    const parent = await this.prisma.parents.delete({
+      where: {
+        parent_id: data.parentId
+      }
+    })
+    return parent
+  }
+
+  async updateParentAd (id: string, data: Partial<Parents>): Promise<Parents> {
+    const parent = await this.prisma.parents.update({
+      where: { parent_id: id },
+      data
+    })
+    return parent
+  }
+
   async countFilteredParents (filtros: IParentFilter): Promise<number> {
     const userWhereConditions: Prisma.UsersWhereInput = {
       AND: [
@@ -65,15 +82,6 @@ export class ParentRepository implements IParentRepository {
     })
 
     return count
-  }
-
-  async deleteParent (data: DeleteParentSchema): Promise<Parents> {
-    const parent = await this.prisma.parents.delete({
-      where: {
-        parent_id: data.parentId
-      }
-    })
-    return parent
   }
 }
 

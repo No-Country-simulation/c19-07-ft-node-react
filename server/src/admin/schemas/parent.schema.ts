@@ -25,3 +25,12 @@ export const deleteParentSchema = z.object({
   parentId: z.string()
 })
 export type DeleteParentSchema = z.infer<typeof deleteParentSchema>
+
+export const updateParentSchema = z.object({
+  parentId: z.string(),
+  // Puedes definir qué campos son actualizables y sus validaciones aquí
+  userId: z.string().optional(), // Si se permite actualizar el userId
+  relation: z.string().min(3).optional() // Si se permite actualizar la relación
+})
+
+export type UpdateParentSchema = z.infer<typeof updateParentSchema>
