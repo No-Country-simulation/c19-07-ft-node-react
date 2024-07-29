@@ -1,14 +1,14 @@
 import { Box } from "@mui/material";
-import { ParentProvider } from "../contexts";
+import { AcAreaProvider } from "../contexts";
 
 import { useModal } from "../hooks";
-import { AddButton, ParentTable, ParentSearchBar } from "../components";
+import { AddButton, AcAreaTable, AcAreaSearchBar } from "../components";
 
-export default function AdminParentsPage() {
+export default function AdminAcAreasPagePage() {
   const { openModal, closeModal, modalState } = useModal();
 
   return (
-    <ParentProvider>
+    <AcAreaProvider>
       <Box
         p={2}
         height="auto"
@@ -23,16 +23,16 @@ export default function AdminParentsPage() {
           pb={2}
           gap={2}
         >
-          <ParentSearchBar />
+          <AcAreaSearchBar />
 
           <AddButton onClick={() => openModal("create")} />
         </Box>
 
-        <ParentTable
+        <AcAreaTable
           openCreateModal={modalState.type === "create"}
           closeCreateModal={closeModal}
         />
       </Box>
-    </ParentProvider>
+    </AcAreaProvider>
   );
 }

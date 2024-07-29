@@ -4,6 +4,7 @@ import {
   MenuItem,
   TextField,
   CircularProgress,
+  type GridOwnProps,
 } from "@mui/material";
 import type { UseFormRegister, FieldErrors } from "react-hook-form";
 
@@ -16,6 +17,7 @@ type FormField = {
 };
 
 interface CustomFormProps {
+  columns?: GridOwnProps["columns"];
   register: UseFormRegister<any>;
   formFields: FormField[];
   errors: FieldErrors<any>;
@@ -27,6 +29,7 @@ interface CustomFormProps {
 
 export const CustomForm = ({
   errors,
+  columns = { xs: 6, sm: 12 },
   onSubmit,
   register,
   formFields,
@@ -37,7 +40,7 @@ export const CustomForm = ({
   return (
     <Grid
       container
-      columns={{ xs: 6, sm: 12 }}
+      columns={columns}
       spacing={3}
       component="form"
       onSubmit={onSubmit}

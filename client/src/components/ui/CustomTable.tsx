@@ -12,9 +12,15 @@ import {
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
+type Column = {
+  id: string;
+  label: string;
+  format?: (value: any) => string;
+};
+
 interface CustomTableProps {
   rows: any[];
-  columns: { id: string; label: string }[];
+  columns: Column[];
   isLoading: boolean;
   onEdit: (row: any) => void;
   onDelete: (row: any) => void;
@@ -61,7 +67,13 @@ export const CustomTable = ({
                   {columns.map((column) => {
                     const value = row[column.id];
                     return (
-                      <TableCell key={column.id}>{value ?? "N/A"}</TableCell>
+                      <TableCell key={column.id}>
+                        {value
+                          ? column.format
+                            ? column.format(value)
+                            : value
+                          : "n/a"}
+                      </TableCell>
                     );
                   })}
                   <TableCell>

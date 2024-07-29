@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 
+import { Filter } from "../interfaces";
 import { userMessage } from "../constants";
 import { useAxiosPrivate } from "../../../hooks";
 import { Message, UsersResponse } from "../../../interfaces";
@@ -8,25 +9,18 @@ interface UserContextProps {
   children: ReactNode;
 }
 
-export interface IFilter {
-  name?: string;
-  page?: string;
-  limit?: string;
-  typeUser?: string;
-}
-
-export interface IUserContextValue {
+export interface UserContextValue {
   user: UsersResponse | null;
   setUser: React.Dispatch<React.SetStateAction<UsersResponse | null>>;
-  filter: IFilter;
-  setFilter: React.Dispatch<React.SetStateAction<IFilter>>;
+  filter: Filter;
+  setFilter: React.Dispatch<React.SetStateAction<Filter>>;
   getUsers: () => Promise<void>;
   createUser: (userData: any) => Promise<Message>;
   deleteUser: (userId: string) => Promise<Message>;
   updateUser: (userId: string, userData: any) => Promise<Message>;
 }
 
-export const UserContext = createContext<IUserContextValue | undefined>(
+export const UserContext = createContext<UserContextValue | undefined>(
   undefined
 );
 
@@ -34,7 +28,7 @@ export const UserProvider = ({ children }: UserContextProps) => {
   const api = useAxiosPrivate();
 
   const [user, setUser] = useState<UsersResponse | null>(null);
-  const [filter, setFilter] = useState<IFilter>({
+  const [filter, setFilter] = useState<Filter>({
     name: "",
     page: "1",
     limit: "10",
