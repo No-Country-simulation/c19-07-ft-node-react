@@ -11,9 +11,13 @@ const router: Router = Router()
 router.get('/users', userCtrl.getAllUsers)
 router.get('/active-students', userCtrl.getActiveUsersByTypeUser)
 router.get('/parents', parentCtrl.getAllParents)
-router.get('/top-students', dashboardctrl.getTopFiveStudents)
+router.get('/dashboard', dashboardctrl.getDashboardData)
+
 router.post('/create-user', userCtrl.createUser)
+
 router.put('/update-user/:id', userCtrl.updateUser)
+
 router.delete('/delete-user/:id', userCtrl.softDeleteUser)
+
 router.patch('/restore-user/:id', userCtrl.restoreUser)
 export default router
