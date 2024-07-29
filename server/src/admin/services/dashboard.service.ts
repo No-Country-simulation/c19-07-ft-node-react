@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
-import { Evaluation_results } from '@prisma/client'
 import { DashboardRepository } from '../repositories/dashboard.repository'
+import { IStudentsWitchEvaluations } from '../interface/dashboardInterface'
 
 export class DashboardService {
-  constructor (private readonly dashboardRepository: DashboardRepository) {}
-  async getTopFiveStudents (): Promise<any> {
+  constructor (private readonly dashboardRepository: DashboardRepository) { }
+
+  async getDashboardData (): Promise<any> {
     const studentsWitchEvaluations = await this.dashboardRepository.getStudentsWithEvaluations()
     const topStudents = studentsWitchEvaluations
       .map((student) => ({
@@ -17,11 +18,27 @@ export class DashboardService {
       .sort((a, b) => Number(b.averageMark) - Number(a.averageMark))
       .slice(0, 5)
 
-    return topStudents
+    const overallAverage = this.calculateOverallAverage(studentsWitchEvaluations)
+    const activeStudents = await this.dashboardRepository.countActiveStudents()
+    const numberOfTeachers = await this.dashboardRepository.countTeachers()
+    const numberofUsers = await this.dashboardRepository.countAllUsers()
+
+    return {
+      overallAverage,
+      activeStudents,
+      numberOfTeachers,
+      numberofUsers,
+      topStudents
+    }
   }
 
-  private calculateAverageMarks (evaluations: Evaluation_results[]): number {
+  private calculateAverageMarks (evaluations: Array<{ mark: number }>): number {
     const totalMarks = evaluations.reduce((acc, result) => acc + result.mark, 0)
     return evaluations.length > 0 ? totalMarks / evaluations.length : 0
+  }
+
+  private calculateOverallAverage (students: IStudentsWitchEvaluations[]): number {
+    const totalMarks = students.reduce((acc, student) => acc + this.calculateAverageMarks(student.evaluations_results), 0)
+    return students.length > 0 ? totalMarks / students.length : 0
   }
 }

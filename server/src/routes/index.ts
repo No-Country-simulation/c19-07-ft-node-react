@@ -5,7 +5,7 @@ import professorRoutes from '../professors/professors.routes'
 import studentRoutes from '../students/students.routes'
 import usersRoutes from '../users/users.routes'
 import chatRoutes from '../chat/chat.routes'
-import adminRoutes from '../admin/routes/user.routes'
+import adminRoutes from '../admin/routes/admin.routes'
 const router: Router = Router()
 
 router.use('/academic-area', academicAreaRoutes)
