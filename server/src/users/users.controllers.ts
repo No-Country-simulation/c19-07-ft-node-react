@@ -5,6 +5,7 @@ import HTTP_STATUS from '../constants/statusCodeServer.const'
 import { ResponseHandler } from '../libs/response.lib'
 import { ICustomRequest } from '../types'
 import * as getAllUsersServices from './users.services'
+import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library'
 
 export const getAllUsersControllers = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -15,23 +16,31 @@ export const getAllUsersControllers = async (req: Request, res: Response): Promi
   }
 }
 
-export const createUsersControllers = async (req: Request, res: Response): Promise<void> => {
+export const createUsersControllers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { name, email, password, type_user } = req.body
+    const { name, email, password, type_user: typeUser } = req.body
 
     // Crear el objeto de datos del usuario con las propiedades requeridas
-    const userData: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt'> = {
+    const userData: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> = {
       name,
       email,
       password,
-      type_user,
+      type_user: typeUser,
       state: 'ACTIVE'
     }
 
     const user = await getAllUsersServices.createUsersServices(userData)
-    res.json(user)
-  } catch (err: any) {
-    res.status(500).send('Server Error')
+    new ResponseHandler(res).sendResponse(HTTP_STATUS.CREATED, 'User created successfully', user)
+  } catch (error: any) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      console.error('Prisma error:', { ...error, message: error.message })
+      return new ResponseHandler(res).sendError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'server error')
+    }
+    if (error instanceof PrismaClientValidationError) {
+      console.error('Prisma validation error:', { ...error, message: error.message })
+      return new ResponseHandler(res).sendError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'server error')
+    }
+    next(error)
   }
 }
 

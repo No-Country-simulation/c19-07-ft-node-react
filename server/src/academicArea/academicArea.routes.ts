@@ -6,7 +6,9 @@ const academicAreaCtrl = new AcademicAreaCtrl()
 const router: Router = Router()
 
 router.post('/create', verifyToken, academicAreaCtrl.createAcademicArea)
-router.get('/', verifyToken, academicAreaCtrl.getAcademicAreas)
+router.get('/',
+  //  verifyToken,
+  academicAreaCtrl.getAcademicAreas)
 router.get('/:academicAreaId', verifyToken, academicAreaCtrl.getAcademicAreaById)
 router.delete('/:academicAreaId', verifyToken, academicAreaCtrl.deleteAcademicAreaById)
 router.put('/:academicAreaId', verifyToken, academicAreaCtrl.AcademicAreaPutById)

@@ -2,19 +2,16 @@
 import { Users } from '@prisma/client'
 // import * as getAllUsersRepository from './users.repository'
 import * as getAllUsersRepository from '../users/users.repository'
-
+import { AuthService } from '../auth/auth.service'
 export const getAllUsersServices = async (): Promise<Users[]> => {
   return await getAllUsersRepository.getAllUsersRepository()
 }
 
-export const createUsersServices = async (data: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt'>): Promise<Users> => {
-  try {
-    const user = await getAllUsersRepository.createUserRepository(data)
+export const createUsersServices = async (data: Omit<Users, 'user_id' | 'createdAt' | 'updatedAt' | 'deletedAt'>): Promise<Users> => {
+  const dataCreateUser = { ...data, password: AuthService.hashPassword(data.password) }
+  const user = await getAllUsersRepository.createUserRepository(dataCreateUser)
 
-    return user
-  } catch (error: any) {
-    throw new Error(`Error creating user: ${error.message}`)
-  }
+  return user
 }
 
 export const getUserByIdServices = async (id: string): Promise<Users | null> => {

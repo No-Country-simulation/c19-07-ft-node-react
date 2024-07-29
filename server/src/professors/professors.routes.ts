@@ -1,17 +1,26 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 // src/modules/professors/professor.routes.ts
 import { Router } from 'express'
-import * as professorController from './professors.controllers'
-import { verifyToken } from '../middlewares/verifyAccesToken.mdl'
-import { checkRole } from '../middlewares/checkRole.mdl'
 import { ROLES } from '../constants/roles.const'
+import { checkRole } from '../middlewares/checkRole.mdl'
+import * as professorController from './professors.controllers'
 
 const professorRoutes = Router()
 
-professorRoutes.get('/', verifyToken, checkRole([ROLES.ADMIN, ROLES.PROFESSOR]), professorController.getAllProfessors)
+// professorRoutes.get('/', checkRole([ROLES.ADMIN, ROLES.PROFESSOR, ROLES.PARENTS]), professorController.getAllProfessors)
+professorRoutes.get('/details', professorController.getAllStudentsWithDetailsController) // se agrego esta ruta
+
+professorRoutes.get('/', professorController.getAllProfessors)
 professorRoutes.post('/', professorController.createProfessor)
 professorRoutes.get('/:id', professorController.getProfessorById)
 professorRoutes.patch('/:id', professorController.updateProfessor)
 professorRoutes.delete('/:id', professorController.deleteProfessor)
+// Evaluations Routes
+professorRoutes.post('/evaluations', professorController.createEvaluations)
+professorRoutes.get('/evaluations/:id', professorController.getEvaluationsByCourse)
+professorRoutes.get('/evaluation_results/:id', professorController.getResultsFromOneAcademicRecord)
+professorRoutes.patch('/evaluations/:id', professorController.updateEvaluationById)
+// Assigned Students
+professorRoutes.get('/assigned_students/:id', professorController.getAssignedStudents)
 
 export default professorRoutes

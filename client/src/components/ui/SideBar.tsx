@@ -1,10 +1,14 @@
 import {
-  Close,
-  AutoGraph,
-  People,
   Chat,
-  Campaign,
+  Close,
+  People,
   School,
+  Campaign,
+  AutoGraph,
+  Dashboard,
+  SquareFoot,
+  BorderColor,
+  FamilyRestroom,
 } from "@mui/icons-material";
 import {
   Box,
@@ -27,17 +31,17 @@ const drawerBackgroundColor = "#abd1c6";
 const parentOptions = [
   {
     text: "Performance",
-    path: "/parent",
+    path: "/parents/performance",
     icon: <AutoGraph></AutoGraph>,
   },
   {
     text: "Classmates",
-    path: "/parent/classmates",
+    path: "/parents/classmates",
     icon: <People></People>,
   },
   {
     text: "Chat",
-    path: "",
+    path: "parents/contacts",
     icon: <Chat></Chat>,
   },
 ];
@@ -63,8 +67,41 @@ const professorOptions = [
   },
   {
     text: "Chat",
-    path: "",
+    path: "/teacher/contacts",
     icon: <Chat></Chat>,
+  },
+];
+
+const adminOptions = [
+  {
+    text: "Dashboard",
+    path: "/admin/dashboard",
+    icon: <Dashboard></Dashboard>,
+  },
+  {
+    text: "Users",
+    path: "/admin/users",
+    icon: <People></People>,
+  },
+  {
+    text: "Students",
+    path: "/admin/students",
+    icon: <School></School>,
+  },
+  {
+    text: "Teachers",
+    path: "/admin/teachers",
+    icon: <BorderColor></BorderColor>,
+  },
+  {
+    text: "Parents",
+    path: "/admin/parents",
+    icon: <FamilyRestroom></FamilyRestroom>,
+  },
+  {
+    text: "Academic Areas",
+    path: "/admin/academic-areas",
+    icon: <SquareFoot></SquareFoot>,
   },
 ];
 
@@ -81,6 +118,8 @@ export const SideBar = () => {
       ? studentOptions
       : type_user === "PROFESSOR"
       ? professorOptions
+      : type_user === "ADMIN"
+      ? adminOptions
       : [];
 
   const drawerContent = (

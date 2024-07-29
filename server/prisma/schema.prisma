@@ -35,17 +35,20 @@ model Users {
   state        type_state     @default(ACTIVE)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
-  Students     Students[]
-  Parents      Parents[]
+  deletedAt    DateTime?
+  Students     Students?
+  Parents      Parents?
   Professors   Professors[]
   RefreshToken RefreshToken[]
-  messages01     Messages[] @relation(name: "sender")
-  Messages02    Messages[] @relation(name: "Receiver")
+  messages01   Messages[]     @relation(name: "sender")
+  Messages02   Messages[]     @relation(name: "Receiver")
 }
 
 model Students {
   student_id             String               @id @default(cuid())
-  user_id                String
+  user_id                String               @unique
+  telephone              String?
+  age                    Int?
   grade                  String
   section                String
   createdAt              DateTime             @default(now())
@@ -57,12 +60,14 @@ model Students {
   evaluations_results    Evaluation_results[]
   educational_level_id   String
   educational_level      Educational_levels?  @relation(fields: [educational_level_id], references: [level_id])
+  courses                Courses[]
+  feedback String
 }
 
 model Messages {
   message_id    String   @id @default(cuid())
   message       String
-  roomId        String   @default(uuid())   
+  roomId        String   @default(uuid())
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   userSendID    String
@@ -70,11 +75,12 @@ model Messages {
   SendId        Users    @relation(name: "sender", fields: [userSendID], references: [user_id])
   ReceiveID     Users    @relation(name: "Receiver", fields: [userReceiveId], references: [user_id])
 }
-  // id    Int     @id @default(autoincrement())
+
+// id    Int     @id @default(autoincrement())
 
 model Parents {
   parent_id String    @id @default(cuid())
-  user_id   String
+  user_id   String    @unique
   relation  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -104,6 +110,7 @@ model Professors {
   user                 Users              @relation(fields: [user_id], references: [user_id])
   educational_level    Educational_levels @relation(fields: [educational_level_id], references: [level_id])
   academic_area        Academic_areas     @relation(fields: [area_academica_id], references: [academic_area_id])
+  courses              Courses[]          @relation("CourseProfessor") // Relación opuesta definida aquí //se agrego 
 }
 
 model Academic_areas {
@@ -126,10 +133,13 @@ model Courses {
   academic_area     Academic_areas     @relation(fields: [area_academica_id], references: [academic_area_id])
   academic_record   Academic_records[]
   evaluations       Evaluations[]
+  students          Students[]
+  professor         Professors         @relation("CourseProfessor", fields: [professor_id], references: [professor_id]) // Relación con el modelo `Professors`  //se agrego 
 }
 
 model Academic_records {
   historial_id String   @id @default(cuid())
+  name String @default("")
   curso_id     String
   curso        Courses  @relation(fields: [curso_id], references: [cursos_id])
   mark         Float
@@ -145,7 +155,7 @@ model Evaluations {
   curso             Courses              @relation(fields: [curso_id], references: [cursos_id])
   name              String
   description       String
-  date              DateTime
+  date              DateTime             @default(now())
   evaluation_result Evaluation_results[]
 }
 

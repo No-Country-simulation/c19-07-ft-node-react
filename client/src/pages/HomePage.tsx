@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 
 import { NavBar, SideBar } from "../components";
 
-export function HomePage() {
+export default function HomePage() {
   return (
     <Box
       className="animate__animated animate__fadeIn animate__faster"
@@ -20,7 +20,7 @@ export function HomePage() {
           overflow="auto"
           sx={{
             height: "calc(100% - 64px)",
-            padding: 3,
+            padding: { xs: 2, sm: 3 },
           }}
         >
           <Outlet />
