@@ -6,11 +6,11 @@ export interface CreateProfessor {
   employeeState: string
   userId: string
 }
-export interface CreateEvaluationAndResults {
+export interface CreateAcademicRecord {
   curso_id: string
   name: string
   description: string
-  date: Date
+  date: string
   student_id: string
   mark: number
   comment: string
