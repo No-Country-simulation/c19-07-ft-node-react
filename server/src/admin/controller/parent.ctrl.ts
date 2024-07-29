@@ -58,6 +58,7 @@ export class ParentCtrl {
       new ResponseHandler(res).sendResponse(200, 'Parent updated successfully', updatedParent)
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
+        console.log(error)
         return new ResponseHandler(res).sendError(500, 'server error')
       }
       if (error instanceof z.ZodError) {
