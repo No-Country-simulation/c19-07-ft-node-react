@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // src/modules/professors/repositories/professor.repository.ts
-import { Courses, Evaluation_results, Evaluations, PrismaClient, Professors } from '@prisma/client'
+import { Academic_records, Courses, Evaluation_results, Evaluations, PrismaClient, Professors } from '@prisma/client'
 import { CreateEvaluationAndResults } from '../types/professors.type'
 import { DatabaseError } from '../errors/databaseError'
 const prisma = new PrismaClient()
@@ -86,37 +86,44 @@ export const getAssignedCourses = async (professor_id: string): Promise<Courses[
   }
 }
 
-
-
-//New
-//New Routes for Reports
+// New
+// New Routes for Reports
 export const getAllStudentsWithDetailsRepository = async () => {
   const data = await prisma.students.findMany({
-      include: {
-                user: true,
-                  parent: {
-                    include: {
-                      user: true
-                    }
-                },
-                courses: {
-                    include: {
-                      academic_area: true,
-                      academic_record: {
-                        include: {
-                          student: true
-                        }
-                      },
-                      evaluations: true,
-                      professor: {
-                        include: {
-                          user: true
-                        }
-                      }
-                  }
-                }
+    include: {
+      user: true,
+      parent: {
+        include: {
+          user: true
+        }
+      },
+      courses: {
+        include: {
+          academic_area: true,
+          academic_record: {
+            include: {
+              student: true
+            }
+          },
+          evaluations: true,
+          professor: {
+            include: {
+              user: true
+            }
+          }
+        }
+      }
     }
   })
 
   return data
+}
+
+export const updateStudentEvaluations = async (historial_id: string, body: Partial<Omit<Academic_records, 'updatedAt' | 'deletedAt'>>): Promise<Academic_records> => {
+  try {
+    return await prisma.academic_records.update({ where: { historial_id }, data: { ...body } })
+  } catch (err: any) {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    throw new DatabaseError(`Error updating the student: ${err.message}`)
+  }
 }
