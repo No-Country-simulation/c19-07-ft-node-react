@@ -139,6 +139,7 @@ model Courses {
 
 model Academic_records {
   historial_id String   @id @default(cuid())
+  name String @default("")
   curso_id     String
   curso        Courses  @relation(fields: [curso_id], references: [cursos_id])
   mark         Float

@@ -16,9 +16,9 @@ professorRoutes.get('/:id', professorController.getProfessorById)
 professorRoutes.patch('/:id', professorController.updateProfessor)
 professorRoutes.delete('/:id', professorController.deleteProfessor)
 // Evaluations Routes
-professorRoutes.post('/evaluations/:id', professorController.createEvaluations)
+professorRoutes.post('/evaluations', professorController.createEvaluations)
 professorRoutes.get('/evaluations/:id', professorController.getEvaluationsByCourse)
-professorRoutes.get('/evaluation_results/:id', professorController.getResultsFromOneEvaluation)
+professorRoutes.get('/evaluation_results/:id', professorController.getResultsFromOneAcademicRecord)
 professorRoutes.patch('/evaluations/:id', professorController.updateEvaluationById)
 // Assigned Students
 professorRoutes.get('/assigned_students/:id', professorController.getAssignedStudents)
