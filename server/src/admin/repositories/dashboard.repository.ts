@@ -14,4 +14,25 @@ export class DashboardRepository implements IdashboardRepository {
     console.log('estudents witch evaluations', students[0])
     return students
   }
+
+  async countActiveStudents (): Promise<number> {
+    return await this.prisma.users.count({
+      where: { type_user: 'STUDENT', state: 'ACTIVE' }
+    })
+  }
+
+  async countTeachers (): Promise<number> {
+    return await this.prisma.users.count({
+      where: { type_user: 'PROFESSOR' }
+    })
+  }
+
+  async countAllUsers (): Promise<number> {
+    const count = await this.prisma.users.count(
+      {
+        where: { deletedAt: null }
+      }
+    )
+    return count
+  }
 }

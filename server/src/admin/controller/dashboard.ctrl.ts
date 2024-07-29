@@ -10,9 +10,9 @@ import HTTP_STATUS from '../../constants/statusCodeServer.const'
 const dashboardService = new DashboardService(new DashboardRepository(new PrismaClient()))
 
 export class DashboardCtrl {
-  async getTopFiveStudents (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
+  async getDashboardData (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const topFiveStudents = await dashboardService.getTopFiveStudents()
+      const topFiveStudents = await dashboardService.getDashboardData()
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'Top five students retrieved successfully', topFiveStudents)
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
