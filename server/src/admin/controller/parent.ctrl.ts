@@ -4,7 +4,7 @@ import { ParentService } from '../services/parent.service'
 import { ResponseHandler } from '../../libs/response.lib'
 import { ICustomRequest } from '../../types'
 import { Response, NextFunction } from 'express'
-import { queryParamsSchema, deleteParentSchema } from '../schemas/parent.schema'
+import { queryParamsSchema, deleteParentSchema, updateParentSchema } from '../schemas/parent.schema'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { z } from 'zod'
 import { formattedErrorsZod } from '../../libs/formatedErrorsZod'
@@ -38,6 +38,24 @@ export class ParentCtrl {
       const { parentId } = deleteParentSchema.parse(req.params)
       await parentService.deleteParent(parentId)
       new ResponseHandler(res).sendResponse(200, 'Parent deleted successfully', null)
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        return new ResponseHandler(res).sendError(500, 'server error')
+      }
+      if (error instanceof z.ZodError) {
+        const errors = formattedErrorsZod(error)
+        return new ResponseHandler(res).sendError(400, 'Validation error', errors)
+      }
+      next(error)
+    }
+  }
+
+  async updateParentAd (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { parentId } = updateParentSchema.parse(req.params)
+      const data = req.body
+      const updatedParent = await parentService.updateParentAd(parentId, data)
+      new ResponseHandler(res).sendResponse(200, 'Parent updated successfully', updatedParent)
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         return new ResponseHandler(res).sendError(500, 'server error')

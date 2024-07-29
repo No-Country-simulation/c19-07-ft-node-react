@@ -11,6 +11,7 @@ export interface IParentRepository {
   createParent: (data: CreateParentSchema) => Promise<Parents>
   countFilteredParents: (filtros: IParentFilter) => Promise<number>
   deleteParent: (data: DeleteParentSchema) => Promise<Parents>
+  updateParentAd: (id: string, data: Partial<Parents>) => Promise<Parents>
 }
 export interface IParentFilter {
   name?: string

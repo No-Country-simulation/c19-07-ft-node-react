@@ -4,6 +4,7 @@ import { PaginatedResponse, ResponseHandler } from '../../libs/response.lib'
 import { IParentListFormat } from '../interface/parentInterface'
 import { IParentFilter } from '../repositories/interface/parent.interface'
 import { ParentRepository } from '../repositories/parent.repository'
+import { Parents } from '@prisma/client'
 
 export class ParentService {
   constructor (private readonly parentRepository: ParentRepository) {}
@@ -47,5 +48,14 @@ export class ParentService {
     if (existingParent == null) { throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT) }
 
     await this.parentRepository.deleteParent({ parentId })
+  }
+
+  async updateParentAd (parentId: string, data: Partial<Parents>): Promise<Parents> {
+    const existingParent = await this.parentRepository.findParentByUserId(parentId)
+    if (existingParent == null) {
+      throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT)
+    }
+    const updatedParent = await this.parentRepository.updateParentAd(parentId, data)
+    return updatedParent
   }
 }
