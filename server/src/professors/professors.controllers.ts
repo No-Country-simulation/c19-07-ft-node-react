@@ -75,13 +75,11 @@ export const deleteProfessor = async (req: Request, res: Response): Promise<void
 
 export const createEvaluations = async (req: Request, res: Response): Promise<any> => {
   try {
-    const isValid: boolean = professorService.validateCreateEvaluation(req.body)
-    if (!isValid) return res.send(400).send({ err: 'Invalid body' })
-    const { id } = req.params
-    if (typeof id !== 'string') return res.send(400).send({ err: 'Invalid curso_id' })
+    const isValidBody: boolean = professorService.validateCreateEvaluation(req.body)
+    if (!isValidBody) return res.status(400).send({ err: 'Invalid body' })
 
-    const { evaluation_id } = await professorService.createEvaluation(id, req.body)
-    if (evaluation_id.length === 0) return res.send(503).send({ err: 'An error ocurred creating the evaluation' })
+    const { historial_id } = await professorService.createAcademicRecord(req.body)
+    if (historial_id.length === 0) return res.status(503).send({ err: 'An error ocurred creating the evaluation' })
 
     res.status(204).send()
   } catch (e: any) {
@@ -95,7 +93,7 @@ export const getEvaluationsByCourse = async (req: Request, res: Response): Promi
     const { id } = req.params
     if (id.length === 0) return res.status(400).send({ err: 'Invalid Id' })
 
-    const evaluations = await professorService.getEvaluationsById(id)
+    const evaluations = await professorService.getAcademicRecordsByCourseId(id)
     if (evaluations.length <= 0) return res.status(404).send({ err: 'No evaluations found' })
 
     res.status(200).send({ data: evaluations })
@@ -105,12 +103,12 @@ export const getEvaluationsByCourse = async (req: Request, res: Response): Promi
   }
 }
 
-export const getResultsFromOneEvaluation = async (req: Request, res: Response): Promise<any> => {
+export const getResultsFromOneAcademicRecord = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params
     if (id.length <= 0) res.status(400).send({ err: 'Invalid Id' })
     console.log(id)
-    const results = await professorService.getEvaluationsResults(id)
+    const results = await professorService.getAcademicRecords(id)
     if (results.length <= 0) return res.status(404).send({ err: 'No results found' })
     res.status(200).send({ data: results })
   } catch (err: any) {
