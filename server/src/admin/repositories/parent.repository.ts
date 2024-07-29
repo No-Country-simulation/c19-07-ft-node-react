@@ -93,6 +93,15 @@ export class ParentRepository implements IParentRepository {
 
     return count
   }
+
+  async deleteParent (data: DeleteParentSchema): Promise<Parents> {
+    const parent = await this.prisma.parents.delete({
+      where: {
+        parent_id: data.parentId
+      }
+    })
+    return parent
+  }
 }
 
 export interface IParentWithUser extends Parents {
