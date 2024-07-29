@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Parents, Prisma, PrismaClient, Users } from '@prisma/client'
 import { IParentFilter, IParentRepository } from './interface/parent.interface'
-import { CreateParentSchema } from '../schemas/parent.schema'
+import { CreateParentSchema, DeleteParentSchema } from '../schemas/parent.schema'
 
 export class ParentRepository implements IParentRepository {
   constructor (private readonly prisma: PrismaClient) {}
@@ -65,6 +65,15 @@ export class ParentRepository implements IParentRepository {
     })
 
     return count
+  }
+
+  async deleteParent (data: DeleteParentSchema): Promise<Parents> {
+    const parent = await this.prisma.parents.delete({
+      where: {
+        parent_id: data.parentId
+      }
+    })
+    return parent
   }
 }
 

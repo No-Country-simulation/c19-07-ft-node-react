@@ -1,5 +1,5 @@
 import { Parents } from '@prisma/client'
-import { CreateParentSchema } from '../../schemas/parent.schema'
+import { CreateParentSchema, DeleteParentSchema } from '../../schemas/parent.schema'
 
 export interface IParentRepository {
   findParentByUserId: (userId: string) => Promise<Parents | null>
@@ -10,6 +10,7 @@ export interface IParentRepository {
   ) => Promise<Parents[]>
   createParent: (data: CreateParentSchema) => Promise<Parents>
   countFilteredParents: (filtros: IParentFilter) => Promise<number>
+  deleteParent: (data: DeleteParentSchema) => Promise<Parents>
 }
 export interface IParentFilter {
   name?: string

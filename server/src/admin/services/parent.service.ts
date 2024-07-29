@@ -1,3 +1,5 @@
+import HTTP_STATUS from '../../constants/statusCodeServer.const'
+import { ConflictError } from '../../errors/conflictError'
 import { PaginatedResponse, ResponseHandler } from '../../libs/response.lib'
 import { IParentListFormat } from '../interface/parentInterface'
 import { IParentFilter } from '../repositories/interface/parent.interface'
@@ -33,5 +35,17 @@ export class ParentService {
 
     const listParents = ResponseHandler.paginate(formatParents, totalParents, page, limit, baseUrl)
     return listParents
+  }
+
+  async createParent (userId: string, relation: string): Promise<void> {
+    const existParent = await this.parentRepository.findParentByUserId(userId)
+    if (existParent != null) { throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT) }
+  }
+
+  async deleteParent (parentId: string): Promise<void> {
+    const existingParent = await this.parentRepository.findParentByUserId(parentId)
+    if (existingParent == null) { throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT) }
+
+    await this.parentRepository.deleteParent({ parentId })
   }
 }
