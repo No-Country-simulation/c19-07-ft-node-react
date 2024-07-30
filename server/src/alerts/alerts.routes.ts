@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from 'express'
-import { alertController } from './AlertsController'
+import { alertController } from './alerts.controller'
 
 const alertRoutes = Router()
 
