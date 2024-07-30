@@ -2,6 +2,7 @@ import { PrismaClient, Alerts, Academic_records } from '@prisma/client'
 import { sendEmail } from '../configs/emailConfig'
 import { ConflictError } from '../errors/conflictError'
 import HTTP_STATUS from '../constants/statusCodeServer.const'
+import { DatabaseError } from '../errors/databaseError'
 
 const prisma = new PrismaClient()
 
@@ -13,12 +14,16 @@ export class AlertRepository {
 
   // Crear una nueva alerta
   async createAlert (data: Omit<Alerts, 'parent_id'>): Promise<Alerts> {
-    return await prisma.alerts.create({
-      data: {
-        ...data,
-        parent_id: data.parentId
-      }
-    })
+    try {
+      return await prisma.alerts.create({
+        data: {
+          ...data,
+          parent_id: data.parentId
+        }
+      })
+    } catch (err: any) {
+      throw new DatabaseError(err.message)
+    }
   }
 
   // Obtener una alerta por ID

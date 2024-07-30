@@ -1,5 +1,7 @@
 import { Academic_records, Alerts } from '@prisma/client'
 import { AlertRepository } from './alerts.repository'
+import { z } from 'zod'
+import { ValidationError } from '../errors/validationError'
 // const prisma = new PrismaClient()
 const alertRepository = new AlertRepository()
 export const getAllAlerts = async (): Promise<Alerts[]> => {
@@ -24,4 +26,17 @@ export const deleteAlert = async (id: string): Promise<Alerts> => {
 
 export const getFeedback = async (studentId: string): Promise<Academic_records[]> => {
   return await alertRepository.getFeedback(studentId)
+}
+
+const alertsSchema = z.object({
+  message: z.string(),
+  date: z.string(),
+  typeAlert: z.string(),
+  parentId: z.string()
+})
+
+export const validateAlertBody = (data: Alerts): void => {
+  const bodyValidation = alertsSchema.safeParse(data)
+  if (bodyValidation.success) return
+  throw new ValidationError(bodyValidation.error.message)
 }
