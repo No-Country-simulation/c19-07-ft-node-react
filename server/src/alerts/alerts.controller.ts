@@ -6,6 +6,8 @@ import HTTP_STATUS from '../constants/statusCodeServer.const'
 import { ConflictError } from '../errors/conflictError'
 import * as alertsService from './alerts.service'
 import { getErrorMessageAndStatus } from '../utils/getErrorMessageAndStatus'
+import { ValidationError } from '../errors/validationError'
+import { NotFoundError } from '../errors/notFoundError'
 
 const prisma = new PrismaClient()
 const alertRepository = new AlertRepository()
@@ -33,15 +35,14 @@ class AlertController {
 
   async getAlertById (req: Request, res: Response): Promise<void> {
     try {
+      if (req.params.id === undefined || req.params.id === null) throw new ValidationError('Invalid alert id provided')
       const { id } = req.params
-      const alert = await alertRepository.getAlertById(id)
-      if (alert != null) {
-        res.status(200).json(alert)
-      } else {
-        res.status(404).json({ error: 'Alert not found.' })
-      }
-    } catch (err) {
-      res.status(500).json({ error: 'An error occurred while fetching the alert.' })
+      const alert = await alertsService.getAlertById(id)
+      if (alert === null) throw new NotFoundError('Alert not found', 404)
+      res.status(200).send({ data: alert })
+    } catch (err: any) {
+      const { message, status } = getErrorMessageAndStatus(err)
+      res.status(status).send({ messsage: message, err_details: err.message })
     }
   }
 

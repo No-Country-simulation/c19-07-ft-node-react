@@ -28,7 +28,11 @@ export class AlertRepository {
 
   // Obtener una alerta por ID
   async getAlertById (id: string): Promise<Alerts | null> {
-    return await prisma.alerts.findUnique({ where: { parent_id: id } })
+    try {
+      return await prisma.alerts.findUnique({ where: { parent_id: id } })
+    } catch (err: any) {
+      throw new DatabaseError(err.message)
+    }
   }
 
   // Actualizar una alerta
