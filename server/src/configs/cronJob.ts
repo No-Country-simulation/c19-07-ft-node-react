@@ -10,7 +10,7 @@ interface StudentWithGrades {
   grades: Academic_records[]
 }
 
-const sendStudentGradesEmails = async () => {
+const sendStudentGradesEmails = async (): Promise<void> => {
   try {
     // Obtén todos los estudiantes con sus notas
     const students: StudentWithGrades[] = await alertRepository.getAllStudentsWithGrades()
