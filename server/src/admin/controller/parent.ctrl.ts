@@ -8,8 +8,9 @@ import { queryParamsSchema, deleteParentSchema, updateParentSchema } from '../sc
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { z } from 'zod'
 import { formattedErrorsZod } from '../../libs/formatedErrorsZod'
+import { UserRepository } from '../repositories/user.repository'
 
-const parentService = new ParentService(new ParentRepository(new PrismaClient()))
+const parentService = new ParentService(new ParentRepository(new PrismaClient()), new UserRepository(new PrismaClient()))
 
 export class ParentCtrl {
   async getAllParents (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {

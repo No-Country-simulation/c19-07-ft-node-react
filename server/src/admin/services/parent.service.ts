@@ -5,9 +5,10 @@ import { IParentListFormat } from '../interface/parentInterface'
 import { IParentFilter } from '../repositories/interface/parent.interface'
 import { ParentRepository } from '../repositories/parent.repository'
 import { Parents } from '@prisma/client'
+import { UserRepository } from '../repositories/user.repository'
 
 export class ParentService {
-  constructor (private readonly parentRepository: ParentRepository) {}
+  constructor (private readonly parentRepository: ParentRepository, private readonly userRepository: UserRepository) {}
 
   async getAllParents (page: number, limit: number, filtro: IParentFilter): Promise<PaginatedResponse<IParentListFormat>> {
     let baseUrl = ''
@@ -38,9 +39,16 @@ export class ParentService {
     return listParents
   }
 
-  async createParent (userId: string, relation: string): Promise<void> {
+  async createParent (userId: string, relation: string): Promise<Parents> {
+    const existUser = await this.userRepository.findUserById(userId) // verify if user exists
+    if (existUser === null) throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT)
+    if (existUser.type_user !== 'PARENTS') throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT) // verify if user is a parent
+
     const existParent = await this.parentRepository.findParentByUserId(userId)
-    if (existParent != null) { throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT) }
+    if (existParent != null) throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT) // verify if user already has a parent
+
+    const newParent = await this.parentRepository.createParent({ userId, relation })
+    return newParent
   }
 
   async deleteParent (parentId: string): Promise<void> {
