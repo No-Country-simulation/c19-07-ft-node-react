@@ -1,7 +1,8 @@
 import cron from 'node-cron'
 import { sendEmail } from './emailConfig'
-import { alertRepository } from '../alerts/alerts.repository'
 import { Academic_records } from '@prisma/client'
+import { AlertRepository } from '../alerts/alerts.repository'
+const alertRepository = new AlertRepository()
 
 // Define un tipo para los datos de los estudiantes con calificaciones
 interface StudentWithGrades {
