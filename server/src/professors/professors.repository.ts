@@ -13,7 +13,7 @@ export const getAllProfessors = async (): Promise<Professors[]> => {
   }
 }
 
-export const createProfessor = async (data: Omit<Professors, ('professor_id' | 'createdAt' | 'updateAt')>): Promise<Professors> => {
+export const createProfessor = async (data: Omit<Professors, ('professor_id' | 'createdAt' | 'updateAt' | 'deletedAt')>): Promise<Professors> => {
   try {
     return await prisma.professors.create({ data })
   } catch (e: any) {
