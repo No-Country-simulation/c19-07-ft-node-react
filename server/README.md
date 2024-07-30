@@ -13,7 +13,7 @@ El objetivo es lograr facilitar la entrega de las notas y del seguimiento academ
 - **Juan santiago usca mamani** - Programador Backend: www.linkedin.com/in/santiagousca
 - **Ramiro Carnicer Souble** - Programador Backend
 - **Juan Manuel Gutiérrez Gómez** - Programador Frontend: www.linkedin.com/in/jumagu
-- **Lina Marcela Naranjo Jaramillo** - Programadora Frontend
+- **Lina Marcela Naranjo Jaramillo** - Programadora Frontend: https://www.linkedin.com/in/lina-marcela-naranjo-frontend/
 #### Tecnologías Backend
 - NodeJs
 - Express
