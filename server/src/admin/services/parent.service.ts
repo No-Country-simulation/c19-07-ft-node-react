@@ -1,10 +1,14 @@
+import HTTP_STATUS from '../../constants/statusCodeServer.const'
+import { ConflictError } from '../../errors/conflictError'
 import { PaginatedResponse, ResponseHandler } from '../../libs/response.lib'
 import { IParentListFormat } from '../interface/parentInterface'
 import { IParentFilter } from '../repositories/interface/parent.interface'
 import { ParentRepository } from '../repositories/parent.repository'
+import { Parents } from '@prisma/client'
+import { UserRepository } from '../repositories/user.repository'
 
 export class ParentService {
-  constructor (private readonly parentRepository: ParentRepository) {}
+  constructor (private readonly parentRepository: ParentRepository, private readonly userRepository: UserRepository) {}
 
   async getAllParents (page: number, limit: number, filtro: IParentFilter): Promise<PaginatedResponse<IParentListFormat>> {
     let baseUrl = ''
@@ -33,5 +37,26 @@ export class ParentService {
 
     const listParents = ResponseHandler.paginate(formatParents, totalParents, page, limit, baseUrl)
     return listParents
+  }
+
+  async createParent (userId: string, relation: string): Promise<Parents> {
+    const existUser = await this.userRepository.findUserById(userId) // verify if user exists
+    if (existUser === null) throw new ConflictError('Could not find', HTTP_STATUS.NOT_FOUND)
+    if (existUser.type_user !== 'PARENTS') throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT) // verify if user is a parent
+
+    const existParent = await this.parentRepository.findParentByUserId(userId)
+    if (existParent != null) throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT) // verify if user already has a parent
+
+    const newParent = await this.parentRepository.createParent({ userId, relation })
+    return newParent
+  }
+
+  async updateParentAd (parentId: string, data: Partial<Parents>): Promise<Parents> {
+    const existingParent = await this.parentRepository.findParentByParentId(parentId)
+    if (existingParent == null) {
+      throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT)
+    }
+    const updatedParent = await this.parentRepository.updateParentAd(parentId, data)
+    return updatedParent
   }
 }

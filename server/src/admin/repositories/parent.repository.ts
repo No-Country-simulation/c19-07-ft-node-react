@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Parents, Prisma, PrismaClient, Users } from '@prisma/client'
 import { IParentFilter, IParentRepository } from './interface/parent.interface'
-import { CreateParentSchema } from '../schemas/parent.schema'
+import { CreateParentSchema, DeleteParentSchema } from '../schemas/parent.schema'
 
 export class ParentRepository implements IParentRepository {
   constructor (private readonly prisma: PrismaClient) {}
@@ -10,6 +10,15 @@ export class ParentRepository implements IParentRepository {
     const parent = await this.prisma.parents.findFirst({
       where: {
         user_id: userId
+      }
+    })
+    return parent
+  }
+
+  async findParentByParentId (parentId: string): Promise<Parents | null> {
+    const parent = await this.prisma.parents.findFirst({
+      where: {
+        parent_id: parentId
       }
     })
     return parent
@@ -27,6 +36,7 @@ export class ParentRepository implements IParentRepository {
       skip: (page - 1) * limit,
       take: limit,
       where: {
+        deletedAt: null,
         user: {
           ...userWhereConditions
         }
@@ -45,6 +55,23 @@ export class ParentRepository implements IParentRepository {
         user_id: data.userId,
         relation: data.relation
       }
+    })
+    return parent
+  }
+
+  async deleteParent (data: DeleteParentSchema): Promise<Parents> {
+    const parent = await this.prisma.parents.delete({
+      where: {
+        parent_id: data.parentId
+      }
+    })
+    return parent
+  }
+
+  async updateParentAd (id: string, data: Partial<Parents>): Promise<Parents> {
+    const parent = await this.prisma.parents.update({
+      where: { parent_id: id },
+      data
     })
     return parent
   }

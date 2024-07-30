@@ -6,7 +6,7 @@ export const getAllParent = async (): Promise<Parents[]> => {
   return await prisma.parents.findMany()
 }
 
-export const createParent = async (data: Omit<Parents, 'parent_id'>): Promise<Parents> => {
+export const createParent = async (data: Omit<Parents, 'parent_id' | 'deletedAt'>): Promise<Parents> => {
   return await prisma.parents.create({ data })
 }
 
