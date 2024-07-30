@@ -44,7 +44,6 @@ class Server {
       , router)
 
     this.app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
-    this.app.use('/api/alerts', alertRoutes)
   }
 
   errorHandling (): void {
