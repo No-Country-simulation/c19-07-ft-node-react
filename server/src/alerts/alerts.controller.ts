@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
-import { AlertRepository } from './AlertRepository'
+import { AlertRepository } from './alerts.repository'
 import { sendEmail } from '../configs/emailConfig'
 import HTTP_STATUS from '../constants/statusCodeServer.const'
 import { ConflictError } from '../errors/conflictError'

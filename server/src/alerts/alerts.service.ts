@@ -1,5 +1,5 @@
 import { Academic_records, Alerts } from '@prisma/client'
-import { AlertRepository } from './AlertRepository'
+import { AlertRepository } from './alerts.repository'
 // const prisma = new PrismaClient()
 const alertRepository = new AlertRepository()
 export const getAllAlerts = async (): Promise<Alerts[]> => {
