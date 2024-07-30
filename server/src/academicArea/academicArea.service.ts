@@ -4,13 +4,15 @@ import { ConflictError } from '../errors/conflictError'
 import HTTP_STATUS from '../constants/statusCodeServer.const'
 import { NotFoundError } from '../errors/notFoundError'
 import { ResponseHandler } from '../libs/response.lib'
+import { IAcademicAreaFilter } from '../admin/interface/academicAreaInterface'
+import { CreateAcademicAreaSchema, UpdateAcademicAreaSchema } from './schemas/academicArea.schema'
 export class AcademicAreaService {
   constructor (
     private readonly academicAreaRepository: AcademicAreaRepository
   ) {}
 
   async createAcademicArea (
-    data: Omit<Academic_areas, 'academic_area_id' | 'createdAt' | 'updatedAt'>
+    data: CreateAcademicAreaSchema
   ): Promise<Academic_areas> {
     const academicAreaExists =
       await this.academicAreaRepository.findByNameAndEducationalLevel(
@@ -35,7 +37,8 @@ export class AcademicAreaService {
 
   async getAcademicAreas (
     page: number,
-    limit: number
+    limit: number,
+    filters: IAcademicAreaFilter
   ): Promise<
     {
       items: Academic_areas[]
@@ -61,7 +64,7 @@ export class AcademicAreaService {
     }
 
     const totalAcademicAreas =
-      await this.academicAreaRepository.countAcademicAreas()
+      await this.academicAreaRepository.countFilteredAcademicAreas(filters)
     if (totalAcademicAreas === 0) {
       throw new NotFoundError(
         'Academic areas not found',
@@ -71,7 +74,8 @@ export class AcademicAreaService {
 
     const academicAreas = await this.academicAreaRepository.getAcademicAreas(
       page,
-      limit
+      limit,
+      filters
     )
 
     return ResponseHandler.paginate(academicAreas, totalAcademicAreas, page, limit, baseUrl)
@@ -112,8 +116,8 @@ export class AcademicAreaService {
     return deletedAcademicArea
   }
 
-  async AcademicAreaPutService (
-    data: Omit<Academic_areas, 'academic_area_id' | 'createdAt' | 'updatedAt'>,
+  async updateAcademicAreaSchema (
+    data: UpdateAcademicAreaSchema,
     academicAreaId: string
   ): Promise<Academic_areas> {
     const academicAreaExists = await this.academicAreaRepository.getAcademicAreaById(
