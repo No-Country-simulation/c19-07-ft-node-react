@@ -46,7 +46,11 @@ export class AlertRepository {
 
   // Eliminar una alerta
   async deleteAlert (id: string): Promise<Alerts> {
-    return await prisma.alerts.delete({ where: { parent_id: id } })
+    try {
+      return await prisma.alerts.delete({ where: { parent_id: id } })
+    } catch (err: any) {
+      throw new DatabaseError(err.message)
+    }
   }
 
   // Obtener feedback (o registros académicos)

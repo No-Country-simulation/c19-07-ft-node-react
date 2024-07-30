@@ -61,11 +61,13 @@ class AlertController {
 
   async deleteAlert (req: Request, res: Response): Promise<void> {
     try {
+      if (req.params.id === undefined || req.params.id == null) throw new ValidationError('Invalid id provided')
       const { id } = req.params
-      await alertRepository.deleteAlert(id)
+      await alertsService.deleteAlert(id)
       res.status(204).send()
-    } catch (err) {
-      res.status(500).json({ error: 'An error occurred while deleting the alert.' })
+    } catch (err: any) {
+      const { message, status } = getErrorMessageAndStatus(err)
+      res.status(status).send({ messsage: message, err_details: err.message })
     }
   }
 
