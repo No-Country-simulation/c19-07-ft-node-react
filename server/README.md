@@ -8,7 +8,7 @@ Una plataforma online para poder medir el rendimiento escolar de los estudiantes
 El objetivo es lograr facilitar la entrega de las notas y del seguimiento academico a los alumnos y los padres. Además de facilitar la comunicación entre padre y profesor.
 
 ### Colaboradores
-- **Darvin Ricardo Alania Inocencio** - Programador Backend
+- **Darvin Ricardo Alania Inocencio** - Programador Backend: https://www.linkedin.com/in/darvin-ricardo-alania-inocencio-7927392a9/
 - **Fernando Martínez** - Programador Backend
 - **Juan santiago usca mamani** - Programador Backend: www.linkedin.com/in/santiagousca
 - **Ramiro Carnicer Souble** - Programador Backend
