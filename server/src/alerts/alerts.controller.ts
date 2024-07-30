@@ -4,9 +4,11 @@ import { AlertRepository } from './alerts.repository'
 import { sendEmail } from '../configs/emailConfig'
 import HTTP_STATUS from '../constants/statusCodeServer.const'
 import { ConflictError } from '../errors/conflictError'
+import * as alertsService from './alerts.service'
 
 const prisma = new PrismaClient()
 const alertRepository = new AlertRepository()
+
 class AlertController {
   async getAllAlerts (req: Request, res: Response): Promise<void> {
     try {
@@ -19,7 +21,8 @@ class AlertController {
 
   async createAlert (req: Request, res: Response): Promise<void> {
     try {
-      const alert = await alertRepository.createAlert(req.body)
+      const isValidBody = await alertsService.validateAlertBody(req.body)
+      const alert = await alertsService.createAlert(req.body)
       res.status(201).json(alert)
     } catch (err) {
       res.status(500).json({ error: 'An error occurred while creating the alert.' })
