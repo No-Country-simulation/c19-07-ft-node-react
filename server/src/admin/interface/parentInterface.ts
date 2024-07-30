@@ -7,3 +7,8 @@ export interface IParentListFormat {
   createdAt: Date
   updatedAt: Date
 }
+export interface IParentFilter {
+  name?: string
+  email?: string
+  viewDeleted?: 'only' | 'include' | 'none'
+}
