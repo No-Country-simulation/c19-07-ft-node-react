@@ -48,11 +48,14 @@ class AlertController {
 
   async updateAlert (req: Request, res: Response): Promise<void> {
     try {
+      if (req.params.id === undefined || req.params.id === null) throw new ValidationError('Invalid id provided')
+      alertsService.validateUpdateAlertBody(req.body)
       const { id } = req.params
-      const alert = await alertRepository.updateAlert(id, req.body)
-      res.status(200).json(alert)
-    } catch (err) {
-      res.status(500).json({ error: 'An error occurred while updating the alert.' })
+      await alertsService.updateAlert(id, req.body)
+      res.status(204).send()
+    } catch (err: any) {
+      const { message, status } = getErrorMessageAndStatus(err)
+      res.status(status).send({ messsage: message, err_details: err.message })
     }
   }
 

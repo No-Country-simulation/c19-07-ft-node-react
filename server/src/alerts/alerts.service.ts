@@ -35,8 +35,21 @@ const alertsSchema = z.object({
   parentId: z.string()
 })
 
+const updateAlertSchema = z.object({
+  message: z.optional(z.string()),
+  date: z.optional(z.string()),
+  typeAlert: z.optional(z.string()),
+  parentId: z.optional(z.string())
+})
+
 export const validateAlertBody = (data: Alerts): void => {
   const bodyValidation = alertsSchema.safeParse(data)
+  if (bodyValidation.success) return
+  throw new ValidationError(bodyValidation.error.message)
+}
+
+export const validateUpdateAlertBody = (data: Partial<Alerts>): void => {
+  const bodyValidation = updateAlertSchema.safeParse(data)
   if (bodyValidation.success) return
   throw new ValidationError(bodyValidation.error.message)
 }

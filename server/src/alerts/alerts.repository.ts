@@ -37,7 +37,11 @@ export class AlertRepository {
 
   // Actualizar una alerta
   async updateAlert (id: string, data: Partial<Alerts>): Promise<Alerts> {
-    return await prisma.alerts.update({ where: { parent_id: id }, data })
+    try {
+      return await prisma.alerts.update({ where: { parent_id: id }, data })
+    } catch (e: any) {
+      throw new DatabaseError(e.message)
+    }
   }
 
   // Eliminar una alerta
