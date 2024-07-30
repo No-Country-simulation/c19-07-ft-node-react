@@ -19,18 +19,3 @@ export const createParentSchema = z.object({
   relation: z.string().min(3)
 })
 export type CreateParentSchema = z.infer<typeof createParentSchema>
-
-// aca agregue el schema
-export const deleteParentSchema = z.object({
-  parentId: z.string()
-})
-export type DeleteParentSchema = z.infer<typeof deleteParentSchema>
-
-export const updateParentSchema = z.object({
-  parentId: z.string(),
-  // Puedes definir qué campos son actualizables y sus validaciones aquí
-  userId: z.string().optional(), // Si se permite actualizar el userId
-  relation: z.string().min(3).optional() // Si se permite actualizar la relación
-})
-
-export type UpdateParentSchema = z.infer<typeof updateParentSchema>

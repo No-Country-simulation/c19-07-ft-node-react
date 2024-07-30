@@ -7,7 +7,7 @@ export const getAllParents = async (): Promise<Parents[]> => {
   return await parentRepository.getAllParent()
 }
 
-export const createParents = async (data: Omit<Parents, 'updateAt' | 'parent_id' | 'deletedAt'>): Promise<Parents> => {
+export const createParents = async (data: Omit<Parents, 'updateAt' | 'parent_id'>): Promise<Parents> => {
   return await parentRepository.createParent(data)
 }
 

@@ -14,10 +14,9 @@ router.get('/parents', parentCtrl.getAllParents)
 router.get('/dashboard', dashboardctrl.getDashboardData)
 
 router.post('/create-user', userCtrl.createUser)
-router.post('/create-parent', parentCtrl.createParent)
 
 router.put('/update-user/:id', userCtrl.updateUser)
-router.put('/update-parent/:parentId', parentCtrl.updateParentAd)
+
 router.delete('/delete-user/:id', userCtrl.softDeleteUser)
 
 router.patch('/restore-user/:id', userCtrl.restoreUser)
