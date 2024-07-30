@@ -12,7 +12,7 @@ El objetivo es lograr facilitar la entrega de las notas y del seguimiento academ
 - **Fernando Martínez** - Programador Backend
 - **Juan santiago usca mamani** - Programador Backend: www.linkedin.com/in/santiagousca
 - **Ramiro Carnicer Souble** - Programador Backend
-- **Juan Manuel Gutiérrez Gómez** - Programador Frontend
+- **Juan Manuel Gutiérrez Gómez** - Programador Frontend: www.linkedin.com/in/jumagu
 - **Lina Marcela Naranjo Jaramillo** - Programadora Frontend
 #### Tecnologías Backend
 - NodeJs
@@ -21,5 +21,9 @@ El objetivo es lograr facilitar la entrega de las notas y del seguimiento academ
 - JWT
 #### Tecnologías Frontend
 - React
+- Vite
+- Redux Toolkit
+- Axios
+- Socket.IO
 
 ### Enlaces importantes
