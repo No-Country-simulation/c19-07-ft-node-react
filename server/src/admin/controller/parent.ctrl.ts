@@ -4,11 +4,12 @@ import { ParentService } from '../services/parent.service'
 import { ResponseHandler } from '../../libs/response.lib'
 import { ICustomRequest } from '../../types'
 import { Response, NextFunction } from 'express'
-import { queryParamsSchema, deleteParentSchema, updateParentSchema } from '../schemas/parent.schema'
+import { queryParamsSchema, updateParentSchema, createParentSchema, CreateParentSchema } from '../schemas/parent.schema'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { z } from 'zod'
 import { formattedErrorsZod } from '../../libs/formatedErrorsZod'
 import { UserRepository } from '../repositories/user.repository'
+import { CustomError } from '../../errors/customError'
 
 const parentService = new ParentService(new ParentRepository(new PrismaClient()), new UserRepository(new PrismaClient()))
 
@@ -34,14 +35,22 @@ export class ParentCtrl {
     }
   }
 
-  async deleteParent (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
+  async createParent (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { parentId } = deleteParentSchema.parse(req.params)
-      await parentService.deleteParent(parentId)
-      new ResponseHandler(res).sendResponse(200, 'Parent deleted successfully', null)
+      const { userId, relation }: CreateParentSchema = createParentSchema.parse(req.body)
+      const createdParent = await parentService.createParent(userId, relation)
+      new ResponseHandler(res).sendResponse(200, 'Parent created successfully', createdParent)
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         return new ResponseHandler(res).sendError(500, 'server error')
+      }
+      if (error instanceof CustomError && error.name === 'ConflictError') {
+        console.error('error -->', error.stack)
+        return new ResponseHandler(res).sendError(error.statusCode, error.message)
+      }
+      if (error instanceof CustomError && error.name === 'NotFoundError') {
+        console.error('error -->', error.stack)
+        return new ResponseHandler(res).sendError(error.statusCode, error.message)
       }
       if (error instanceof z.ZodError) {
         const errors = formattedErrorsZod(error)

@@ -3,6 +3,7 @@ import { CreateParentSchema, DeleteParentSchema } from '../../schemas/parent.sch
 
 export interface IParentRepository {
   findParentByUserId: (userId: string) => Promise<Parents | null>
+  findParentByParentId: (parentId: string) => Promise<Parents | null>
   getAllParents: (
     page: number,
     limit: number,

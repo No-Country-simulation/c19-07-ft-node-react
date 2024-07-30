@@ -84,6 +84,7 @@ model Parents {
   relation  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
   user      Users     @relation(fields: [user_id], references: [user_id])
   student   Students?
   alerts    Alerts[] // Relación uno a muchos con Alerts

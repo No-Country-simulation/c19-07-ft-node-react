@@ -15,6 +15,15 @@ export class ParentRepository implements IParentRepository {
     return parent
   }
 
+  async findParentByParentId (parentId: string): Promise<Parents | null> {
+    const parent = await this.prisma.parents.findFirst({
+      where: {
+        parent_id: parentId
+      }
+    })
+    return parent
+  }
+
   async getAllParents (page: number, limit: number, filtro: IParentFilter): Promise<IParentWithUser[]> {
     const userWhereConditions: Prisma.UsersWhereInput = {
       AND: [
@@ -27,6 +36,7 @@ export class ParentRepository implements IParentRepository {
       skip: (page - 1) * limit,
       take: limit,
       where: {
+        deletedAt: null,
         user: {
           ...userWhereConditions
         }

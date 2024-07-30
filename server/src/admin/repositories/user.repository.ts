@@ -63,11 +63,30 @@ export class UserRepository implements IUserRepository {
         deletedAt: new Date()
       }
     })
+
+    await this.prisma.parents.updateMany({
+      where: {
+        user_id: userId
+      },
+      data: {
+        deletedAt: new Date()
+      }
+    })
+
     return user
   }
 
   async restoreUser (userId: string): Promise<Users> {
     const user = await this.prisma.users.update({
+      where: {
+        user_id: userId
+      },
+      data: {
+        deletedAt: null
+      }
+    })
+
+    await this.prisma.parents.updateMany({
       where: {
         user_id: userId
       },

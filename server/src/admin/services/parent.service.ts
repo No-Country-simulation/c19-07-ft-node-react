@@ -41,7 +41,7 @@ export class ParentService {
 
   async createParent (userId: string, relation: string): Promise<Parents> {
     const existUser = await this.userRepository.findUserById(userId) // verify if user exists
-    if (existUser === null) throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT)
+    if (existUser === null) throw new ConflictError('Could not find', HTTP_STATUS.NOT_FOUND)
     if (existUser.type_user !== 'PARENTS') throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT) // verify if user is a parent
 
     const existParent = await this.parentRepository.findParentByUserId(userId)
@@ -51,15 +51,8 @@ export class ParentService {
     return newParent
   }
 
-  async deleteParent (parentId: string): Promise<void> {
-    const existingParent = await this.parentRepository.findParentByUserId(parentId)
-    if (existingParent == null) { throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT) }
-
-    await this.parentRepository.deleteParent({ parentId })
-  }
-
   async updateParentAd (parentId: string, data: Partial<Parents>): Promise<Parents> {
-    const existingParent = await this.parentRepository.findParentByUserId(parentId)
+    const existingParent = await this.parentRepository.findParentByParentId(parentId)
     if (existingParent == null) {
       throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT)
     }
