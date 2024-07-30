@@ -16,9 +16,9 @@ class AlertController {
   async getAllAlerts (req: Request, res: Response): Promise<void> {
     try {
       const alerts = await alertRepository.getAllAlerts()
-      res.status(200).json(alerts)
+      res.status(200).send(alerts)
     } catch (err) {
-      res.status(500).json({ error: 'An error occurred while fetching alerts.' })
+      res.status(500).send({ error: 'An error occurred while fetching alerts.' })
     }
   }
 
@@ -76,40 +76,39 @@ class AlertController {
       const { studentId } = req.params
       const academicRecords = await alertRepository.getFeedback(studentId)
       if (academicRecords.length > 0) {
-        res.status(200).json(academicRecords)
+        res.status(200).send(academicRecords)
       } else {
-        res.status(204).json({ message: 'No feedback available for this student.' })
+        res.status(204).send({ message: 'No feedback available for this student.' })
       }
-    } catch (err) {
-      res.status(500).json({ error: 'An error occurred while fetching feedback.' })
+    } catch (err: any) {
+      const { message, status } = getErrorMessageAndStatus(err)
+      res.status(status).send({ messsage: message, err_details: err.message })
     }
   }
 
   // Envio de Correos
   async sendGradesEmail (req: Request, res: Response): Promise<void> {
     try {
+      alertsService.validateEmailBody(req.body)
       const { studentId, email } = req.body
       const academicRecords = await alertRepository.getFeedback(studentId)
+      if (academicRecords.length <= 0) throw new NotFoundError('Academic recrods not found', 404)
+      // Asumiendo que los cursos están relacionados con los registros académicos
+      const gradeText = await Promise.all(academicRecords.map(async (record) => {
+        const course = await prisma.courses.findUnique({ where: { cursos_id: record.curso_id } })
+        if (course === null) {
+          throw new ConflictError('Course not found', HTTP_STATUS.NOT_FOUND)
+        }
+        return `Subject: ${course.nombre}, Grade: ${record.mark}`
+      }))
+      const text = `Here are the grades for your child:\n\n${gradeText.join('\n')}`
 
-      if (academicRecords.length > 0) {
-        // Asumiendo que los cursos están relacionados con los registros académicos
-        const gradeText = await Promise.all(academicRecords.map(async (record) => {
-          const course = await prisma.courses.findUnique({ where: { cursos_id: record.curso_id } })
-          if (course === null) {
-            throw new ConflictError('Course not found', HTTP_STATUS.NOT_FOUND)
-          }
-          return `Subject: ${course.nombre}, Grade: ${record.mark}`
-        }))
-        const text = `Here are the grades for your child:\n\n${gradeText.join('\n')}`
-
-        // Envía el correo usando el transporter de Nodemailer
-        await sendEmail(email, 'Your Child\'s Grades', text)
-        res.status(200).json({ message: 'Email sent successfully' })
-      } else {
-        res.status(204).json({ message: 'No feedback available for this student.' })
-      }
-    } catch (err) {
-      res.status(500).json({ error: 'An error occurred while sending the email.' })
+      // Envía el correo usando el transporter de Nodemailer
+      await sendEmail(email, 'Your Child\'s Grades', text)
+      res.status(200).send({ message: 'Email sent successfully' })
+    } catch (err: any) {
+      const { message, status } = getErrorMessageAndStatus(err)
+      res.status(status).send({ messsage: message, err_details: err.message })
     }
   }
 }

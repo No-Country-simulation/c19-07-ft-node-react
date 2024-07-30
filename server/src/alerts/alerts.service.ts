@@ -2,6 +2,7 @@ import { Academic_records, Alerts } from '@prisma/client'
 import { AlertRepository } from './alerts.repository'
 import { z } from 'zod'
 import { ValidationError } from '../errors/validationError'
+import { SendEmailBody } from '../types/sendEmail.type'
 // const prisma = new PrismaClient()
 const alertRepository = new AlertRepository()
 export const getAllAlerts = async (): Promise<Alerts[]> => {
@@ -35,6 +36,12 @@ const alertsSchema = z.object({
   parentId: z.string()
 })
 
+export const validateAlertBody = (data: Alerts): void => {
+  const bodyValidation = alertsSchema.safeParse(data)
+  if (bodyValidation.success) return
+  throw new ValidationError(bodyValidation.error.message)
+}
+
 const updateAlertSchema = z.object({
   message: z.optional(z.string()),
   date: z.optional(z.string()),
@@ -42,14 +49,19 @@ const updateAlertSchema = z.object({
   parentId: z.optional(z.string())
 })
 
-export const validateAlertBody = (data: Alerts): void => {
-  const bodyValidation = alertsSchema.safeParse(data)
+export const validateUpdateAlertBody = (data: Partial<Alerts>): void => {
+  const bodyValidation = updateAlertSchema.safeParse(data)
   if (bodyValidation.success) return
   throw new ValidationError(bodyValidation.error.message)
 }
 
-export const validateUpdateAlertBody = (data: Partial<Alerts>): void => {
-  const bodyValidation = updateAlertSchema.safeParse(data)
+const sendEmailSchema = z.object({
+  studentId: z.string(),
+  email: z.string().email()
+})
+
+export const validateEmailBody = (data: SendEmailBody): void => {
+  const bodyValidation = sendEmailSchema.safeParse(data)
   if (bodyValidation.success) return
   throw new ValidationError(bodyValidation.error.message)
 }

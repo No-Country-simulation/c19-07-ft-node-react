@@ -9,7 +9,6 @@ alertRoutes.post('/', alertController.createAlert)
 alertRoutes.get('/:id', alertController.getAlertById)
 alertRoutes.patch('/:id', alertController.updateAlert)
 alertRoutes.delete('/:id', alertController.deleteAlert)
-alertRoutes.get('/academic-records/:studentId', alertController.getFeedback)
 alertRoutes.post('/send-grades-email', alertController.sendGradesEmail)
 
 export default alertRoutes
