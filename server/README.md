@@ -10,7 +10,7 @@ El objetivo es lograr facilitar la entrega de las notas y del seguimiento academ
 ### Colaboradores
 - **Darvin Ricardo Alania Inocencio** - Programador Backend
 - **Fernando Martínez** - Programador Backend
-- **Juan santiago usca mamani** - Programador Backend
+- **Juan santiago usca mamani** - Programador Backend: www.linkedin.com/in/santiagousca
 - **Ramiro Carnicer Souble** - Programador Backend
 - **Juan Manuel Gutiérrez Gómez** - Programador Frontend
 - **Lina Marcela Naranjo Jaramillo** - Programadora Frontend
