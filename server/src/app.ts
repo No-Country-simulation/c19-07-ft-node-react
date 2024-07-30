@@ -6,7 +6,7 @@ import morgan from 'morgan'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../openapi.json'
 import { ServerSocket } from './configs/chat.gateway'
-import alertRoutes from './alerts/AlertsRoutes'
+import alertRoutes from './alerts/alerts.routes'
 
 import router from './routes/index'
 import authRoutes from './auth/auth.routes'
