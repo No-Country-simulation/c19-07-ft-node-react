@@ -1,23 +1,23 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 
 import { Filter } from "../interfaces";
-import { userMessage } from "../constants";
+import { acAreaMessage } from "../constants";
 import { useAxiosPrivate } from "../../../hooks";
-import { Message, ParentsResponse } from "../../../interfaces";
+import { StatusRespMsg, AcademicAreasResponse } from "../../../interfaces";
 
 interface AcAreaContextProps {
   children: ReactNode;
 }
 
 export interface AcAreaContextValue {
-  acArea: ParentsResponse | null;
-  setAcArea: React.Dispatch<React.SetStateAction<ParentsResponse | null>>;
+  acArea: AcademicAreasResponse | null;
+  setAcArea: React.Dispatch<React.SetStateAction<AcademicAreasResponse | null>>;
   filter: Filter;
   setFilter: React.Dispatch<React.SetStateAction<Filter>>;
   getAcAreas: () => Promise<void>;
-  createAcArea: (data: any) => Promise<Message>;
-  deleteAcArea: (id: string) => Promise<Message>;
-  updateAcArea: (id: string, data: any) => Promise<Message>;
+  createAcArea: (data: any) => Promise<StatusRespMsg>;
+  deleteAcArea: (id: string) => Promise<StatusRespMsg>;
+  updateAcArea: (id: string, data: any) => Promise<StatusRespMsg>;
 }
 
 export const AcAreaContext = createContext<AcAreaContextValue | undefined>(
@@ -27,7 +27,7 @@ export const AcAreaContext = createContext<AcAreaContextValue | undefined>(
 export const AcAreaProvider = ({ children }: AcAreaContextProps) => {
   const api = useAxiosPrivate();
 
-  const [acArea, setAcArea] = useState<ParentsResponse | null>(null);
+  const [acArea, setAcArea] = useState<AcademicAreasResponse | null>(null);
   const [filter, setFilter] = useState<Filter>({
     name: "",
     page: "1",
@@ -36,57 +36,60 @@ export const AcAreaProvider = ({ children }: AcAreaContextProps) => {
   });
 
   const getAcAreas = async () => {
-    const response = await api.get<ParentsResponse>(
-      `/admin/parents?page=${filter.page}&limit=${filter.limit}&name=${filter.name}`
+    const response = await api.get<AcademicAreasResponse>(
+      `/academic-area/?page=${filter.page}&limit=${filter.limit}`
     );
     setAcArea(response.data);
   };
 
-  const createAcArea = async (data: any): Promise<Message> => {
+  const createAcArea = async (data: any): Promise<StatusRespMsg> => {
     try {
-      const response = await api.post("/admin/create-parent", data);
+      const response = await api.post("academic-area/create", data);
 
       if (response.data.success) {
         await getAcAreas();
 
-        return { ok: true, msg: userMessage.success.create };
+        return { ok: true, msg: acAreaMessage.success.create };
       }
 
-      return { ok: false, msg: userMessage.wrong };
+      return { ok: false, msg: acAreaMessage.wrong };
     } catch (error) {
-      return { ok: false, msg: userMessage.error };
+      return { ok: false, msg: acAreaMessage.error };
     }
   };
 
-  const updateAcArea = async (id: string, data: any): Promise<Message> => {
+  const updateAcArea = async (
+    id: string,
+    data: any
+  ): Promise<StatusRespMsg> => {
     try {
-      const response = await api.put(`/admin/update-parent/${id}`, data);
+      const response = await api.put(`academic-area/${id}`, data);
 
       if (response.data.success) {
         await getAcAreas();
 
-        return { ok: true, msg: userMessage.success.update };
+        return { ok: true, msg: acAreaMessage.success.update };
       }
 
-      return { ok: false, msg: userMessage.wrong };
+      return { ok: false, msg: acAreaMessage.wrong };
     } catch (error) {
-      return { ok: false, msg: userMessage.error };
+      return { ok: false, msg: acAreaMessage.error };
     }
   };
 
-  const deleteAcArea = async (id: string): Promise<Message> => {
+  const deleteAcArea = async (id: string): Promise<StatusRespMsg> => {
     try {
-      const response = await api.delete(`/admin/delete-parent/${id}`);
+      const response = await api.delete(`academic-area/${id}`);
 
       if (response.data.success) {
         getAcAreas();
 
-        return { ok: true, msg: userMessage.success.delete };
+        return { ok: true, msg: acAreaMessage.success.delete };
       }
 
-      return { ok: false, msg: userMessage.wrong };
+      return { ok: false, msg: acAreaMessage.wrong };
     } catch (error) {
-      return { ok: false, msg: userMessage.error };
+      return { ok: false, msg: acAreaMessage.error };
     }
   };
 

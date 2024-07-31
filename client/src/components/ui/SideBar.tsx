@@ -3,9 +3,10 @@ import {
   Close,
   People,
   School,
-  Campaign,
+  GridView,
   AutoGraph,
   Dashboard,
+  Assessment,
   SquareFoot,
   BorderColor,
   FamilyRestroom,
@@ -30,14 +31,19 @@ const drawerBackgroundColor = "#abd1c6";
 
 const parentOptions = [
   {
+    text: "Overview",
+    path: "/student/my-child/overview",
+    icon: <GridView></GridView>,
+  },
+  {
     text: "Performance",
-    path: "/parents/performance",
+    path: "/parents/my-child/performance",
     icon: <AutoGraph></AutoGraph>,
   },
   {
-    text: "Classmates",
-    path: "/parents/classmates",
-    icon: <People></People>,
+    text: "Assessments",
+    path: "/parents/my-child/assessments",
+    icon: <Assessment></Assessment>,
   },
   {
     text: "Chat",
@@ -48,14 +54,19 @@ const parentOptions = [
 
 const studentOptions = [
   {
+    text: "Overview",
+    path: "/student/overview",
+    icon: <GridView></GridView>,
+  },
+  {
     text: "Performance",
-    path: "",
+    path: "/student/performance",
     icon: <AutoGraph></AutoGraph>,
   },
   {
-    text: "Announcements",
-    path: "",
-    icon: <Campaign></Campaign>,
+    text: "Assessments",
+    path: "/student/assessments",
+    icon: <Assessment></Assessment>,
   },
 ];
 

@@ -2,11 +2,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { CustomForm } from "../../../../components";
-import { parentCreateFormFields } from "../../constants";
-import { CreateParentFormData, createParentFormSchema } from "../../schemas";
+import { acAreaCreateFormFields } from "../../constants";
+import { CreateAcAreaFormData, createAcAreaFormSchema } from "../../schemas";
 
 interface AcAreaCreateFormProps {
-  onSubmit: (data: CreateParentFormData) => void;
+  onSubmit: (data: CreateAcAreaFormData) => void;
 }
 
 export const AcAreaCreateForm = ({ onSubmit }: AcAreaCreateFormProps) => {
@@ -14,18 +14,19 @@ export const AcAreaCreateForm = ({ onSubmit }: AcAreaCreateFormProps) => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<CreateParentFormData>({
-    resolver: zodResolver(createParentFormSchema),
+  } = useForm<CreateAcAreaFormData>({
+    resolver: zodResolver(createAcAreaFormSchema),
   });
 
   return (
     <CustomForm
+      columns={{ xs: 6 }}
       errors={errors}
       register={register}
       isSubmitting={isSubmitting}
       onSubmit={handleSubmit(onSubmit)}
       submitButtonLabel={"Create"}
-      formFields={parentCreateFormFields}
+      formFields={acAreaCreateFormFields}
     />
   );
 };

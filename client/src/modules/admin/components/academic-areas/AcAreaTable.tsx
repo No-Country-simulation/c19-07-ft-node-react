@@ -7,9 +7,9 @@ import {
   ConfirmModal,
   CustomDialog,
 } from "../../../../components";
-import { parentTableColumns } from "../../constants";
+import { acAreaTableColumns } from "../../constants";
 import { useContextAcArea, useModal } from "../../hooks";
-import { CreateParentFormData, EditParentFormData } from "../../schemas";
+import { CreateAcAreaFormData, EditAcAreaFormData } from "../../schemas";
 
 import { AcAreaEditForm } from "./AcAreaEditForm";
 import { AcAreaCreateForm } from "./AcAreaCreateForm";
@@ -37,7 +37,7 @@ export const AcAreaTable = ({
   } = useContextAcArea();
 
   // ? Creation
-  const handleSubmitCreateForm = async (data: CreateParentFormData) => {
+  const handleSubmitCreateForm = async (data: CreateAcAreaFormData) => {
     await createAcArea(data)
       .then((res) => {
         showStatusSnackbar(res);
@@ -51,17 +51,18 @@ export const AcAreaTable = ({
   // ? Update
   const handleEdit = (row: any) => {
     openModal("edit", {
-      user_id: row.user_id,
+      academic_area_id: row.academic_area_id,
       name: row.name,
-      email: row.email,
+      description: row.description,
+      educational_level: row.educational_level,
     });
   };
 
-  const handleSubmitEditForm = async (data: EditParentFormData) => {
-    await updateAcArea(modalState.payload?.user_id, data)
+  const handleSubmitEditForm = async (data: EditAcAreaFormData) => {
+    await updateAcArea(modalState.payload?.academic_area_id, data)
       .then((res) => {
         showStatusSnackbar(res);
-        closeCreateModal();
+        closeModal();
       })
       .catch((error) => {
         showStatusSnackbar(error);
@@ -76,7 +77,7 @@ export const AcAreaTable = ({
   const handleConfirmDeletion = async () => {
     setIsDeleting(true);
 
-    await deleteAcArea(modalState.payload?.user_id)
+    await deleteAcArea(modalState.payload?.academic_area_id)
       .then((res) => {
         showStatusSnackbar(res);
         closeModal();
@@ -111,7 +112,7 @@ export const AcAreaTable = ({
   return (
     <CustomTable
       rows={acArea.data.items}
-      columns={parentTableColumns}
+      columns={acAreaTableColumns}
       onEdit={handleEdit}
       onDelete={handleDelete}
       isLoading={false}
@@ -130,7 +131,6 @@ export const AcAreaTable = ({
         open={modalState.type === "edit"}
         onClose={closeModal}
         title="Edit Academic Area"
-        sx={{ width: "450px" }}
       >
         <AcAreaEditForm
           userToEdit={modalState.payload}

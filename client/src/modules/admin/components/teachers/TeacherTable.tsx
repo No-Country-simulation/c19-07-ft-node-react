@@ -1,10 +1,8 @@
-import { useState } from "react";
-
 import { TablePagination } from "@mui/material";
 
 import {
   CustomTable,
-  ConfirmModal,
+  // ConfirmModal,
   CustomDialog,
 } from "../../../../components";
 import { parentTableColumns } from "../../constants";
@@ -24,7 +22,7 @@ export const TeacherTable = ({
   openCreateModal,
   closeCreateModal,
 }: TeacherTableProps) => {
-  const [isDeleting, setIsDeleting] = useState(false);
+  // const [isDeleting, setIsDeleting] = useState(false);
 
   const { closeModal, openModal, modalState } = useModal();
   const {
@@ -33,7 +31,7 @@ export const TeacherTable = ({
     setFilter,
     createTeacher,
     updateTeacher,
-    deleteTeacher,
+    // deleteTeacher,
   } = useContextTeacher();
 
   // ? Creation
@@ -69,24 +67,24 @@ export const TeacherTable = ({
   };
 
   // ? Deletion
-  const handleDelete = (row: any) => {
-    openModal("delete", row);
-  };
+  // const handleDelete = (row: any) => {
+  //   openModal("delete", row);
+  // };
 
-  const handleConfirmDeletion = async () => {
-    setIsDeleting(true);
+  // const handleConfirmDeletion = async () => {
+  //   setIsDeleting(true);
 
-    await deleteTeacher(modalState.payload?.user_id)
-      .then((res) => {
-        showStatusSnackbar(res);
-        closeModal();
-        setIsDeleting(false);
-      })
-      .catch((error) => {
-        setIsDeleting(false);
-        showStatusSnackbar(error);
-      });
-  };
+  //   await deleteTeacher(modalState.payload?.user_id)
+  //     .then((res) => {
+  //       showStatusSnackbar(res);
+  //       closeModal();
+  //       setIsDeleting(false);
+  //     })
+  //     .catch((error) => {
+  //       setIsDeleting(false);
+  //       showStatusSnackbar(error);
+  //     });
+  // };
 
   // ? Pagination
   const handleChangePage = (_: any, newPage: number) => {
@@ -110,10 +108,11 @@ export const TeacherTable = ({
 
   return (
     <CustomTable
+      actions={["edit"]}
       rows={teacher.data.items}
       columns={parentTableColumns}
       onEdit={handleEdit}
-      onDelete={handleDelete}
+      onDelete={() => {}}
       isLoading={false}
     >
       <TablePagination
@@ -146,13 +145,13 @@ export const TeacherTable = ({
         <TeacherCreateForm onSubmit={handleSubmitCreateForm} />
       </CustomDialog>
 
-      <ConfirmModal
+      {/* <ConfirmModal
         open={modalState.type === "delete"}
         isLoading={isDeleting}
         onClose={closeModal}
         confirmText={`Are you sure to delete the teacher "${modalState.payload?.name}"?`}
         onConfirm={handleConfirmDeletion}
-      />
+      /> */}
     </CustomTable>
   );
 };

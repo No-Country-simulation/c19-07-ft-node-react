@@ -2,12 +2,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { CustomForm } from "../../../../components";
-import { parentEditFormFields } from "../../constants";
-import { EditParentFormData, editParentFormSchema } from "../../schemas";
+import { acAreaEditFormFields } from "../../constants";
+import { EditAcAreaFormData, editAcAreaFormSchema } from "../../schemas";
 
 interface AcAreaEditFormProps {
-  userToEdit: EditParentFormData;
-  onSubmit: (data: EditParentFormData) => void;
+  userToEdit: EditAcAreaFormData;
+  onSubmit: (data: EditAcAreaFormData) => void;
 }
 
 export const AcAreaEditForm = ({
@@ -18,8 +18,8 @@ export const AcAreaEditForm = ({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<EditParentFormData>({
-    resolver: zodResolver(editParentFormSchema),
+  } = useForm<EditAcAreaFormData>({
+    resolver: zodResolver(editAcAreaFormSchema),
     defaultValues: userToEdit,
   });
 
@@ -31,7 +31,7 @@ export const AcAreaEditForm = ({
       isSubmitting={isSubmitting}
       onSubmit={handleSubmit(onSubmit)}
       submitButtonLabel={"Update"}
-      formFields={parentEditFormFields}
+      formFields={acAreaEditFormFields}
     />
   );
 };

@@ -8,11 +8,11 @@ export const UserSearchBar = () => {
   const { setFilter, filter } = useContextUser();
 
   const handleSearchChange = (value: string) => {
-    setFilter({ ...filter, name: value });
+    setFilter({ ...filter, name: value, page: "1" });
   };
 
   const handleChange = (event: SelectChangeEvent<string>) => {
-    setFilter({ ...filter, typeUser: event.target.value });
+    setFilter({ ...filter, typeUser: event.target.value, page: "1" });
   };
 
   return (

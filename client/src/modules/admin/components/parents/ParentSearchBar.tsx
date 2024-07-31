@@ -5,7 +5,7 @@ export const ParentSearchBar = () => {
   const { setFilter, filter } = useContextParent();
 
   const handleSearchChange = (value: string) => {
-    setFilter({ ...filter, name: value });
+    setFilter({ ...filter, name: value, page: "1" });
   };
 
   return (
@@ -13,7 +13,7 @@ export const ParentSearchBar = () => {
       <SearchInput
         sx={{ width: { sm: "60%" } }}
         onChange={handleSearchChange}
-        placeholder="Search for parents by name or email..."
+        placeholder="Search for parents by name..."
         label="Parent Search"
         debounceTime={300}
       />

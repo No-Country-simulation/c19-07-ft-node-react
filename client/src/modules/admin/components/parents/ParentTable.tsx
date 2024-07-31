@@ -1,14 +1,8 @@
-import { useState } from "react";
-
 import { TablePagination } from "@mui/material";
 
-import {
-  CustomTable,
-  ConfirmModal,
-  CustomDialog,
-} from "../../../../components";
 import { parentTableColumns } from "../../constants";
 import { useContextParent, useModal } from "../../hooks";
+import { CustomTable, CustomDialog } from "../../../../components";
 import { CreateParentFormData, EditParentFormData } from "../../schemas";
 
 import { ParentEditForm } from "./ParentEditForm";
@@ -24,7 +18,7 @@ export const ParentTable = ({
   openCreateModal,
   closeCreateModal,
 }: ParentTableProps) => {
-  const [isDeletingUser, setIsDeletingUser] = useState(false);
+  // const [isDeletingUser, setIsDeletingUser] = useState(false);
 
   const { closeModal, openModal, modalState } = useModal();
   const {
@@ -33,7 +27,6 @@ export const ParentTable = ({
     setFilter,
     createParent,
     updateParent,
-    deleteParent,
   } = useContextParent();
 
   // ? Creation
@@ -69,24 +62,24 @@ export const ParentTable = ({
   };
 
   // ? Deletion
-  const handleDelete = (row: any) => {
-    openModal("delete", row);
-  };
+  // const handleDelete = (row: any) => {
+  //   openModal("delete", row);
+  // };
 
-  const handleConfirmDeletion = async () => {
-    setIsDeletingUser(true);
+  // const handleConfirmDeletion = async () => {
+  //   setIsDeletingUser(true);
 
-    await deleteParent(modalState.payload?.user_id)
-      .then((res) => {
-        showStatusSnackbar(res);
-        closeModal();
-        setIsDeletingUser(false);
-      })
-      .catch((error) => {
-        setIsDeletingUser(false);
-        showStatusSnackbar(error);
-      });
-  };
+  //   await deleteParent(modalState.payload?.user_id)
+  //     .then((res) => {
+  //       showStatusSnackbar(res);
+  //       closeModal();
+  //       setIsDeletingUser(false);
+  //     })
+  //     .catch((error) => {
+  //       setIsDeletingUser(false);
+  //       showStatusSnackbar(error);
+  //     });
+  // };
 
   // ? Pagination
   const handleChangePage = (_: any, newPage: number) => {
@@ -110,10 +103,11 @@ export const ParentTable = ({
 
   return (
     <CustomTable
+      actions={["edit"]}
       rows={parent.data.items}
       columns={parentTableColumns}
       onEdit={handleEdit}
-      onDelete={handleDelete}
+      onDelete={() => {}}
       isLoading={false}
     >
       <TablePagination
@@ -146,13 +140,13 @@ export const ParentTable = ({
         <ParentCreateForm onSubmit={handleSubmitCreateForm} />
       </CustomDialog>
 
-      <ConfirmModal
+      {/* <ConfirmModal
         open={modalState.type === "delete"}
         isLoading={isDeletingUser}
         onClose={closeModal}
         confirmText={`Are you sure to delete the parent "${modalState.payload?.name}"?`}
         onConfirm={handleConfirmDeletion}
-      />
+      /> */}
     </CustomTable>
   );
 };

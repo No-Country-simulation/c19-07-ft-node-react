@@ -12,6 +12,7 @@ type FormField = {
   name: string;
   label?: string;
   type?: string;
+  multiline?: boolean;
   placeholder?: string;
   select?: { value: string; label: string }[];
 };
@@ -45,29 +46,33 @@ export const CustomForm = ({
       component="form"
       onSubmit={onSubmit}
     >
-      {formFields.map(({ label, type, name, select, placeholder }) => (
-        <Grid key={name} item xs={6}>
-          <TextField
-            fullWidth
-            select={!!select}
-            label={label}
-            type={type}
-            variant="standard"
-            placeholder={placeholder}
-            {...register(name)}
-            error={!!errors[name]}
-            helperText={errors[name]?.message as string}
-            disabled={isSubmitting || isLoadingDefaultValues}
-          >
-            {select &&
-              select.map(({ value, label }) => (
-                <MenuItem key={value} value={value}>
-                  {label}
-                </MenuItem>
-              ))}
-          </TextField>
-        </Grid>
-      ))}
+      {formFields.map(
+        ({ label, type, name, select, multiline, placeholder }) => (
+          <Grid key={name} item xs={6}>
+            <TextField
+              fullWidth
+              select={!!select}
+              label={label}
+              type={type}
+              multiline={multiline}
+              maxRows={4}
+              variant="standard"
+              placeholder={placeholder}
+              {...register(name)}
+              error={!!errors[name]}
+              helperText={errors[name]?.message as string}
+              disabled={isSubmitting || isLoadingDefaultValues}
+            >
+              {select &&
+                select.map(({ value, label }) => (
+                  <MenuItem key={value} value={value}>
+                    {label}
+                  </MenuItem>
+                ))}
+            </TextField>
+          </Grid>
+        )
+      )}
 
       <Grid item xs={12} sm={3}>
         <Button

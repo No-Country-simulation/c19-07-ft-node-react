@@ -3,7 +3,7 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { Filter } from "../interfaces";
 import { userMessage } from "../constants";
 import { useAxiosPrivate } from "../../../hooks";
-import { Message, UsersResponse } from "../../../interfaces";
+import { StatusRespMsg, UsersResponse } from "../../../interfaces";
 
 interface UserContextProps {
   children: ReactNode;
@@ -15,9 +15,9 @@ export interface UserContextValue {
   filter: Filter;
   setFilter: React.Dispatch<React.SetStateAction<Filter>>;
   getUsers: () => Promise<void>;
-  createUser: (userData: any) => Promise<Message>;
-  deleteUser: (userId: string) => Promise<Message>;
-  updateUser: (userId: string, userData: any) => Promise<Message>;
+  createUser: (userData: any) => Promise<StatusRespMsg>;
+  deleteUser: (userId: string) => Promise<StatusRespMsg>;
+  updateUser: (userId: string, userData: any) => Promise<StatusRespMsg>;
 }
 
 export const UserContext = createContext<UserContextValue | undefined>(
@@ -42,7 +42,7 @@ export const UserProvider = ({ children }: UserContextProps) => {
     setUser(response.data);
   };
 
-  const createUser = async (userData: any): Promise<Message> => {
+  const createUser = async (userData: any): Promise<StatusRespMsg> => {
     try {
       const response = await api.post("/admin/create-user", userData);
 
@@ -61,7 +61,7 @@ export const UserProvider = ({ children }: UserContextProps) => {
   const updateUser = async (
     userId: string,
     userData: any
-  ): Promise<Message> => {
+  ): Promise<StatusRespMsg> => {
     try {
       const response = await api.put(`/admin/update-user/${userId}`, userData);
 
@@ -77,7 +77,7 @@ export const UserProvider = ({ children }: UserContextProps) => {
     }
   };
 
-  const deleteUser = async (userId: string): Promise<Message> => {
+  const deleteUser = async (userId: string): Promise<StatusRespMsg> => {
     try {
       const response = await api.delete(`/admin/delete-user/${userId}`);
 

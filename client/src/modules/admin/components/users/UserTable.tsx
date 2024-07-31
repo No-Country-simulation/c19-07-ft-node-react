@@ -55,7 +55,7 @@ export const UserTable = ({
     await updateUser(modalState.payload?.user_id, data)
       .then((res) => {
         showStatusSnackbar(res);
-        closeCreateModal();
+        closeModal();
       })
       .catch((error) => {
         showStatusSnackbar(error);
