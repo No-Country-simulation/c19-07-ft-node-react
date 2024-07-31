@@ -19,3 +19,9 @@ export const createParentSchema = z.object({
   relation: z.string().min(3)
 })
 export type CreateParentSchema = z.infer<typeof createParentSchema>
+
+export const updateParentSchema = z.object({
+  userId: z.string().optional(),
+  relation: z.string().min(3).optional()
+})
+export type UpdateParentSchema = z.infer<typeof updateParentSchema>

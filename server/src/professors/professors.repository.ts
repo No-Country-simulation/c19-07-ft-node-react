@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // src/modules/professors/repositories/professor.repository.ts
-import { Courses, Evaluation_results, Evaluations, PrismaClient, Professors } from '@prisma/client'
-import { CreateEvaluationAndResults } from '../types/professors.type'
+import { Academic_records, Courses, Evaluation_results, Evaluations, PrismaClient, Professors } from '@prisma/client'
+import { CreateAcademicRecord } from '../types/professors.type'
 import { DatabaseError } from '../errors/databaseError'
 const prisma = new PrismaClient()
 
@@ -13,7 +13,7 @@ export const getAllProfessors = async (): Promise<Professors[]> => {
   }
 }
 
-export const createProfessor = async (data: Omit<Professors, ('professor_id' | 'createdAt' | 'updateAt')>): Promise<Professors> => {
+export const createProfessor = async (data: Omit<Professors, ('professor_id' | 'createdAt' | 'updateAt' | 'deletedAt')>): Promise<Professors> => {
   try {
     return await prisma.professors.create({ data })
   } catch (e: any) {
@@ -41,20 +41,12 @@ export const deleteProfessor = async (id: string): Promise<Professors> => {
   }
 }
 
-export const createEvaluation = async (curso_id: string, body: CreateEvaluationAndResults): Promise<Evaluations> => {
+export const createAcademicRecord = async (date: string, data: Omit<CreateAcademicRecord, 'date'>): Promise<Academic_records> => {
   try {
-    return await prisma.evaluations.create({
+    return await prisma.academic_records.create({
       data: {
-        curso_id,
-        name: body.name,
-        description: body.description,
-        evaluation_result: {
-          create: {
-            student_id: body.student_id,
-            mark: body.mark,
-            comment: body.comment
-          }
-        }
+        date: new Date(date),
+        ...data
       }
     })
   } catch (e: any) {
@@ -62,17 +54,17 @@ export const createEvaluation = async (curso_id: string, body: CreateEvaluationA
   }
 }
 
-export const getEvaluationsById = async (curso_id: string): Promise<Evaluations[]> => {
+export const getAcademicRecordsByCourseId = async (curso_id: string): Promise<Academic_records[]> => {
   try {
-    return await prisma.evaluations.findMany({ where: { curso_id } })
+    return await prisma.academic_records.findMany({ where: { curso_id } })
   } catch (e: any) {
     throw new DatabaseError(e.message)
   }
 }
 
-export const getEvaluationsResults = async (evaluation_id: string): Promise<Evaluation_results[]> => {
+export const getAcademicRecords = async (historial_id: string): Promise<Academic_records[]> => {
   try {
-    return await prisma.evaluation_results.findMany({ where: { evaluation_id } })
+    return await prisma.academic_records.findMany({ where: { historial_id } })
   } catch (e: any) {
     throw new DatabaseError(e.message)
   }
@@ -117,4 +109,13 @@ export const getAllStudentsWithDetailsRepository = async () => {
   })
 
   return data
+}
+
+export const updateStudentEvaluations = async (historial_id: string, body: Partial<Omit<Academic_records, 'updatedAt' | 'deletedAt'>>): Promise<Academic_records> => {
+  try {
+    return await prisma.academic_records.update({ where: { historial_id }, data: { ...body } })
+  } catch (err: any) {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    throw new DatabaseError(`Error updating the student: ${err.message}`)
+  }
 }

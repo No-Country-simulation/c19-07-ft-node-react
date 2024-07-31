@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // src/modules/professors/services/professor.service.ts
-import { Courses, Evaluation_results, Evaluations, Professors, Students, Users } from '@prisma/client'
+import { Academic_records, Courses, Evaluation_results, Evaluations, Professors, Students, Users } from '@prisma/client'
 import * as professorRepository from '../professors/professors.repository'
-import { CreateEvaluationAndResults, CreateProfessor, StudentsAndCourse, StudentsWithData } from '../types/professors.type'
+import { CreateAcademicRecord, CreateProfessor, StudentsAndCourse, StudentsWithData } from '../types/professors.type'
 import z from 'zod'
 import { getStudentEducationalLevel, getStudentMarksByCourse, studentsFromCourse } from '../students/students.services'
 import { DatabaseError } from '../errors/databaseError'
@@ -13,7 +13,7 @@ export const getAllProfessors = async (): Promise<Professors[]> => {
   return await professorRepository.getAllProfessors()
 }
 
-export const createProfessor = async (data: Omit<Professors, 'professor_id'>): Promise<Professors> => {
+export const createProfessor = async (data: Omit<Professors, 'professor_id' | 'deletedAt'>): Promise<Professors> => {
   return await professorRepository.createProfessor(data)
 }
 
@@ -47,27 +47,27 @@ export const validateCreateProfessor = (object: CreateProfessor): boolean => {
 
 const createEvaluationSchema = z.object({
   name: z.string(),
-  description: z.string(),
   date: z.string(),
   student_id: z.string(),
   mark: z.number().min(1).max(100),
-  comment: z.string()
+  comment: z.string(),
+  curso_id: z.string()
 })
 
-export const validateCreateEvaluation = (object: CreateEvaluationAndResults): boolean => {
+export const validateCreateEvaluation = (object: CreateAcademicRecord): boolean => {
   return createEvaluationSchema.safeParse(object).success
 }
 
-export const createEvaluation = async (curso_id: string, body: CreateEvaluationAndResults): Promise<Evaluations> => {
-  return await professorRepository.createEvaluation(curso_id, body)
+export const createAcademicRecord = async (body: CreateAcademicRecord): Promise<Academic_records> => {
+  return await professorRepository.createAcademicRecord(body.date, body)
 }
 
-export const getEvaluationsById = async (id: string): Promise<Evaluations[]> => {
-  return await professorRepository.getEvaluationsById(id)
+export const getAcademicRecordsByCourseId = async (id: string): Promise<Academic_records[]> => {
+  return await professorRepository.getAcademicRecordsByCourseId(id)
 }
 
-export const getEvaluationsResults = async (id: string): Promise<Evaluation_results[]> => {
-  return await professorRepository.getEvaluationsResults(id)
+export const getAcademicRecords = async (id: string): Promise<Academic_records[]> => {
+  return await professorRepository.getAcademicRecords(id)
 }
 
 export const getAssignedCourses = async (id: string): Promise<Courses[]> => {
@@ -228,4 +228,22 @@ export const getAllStudentsWithDetailsService = async () => {
   }))
 
   return data2
+}
+
+const updateEvaluationObject = z.object({
+  mark: z.optional(z.number()),
+  comment: z.optional(z.string()),
+  date: z.optional(z.string())
+})
+
+export const isValidId = (id: string): boolean => {
+  return typeof id === 'string' && id.length > 0
+}
+
+export const isValidBody = (body: Partial<Academic_records>): boolean => {
+  return updateEvaluationObject.safeParse(body).success
+}
+
+export const updateStudentEvaluations = async (id: string, body: Partial<Academic_records>): Promise<Academic_records> => {
+  return await professorRepository.updateStudentEvaluations(id, body)
 }

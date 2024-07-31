@@ -6,6 +6,7 @@ import studentRoutes from '../students/students.routes'
 import usersRoutes from '../users/users.routes'
 import chatRoutes from '../chat/chat.routes'
 import adminRoutes from '../admin/routes/admin.routes'
+import alertRoutes from '../alerts/alerts.routes'
 const router: Router = Router()
 
 router.use('/academic-area', academicAreaRoutes)
@@ -15,5 +16,6 @@ router.use('/students', studentRoutes)
 router.use('/professors', professorRoutes)
 router.use('/parents', parentRoutes)
 router.use('/chat', chatRoutes)
+router.use('/alerts', alertRoutes)
 
 export default router
