@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
 import { ArrowBackOutlined } from "@mui/icons-material";
 
-import { LockIcon } from "../icons/LockIcon";
+import { LockIcon } from "..";
 
 export const Unathorized = () => {
   const navigate = useNavigate();
