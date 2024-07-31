@@ -1,4 +1,4 @@
-import { Logout, Menu, Notifications } from "@mui/icons-material";
+import { Logout, Menu } from "@mui/icons-material";
 import {
   Box,
   AppBar,
@@ -9,10 +9,14 @@ import {
 } from "@mui/material";
 
 import { useAuthStore, useUiStore } from "../../hooks";
+import { useAlert } from "../../hooks/useAlert";
+import  { NotificationComponent } from "./notificationSnackBar";
 
 export const NavBar = () => {
   const { startLogout } = useAuthStore();
   const { handleOpenSideBar } = useUiStore();
+  const {alert} = useAlert();
+  
 
   return (
     <AppBar position="static">
@@ -36,10 +40,8 @@ export const NavBar = () => {
         </Box>
 
         <Box>
-          <Tooltip title="Notifications">
-            <IconButton aria-label="Notifications">
-              <Notifications />
-            </IconButton>
+          <Tooltip title="Notifications">          
+            <NotificationComponent/> 
           </Tooltip>
 
           <Tooltip title="Logout">

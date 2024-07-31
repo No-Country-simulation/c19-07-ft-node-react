@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 
 import { useUiStore } from "../../hooks";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface SideBarItemProps {
   text: string;
@@ -15,6 +15,7 @@ interface SideBarItemProps {
 }
 
 export const SideBarItem = ({ text, path, icon }: SideBarItemProps) => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { handleCloseSideBar } = useUiStore();
 
@@ -25,7 +26,10 @@ export const SideBarItem = ({ text, path, icon }: SideBarItemProps) => {
 
   return (
     <ListItem>
-      <ListItemButton onClick={handleClick}>
+      <ListItemButton
+        onClick={handleClick}
+        selected={path === location.pathname}
+      >
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={text} />
       </ListItemButton>

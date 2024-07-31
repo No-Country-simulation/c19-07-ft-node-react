@@ -6,12 +6,7 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 
-import {
-  HomePage,
-  WelcomePage,
-  NotFoundPage,
-  ParentStudientPrincipalPage,
-} from "./pages";
+import { HomePage, WelcomePage, NotFoundPage } from "./pages";
 import {
   RequireRole,
   PublicRoute,
@@ -31,7 +26,6 @@ import {
   TeacherReport,
 } from "./modules/teacher";
 import {
-  Classmates,
   ParentsLayout,
   ParentsChatPage,
   ParentsContactsPage,
@@ -45,6 +39,12 @@ import {
   AdminDashboardPage,
   AdminAcademicAreasPage,
 } from "./modules/admin";
+import {
+  StudentLayout,
+  StudentOverviewPage,
+  StudentPerformancePage,
+  StudentAssessmentsPage,
+} from "./modules/student";
 
 // import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
 
@@ -122,12 +122,16 @@ const router = createBrowserRouter([
         ),
         children: [
           {
-            path: "performance",
-            element: <ParentStudientPrincipalPage />,
+            path: "my-child/overview",
+            // element: < />,
           },
           {
-            path: "classmates",
-            element: <Classmates />,
+            path: "my-child/performance",
+            // element: < />,
+          },
+          {
+            path: "my-child/assessments",
+            // element: < />,
           },
           {
             path: "contacts",
@@ -148,10 +152,27 @@ const router = createBrowserRouter([
         path: "student",
         element: (
           <RequireRole allowedRoles={["STUDENT"]}>
-            <ParentStudientPrincipalPage />
+            <StudentLayout />
           </RequireRole>
         ),
-        children: [],
+        children: [
+          {
+            path: "overview",
+            element: <StudentOverviewPage />,
+          },
+          {
+            path: "performance",
+            element: <StudentPerformancePage />,
+          },
+          {
+            path: "assessments",
+            element: <StudentAssessmentsPage />,
+          },
+          {
+            path: "*",
+            element: <Navigate to="overview" replace />,
+          },
+        ],
       },
       // Admin
       {
