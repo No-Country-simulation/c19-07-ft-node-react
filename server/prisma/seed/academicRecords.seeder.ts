@@ -109,7 +109,7 @@ const seedAcademicRecords = async (): Promise<void> => {
   const courses: ICourses[] = await prisma.courses.findMany()
   const evaluationNames = ['Examen Parcial', 'Examen Final', 'Trabajo en Clase', 'Proyecto', 'Presentación']
   for (const student of students) {
-    const academicRecordCount = faker.number.int({ max: 6, min: 1 })
+    const academicRecordCount = faker.number.int({ max: courses.length, min: 20 })
     for (let i = 0; i < academicRecordCount; i++) {
       await prisma.academic_records.create({
         data: {
