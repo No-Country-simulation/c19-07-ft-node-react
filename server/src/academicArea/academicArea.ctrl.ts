@@ -5,14 +5,16 @@ import { ICustomRequest } from '../types'
 import { NextFunction, Response } from 'express'
 import { ResponseHandler } from '../libs/response.lib'
 import {
-  AcademicArea,
+  CreateAcademicAreaSchema,
   AcademicAreaId,
   academicAreaIdSchema,
-  academicAreaSchema
+  createAcademicAreaSchema,
+  UpdateAcademicAreaSchema
 } from './schemas/academicArea.schema'
 import HTTP_STATUS from '../constants/statusCodeServer.const'
 import { z } from 'zod'
 import { formattedErrorsZod } from '../libs/formatedErrorsZod'
+import { IAcademicAreaFilter } from '../admin/interface/academicAreaInterface'
 const academicAreaService = new AcademicAreaService(
   new AcademicAreaRepository(new PrismaClient())
 )
@@ -23,7 +25,7 @@ export class AcademicAreaCtrl {
     next: NextFunction
   ): Promise<void> {
     try {
-      const data: AcademicArea = academicAreaSchema.parse(req.body)
+      const data: CreateAcademicAreaSchema = createAcademicAreaSchema.parse(req.body)
       const academicArea = await academicAreaService.createAcademicArea(data)
       new ResponseHandler(res).sendResponse(
         HTTP_STATUS.OK,
@@ -43,7 +45,10 @@ export class AcademicAreaCtrl {
     try {
       const page = isNaN(Number(req.query.page)) ? 1 : Number(req.query.page)
       const limit = isNaN(Number(req.query.limit)) ? 10 : Number(req.query.limit)
-      const academicAreas = await academicAreaService.getAcademicAreas(page, limit)
+      const name = req.query.name as string
+      const viewDeleted = req.body.viewDeleted
+      const filters: IAcademicAreaFilter = { name, viewDeleted }
+      const academicAreas = await academicAreaService.getAcademicAreas(page, limit, filters)
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'Academic areas retrieved successfully', academicAreas)
     } catch (error) {
       next(error)
@@ -73,8 +78,8 @@ export class AcademicAreaCtrl {
   async AcademicAreaPutById (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const academicAreaId: AcademicAreaId = academicAreaIdSchema.parse(req.params.academicAreaId)
-      const data: AcademicArea = academicAreaSchema.parse(req.body)
-      const updatedAcademicArea = await academicAreaService.AcademicAreaPutService(data, academicAreaId)
+      const data: UpdateAcademicAreaSchema = createAcademicAreaSchema.parse(req.body)
+      const updatedAcademicArea = await academicAreaService.updateAcademicAreaSchema(data, academicAreaId)
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'Academic area updated successfully', updatedAcademicArea)
     } catch (error) {
       if (error instanceof z.ZodError) {

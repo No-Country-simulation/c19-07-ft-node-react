@@ -63,11 +63,65 @@ export class UserRepository implements IUserRepository {
         deletedAt: new Date()
       }
     })
+
+    await this.prisma.parents.update({
+      where: {
+        user_id: userId
+      },
+      data: {
+        deletedAt: new Date()
+      }
+    })
+
+    await this.prisma.students.update({
+      where: {
+        user_id: userId
+      },
+      data: {
+        deletedAt: new Date()
+      }
+    })
+
+    await this.prisma.professors.update({
+      where: {
+        user_id: userId
+      },
+      data: {
+        deletedAt: new Date()
+      }
+    })
     return user
   }
 
   async restoreUser (userId: string): Promise<Users> {
     const user = await this.prisma.users.update({
+      where: {
+        user_id: userId
+      },
+      data: {
+        deletedAt: null
+      }
+    })
+
+    await this.prisma.parents.update({
+      where: {
+        user_id: userId
+      },
+      data: {
+        deletedAt: null
+      }
+    })
+
+    await this.prisma.students.update({
+      where: {
+        user_id: userId
+      },
+      data: {
+        deletedAt: null
+      }
+    })
+
+    await this.prisma.professors.update({
       where: {
         user_id: userId
       },
