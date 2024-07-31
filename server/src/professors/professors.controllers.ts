@@ -88,7 +88,7 @@ export const createEvaluations = async (req: Request, res: Response): Promise<an
   }
 }
 
-export const getEvaluationsByCourse = async (req: Request, res: Response): Promise<any> => {
+export const getAcademicRecordsByCourseId = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params
     if (id.length === 0) return res.status(400).send({ err: 'Invalid Id' })
@@ -107,7 +107,6 @@ export const getResultsFromOneAcademicRecord = async (req: Request, res: Respons
   try {
     const { id } = req.params
     if (id.length <= 0) res.status(400).send({ err: 'Invalid Id' })
-    console.log(id)
     const results = await professorService.getAcademicRecords(id)
     if (results.length <= 0) return res.status(404).send({ err: 'No results found' })
     res.status(200).send({ data: results })
@@ -134,7 +133,7 @@ export const getAssignedStudents = async (req: Request, res: Response): Promise<
   }
 }
 
-export const updateEvaluationById = async (req: Request, res: Response): Promise<any> => {
+export const updateAcademicRecordById = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params
     if (!professorService.isValidId(id)) return res.status(400).send({ err: 'Invalid Id' })

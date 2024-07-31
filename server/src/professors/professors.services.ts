@@ -202,18 +202,18 @@ export const getAllStudentsWithDetailsService = async () => {
           mark: record.mark // Asegúrate de que este campo esté disponible y asignado correctamente
         }))
 
-      const evaluations = course.evaluations.map(evaluation => {
-        const marks = academicRecords.map(record => record.mark).filter(mark => mark !== undefined)
-        const averageMark = marks.length > 0 ? marks.reduce((a, b) => a + b, 0) / marks.length : null
+      // const evaluations = course.evaluations.map(evaluation => {
+      //   const marks = academicRecords.map(record => record.mark).filter(mark => mark !== undefined)
+      //   const averageMark = marks.length > 0 ? marks.reduce((a, b) => a + b, 0) / marks.length : null
 
-        return {
-          evaluationId: evaluation.evaluation_id,
-          name: evaluation.name,
-          description: evaluation.description,
-          date: evaluation.date,
-          averageMark
-        }
-      })
+      //   return {
+      //     evaluationId: evaluation.evaluation_id,
+      //     name: evaluation.name,
+      //     description: evaluation.description,
+      //     date: evaluation.date,
+      //     averageMark
+      //   }
+      // })
 
       return {
         courseId: course.cursos_id,
@@ -221,8 +221,7 @@ export const getAllStudentsWithDetailsService = async () => {
         professorId: course.professor.user_id,
         professorName: course.professor.user.name,
         academicAreaName: course.academic_area.name,
-        academicRecords,
-        evaluations
+        academicRecords
       }
     })
   }))
