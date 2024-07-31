@@ -41,7 +41,6 @@ export default function ParentsContactsPage() {
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               onClick={() => {
                 navigate(`/parents/chat/${professor.user_id}`);
-                console.log(professors);
               }}
             >
               <TableCell component="th" scope="row">

@@ -28,6 +28,8 @@ import {
   ParentsLayout,
   ParentsChatPage,
   ParentsContactsPage,
+  ParentsOverviewPage,
+  ParentsPerformancePage,
 } from "./modules/parents";
 import {
   AdminLayout,
@@ -42,7 +44,6 @@ import {
   StudentLayout,
   StudentOverviewPage,
   StudentPerformancePage,
-  StudentAssessmentsPage,
 } from "./modules/student";
 
 import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
@@ -118,15 +119,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: "my-child/overview",
-            // element: < />,
+            element: <ParentsOverviewPage />,
           },
           {
             path: "my-child/performance",
-            // element: < />,
-          },
-          {
-            path: "my-child/assessments",
-            // element: < />,
+            element: <ParentsPerformancePage />,
           },
           {
             path: "contacts",
@@ -158,10 +155,6 @@ const router = createBrowserRouter([
           {
             path: "performance",
             element: <StudentPerformancePage />,
-          },
-          {
-            path: "assessments",
-            element: <StudentAssessmentsPage />,
           },
           {
             path: "*",

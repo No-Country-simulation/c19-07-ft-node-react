@@ -1,6 +1,10 @@
 // Chat
 export { Chat } from "./chat/Chat";
 
+// Student & Parents
+export { Overview } from "./student-parents/Overview";
+export { Performance } from "./student-parents/Performance";
+
 // Icons
 export { LockIcon } from "./icons/LockIcon";
 export { CompassIcon } from "./icons/CompassIcon";

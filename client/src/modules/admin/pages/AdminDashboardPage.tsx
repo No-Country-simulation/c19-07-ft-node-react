@@ -4,17 +4,11 @@ import { Box, Skeleton } from "@mui/material";
 
 import { useAxiosPrivate } from "../../../hooks";
 
-import { DashboardChart } from "../components";
 import { CustomCard } from "../../../components";
+import { showSnackbar } from "../../../helpers";
+import { DashboardChart } from "../components";
+import { dashboardMessage } from "../constants";
 import { DashboardData, DashboardResponse } from "../interfaces";
-
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, ms);
-  });
-}
 
 export default function AdminDashboardPage() {
   const api = useAxiosPrivate();
@@ -25,15 +19,29 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await delay(2000);
-
         const resp = await api.get<DashboardResponse>("/admin/dashboard");
 
         if (resp.data.success) {
           setDashboardData(resp.data.data);
         }
+
+        setDashboardData({
+          activeStudents: 0,
+          numberOfTeachers: 0,
+          overallAverage: 0,
+          numberofUsers: 0,
+          topStudents: [],
+        });
+        showSnackbar(dashboardMessage.wrong, "warning");
       } catch (error) {
-        console.error(error);
+        setDashboardData({
+          activeStudents: 0,
+          numberOfTeachers: 0,
+          overallAverage: 0,
+          numberofUsers: 0,
+          topStudents: [],
+        });
+        showSnackbar(dashboardMessage.error, "error");
       }
     };
 

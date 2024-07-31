@@ -47,7 +47,7 @@ export const CustomCard = ({
           <Skeleton variant="rounded" height="72px" />
         )}
         {subHeading && (
-          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+          <Typography color="text.secondary">
             {subHeading}
           </Typography>
         )}

@@ -1,5 +1,5 @@
 import { Performance } from "../../../components";
 
-export default function StudentPerformancePage() {
+export default function ParentsPerformancePage() {
   return <Performance />;
 }

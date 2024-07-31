@@ -1,13 +1,5 @@
-import { Box } from "@mui/material";
+import { Overview } from "../../../components";
 
 export default function StudentOverviewPage() {
-  return (
-    <Box>
-     {/* Grade - Section */}
-
-     {/* Overall Average */}
-
-     {/* Chart */}
-    </Box>
-  );
+  return <Overview view="student" />;
 }

@@ -6,7 +6,6 @@ import {
   GridView,
   AutoGraph,
   Dashboard,
-  Assessment,
   SquareFoot,
   BorderColor,
   FamilyRestroom,
@@ -32,18 +31,13 @@ const drawerBackgroundColor = "#abd1c6";
 const parentOptions = [
   {
     text: "Overview",
-    path: "/student/my-child/overview",
+    path: "/parents/my-child/overview",
     icon: <GridView></GridView>,
   },
   {
     text: "Performance",
     path: "/parents/my-child/performance",
     icon: <AutoGraph></AutoGraph>,
-  },
-  {
-    text: "Assessments",
-    path: "/parents/my-child/assessments",
-    icon: <Assessment></Assessment>,
   },
   {
     text: "Chat",
@@ -62,11 +56,6 @@ const studentOptions = [
     text: "Performance",
     path: "/student/performance",
     icon: <AutoGraph></AutoGraph>,
-  },
-  {
-    text: "Assessments",
-    path: "/student/assessments",
-    icon: <Assessment></Assessment>,
   },
 ];
 
