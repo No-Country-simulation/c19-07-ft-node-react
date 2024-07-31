@@ -10,6 +10,7 @@ import { z } from 'zod'
 import { formattedErrorsZod } from '../../libs/formatedErrorsZod'
 import { UserRepository } from '../repositories/user.repository'
 import { CustomError } from '../../errors/customError'
+import HTTP_STATUS from '../../constants/statusCodeServer.const'
 const parentService = new ParentService(new ParentRepository(new PrismaClient()), new UserRepository(new PrismaClient()))
 export class ParentCtrl {
   async getAllParents (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
@@ -73,6 +74,19 @@ export class ParentCtrl {
       if (error instanceof z.ZodError) {
         const errors = formattedErrorsZod(error)
         return new ResponseHandler(res).sendError(400, 'Validation error', errors)
+      }
+      next(error)
+    }
+  }
+
+  async getParentsNotAssociated (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const parents = await parentService.getParentsNotAssociated()
+      new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'Parents not associated', parents)
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        console.log(error)
+        return new ResponseHandler(res).sendError(500, 'server error')
       }
       next(error)
     }
