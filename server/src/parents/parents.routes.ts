@@ -8,6 +8,7 @@ const parentRoutes = Router()
 // Rutas más específicas primero
 parentRoutes.get('/details/:id', parentController.getStudentByIdController)
 parentRoutes.get('/details', parentController.getStudentsWithDetailsController)
+parentRoutes.get('/students-Witch-Courses/:id', parentController.getStudent)
 parentRoutes.get('/info', parentController.getStudentParentDetailsControllers)
 
 // Rutas menos específicas después

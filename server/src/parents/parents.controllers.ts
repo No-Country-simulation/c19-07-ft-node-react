@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
 import * as parentsService from '../parents/parents.services'
+import * as parentRepository from '../parents/parents.repository'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { ResponseHandler } from '../libs/response.lib'
 import HTTP_STATUS from '../constants/statusCodeServer.const'
 import { z } from 'zod'
+import { ICustomRequest } from '../types'
 export const getAllParents = async (req: Request, res: Response): Promise<void> => {
   try {
     const parents = await parentsService.getAllParents()
@@ -95,6 +97,60 @@ export const getStudentsWithDetailsController = async (req: Request, res: Respon
     res.status(500).json({ error: 'An error occurred while fetching student details' })
   }
 }
+
+//---------------------//---------------------//---------------------
+//---------------------//---------------------//---------------------
+
+export const getStudent = async (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const data = await parentRepository.getStudentsWitchDetails(req.params.id)
+    if (data === null) throw new Error('Student not found')
+    const formatedData = [data].map((student) => {
+      return {
+        grade: student.grade,
+        section: student.section,
+        student_id: student.student_id,
+        name: student.user.name,
+        courses: student.courses.map((course) => {
+          return {
+            course_id: course.cursos_id,
+            name: course.nombre,
+            professor: course.professor.user.name
+          }
+        })
+      }
+    })
+    const templateData = formatedData.map((data) => {
+      return {
+        student: {
+          grade: data.grade,
+          section: data.section,
+          studentId: data.student_id,
+          data: data.name
+        },
+        course: data.courses.map((course) => {
+          return {
+            courseId: course.course_id,
+            courseName: course.name
+          }
+        }),
+        professor: data.courses.map(course => course.professor)
+
+      }
+    })
+    res.status(200).json(formatedData)
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+
+
+
+//---------------------//---------------------//---------------------
+//---------------------//---------------------//---------------------
+
 
 // GET BY ID
 export const getStudentByIdController = async (req: Request, res: Response): Promise<void> => {
