@@ -105,6 +105,7 @@ export class ParentRepository implements IParentRepository {
     const users = await this.prisma.users.findMany({
       where: {
         type_user: 'PARENTS',
+        deletedAt: null,
         user_id: { notIn: parentIds }
       }
     })
