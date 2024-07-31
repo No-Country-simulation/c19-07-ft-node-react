@@ -114,16 +114,16 @@ const getStudentData = async (students: Students[], courseId: string): Promise<S
       const user: Users | null = await getUserByIdServices(student.user_id)
       if (user === null) throw new DatabaseError('User not found')
 
-      const mark = await getStudentMark(courseId, student.student_id)
-      if (typeof mark !== 'number') throw new LogicError('Error cannot calculate mark for student')
-      console.log(mark)
+      const academicRecords = await getStudentMark(courseId, student.student_id)
+      console.log(academicRecords)
+      if (academicRecords === undefined || academicRecords.length <= 0) continue
       const educationalLevel = await getStudentEducationalLevel(student.educational_level_id)
       console.log(educationalLevel)
       const studentWithData = {
         ...student,
         name: user?.name,
-        mark,
-        educationalLevel: educationalLevel?.name
+        educationalLevel: educationalLevel?.name,
+        academicRecords
       }
 
       studentsWithData.push(studentWithData)
@@ -138,12 +138,11 @@ const getStudentData = async (students: Students[], courseId: string): Promise<S
   }
 }
 
-const getStudentMark = async (courseId: string, studentId: string): Promise<number | undefined> => {
+const getStudentMark = async (courseId: string, studentId: string): Promise<Academic_records[] | undefined> => {
   try {
     const records = await getStudentMarksByCourse(courseId, studentId)
-    if (records.length <= 0) return 0
-    const sumMarks = records.reduce((total, record) => total + record.mark, 0)
-    return sumMarks / records.length
+    if (records.length <= 0) return
+    return records
   } catch (e: any) {
     throw new DatabaseError(e)
   }
