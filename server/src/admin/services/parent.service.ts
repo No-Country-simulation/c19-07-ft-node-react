@@ -38,9 +38,13 @@ export class ParentService {
     return listParents
   }
 
-  async createParent (userId: string, relation: string): Promise<void> {
+  async createParent (userId: string, relation: string): Promise<Parents> {
     const existParent = await this.parentRepository.findParentByUserId(userId)
-    if (existParent != null) { throw new ConflictError('Could not find', HTTP_STATUS.CONFLICT) }
+    if (existParent != null) {
+      throw new ConflictError('Parent already exists', HTTP_STATUS.CONFLICT)
+    }
+    const parent = await this.parentRepository.createParent({ userId, relation })
+    return parent
   }
 
   async deleteParent (parentId: string): Promise<void> {

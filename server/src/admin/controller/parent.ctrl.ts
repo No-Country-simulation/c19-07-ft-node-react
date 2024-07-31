@@ -4,7 +4,7 @@ import { ParentService } from '../services/parent.service'
 import { ResponseHandler } from '../../libs/response.lib'
 import { ICustomRequest } from '../../types'
 import { Response, NextFunction } from 'express'
-import { queryParamsSchema, deleteParentSchema, updateParentSchema } from '../schemas/parent.schema'
+import { queryParamsSchema, deleteParentSchema, updateParentSchema, createParentSchema } from '../schemas/parent.schema'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { z } from 'zod'
 import { formattedErrorsZod } from '../../libs/formatedErrorsZod'
@@ -24,6 +24,24 @@ export class ParentCtrl {
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         return new ResponseHandler(res).sendError(500, 'server error')
+      }
+      if (error instanceof z.ZodError) {
+        const errors = formattedErrorsZod(error)
+        return new ResponseHandler(res).sendError(400, 'Validation error', errors)
+      }
+      next(error)
+    }
+  }
+
+  async createParent (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const data = createParentSchema.parse(req.body)
+      const { userId, relation } = data
+      const parent = await parentService.createParent(userId, relation)
+      new ResponseHandler(res).sendResponse(201, 'Parent created successfully', parent)
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        return new ResponseHandler(res).sendError(500, 'Server error')
       }
       if (error instanceof z.ZodError) {
         const errors = formattedErrorsZod(error)
