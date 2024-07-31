@@ -26,6 +26,12 @@ enum type_state {
   INACTIVE
 }
 
+enum type_periodo_evaluation {
+  PRIMER_PERIODO
+  SEGUNDO_PERIODO
+  TERCER_PERIODO
+  CUARTO_PERIODO
+}
 model Users {
   user_id      String         @id @default(cuid())
   name         String
@@ -162,6 +168,7 @@ model Evaluations {
   curso             Courses              @relation(fields: [curso_id], references: [cursos_id])
   name              String
   description       String
+  periodo           type_periodo_evaluation?
   date              DateTime             @default(now())
   evaluation_result Evaluation_results[]
 }
