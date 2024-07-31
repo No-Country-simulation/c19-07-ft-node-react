@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Request, Response } from 'express'
 import * as professorService from '../professors/professors.services'
 import { Courses } from '@prisma/client'
 import { getErrorMessageAndStatus } from '../utils/getErrorMessageAndStatus'
 import { any } from 'zod'
+import { ValidationError } from '../errors/validationError'
 
 export const getAllProfessors = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -97,9 +99,9 @@ export const getAcademicRecordsByCourseId = async (req: Request, res: Response):
     if (evaluations.length <= 0) return res.status(404).send({ err: 'No evaluations found' })
 
     res.status(200).send({ data: evaluations })
-  } catch (e: any) {
-    const { status, message } = getErrorMessageAndStatus(e)
-    res.status(status).send({ err: message, error_details: e.message })
+  } catch (err: any) {
+    const { status, message } = getErrorMessageAndStatus(err)
+    res.status(status).send({ err: message, error_details: err.message })
   }
 }
 
@@ -112,7 +114,7 @@ export const getResultsFromOneAcademicRecord = async (req: Request, res: Respons
     res.status(200).send({ data: results })
   } catch (err: any) {
     const { status, message } = getErrorMessageAndStatus(err)
-    res.status(status).send({ err: message, error_details: err })
+    res.status(status).send({ err: message, error_details: err.message })
   }
 }
 
@@ -122,14 +124,13 @@ export const getAssignedStudents = async (req: Request, res: Response): Promise<
     if (id.length <= 0) return res.status(404).send({ err: 'Invalid Id' })
 
     const courses: Courses[] = await professorService.getAssignedCourses(id)
-
     if (courses.length <= 0) return res.status(404).send({ err: 'This professor have not any assigned courses' })
     const coursesAndStudents = await professorService.studentsFromCourses(courses)
 
     res.status(200).send({ data: coursesAndStudents })
   } catch (err: any) {
     const { status, message } = getErrorMessageAndStatus(err)
-    res.status(status).send({ err: message, error_details: err })
+    res.status(status).send({ err: message, error_details: err.message })
   }
 }
 
@@ -143,7 +144,7 @@ export const updateAcademicRecordById = async (req: Request, res: Response): Pro
     res.status(204).send()
   } catch (err: any) {
     const { status, message } = getErrorMessageAndStatus(err)
-    res.status(status).send({ err: message, error_details: err })
+    res.status(status).send({ err: message, error_details: err.message })
   }
 }
 
@@ -158,5 +159,28 @@ export const getAllStudentsWithDetailsController = async (req: Request, res: Res
     // }
   } catch (error: any) {
     res.status(500).json({ error: error.message })
+  }
+}
+
+export const getPeriodMarks = async (req: Request, res: Response): Promise<any> => {
+  try {
+    if (req.params.id === undefined || req.params.id === null) throw new ValidationError('Invalid user Id')
+    professorService.validateQueryParameters(req.query)
+    const studentId = req.params.id
+    const courseId = req.query.courseId?.toString()
+    const period = req.query.period?.toString()
+    const academicRecords = await professorService.getAcademicRecordsByStudent(studentId)
+
+    const course = await professorService.getCourseById(courseId!)
+
+    const academicRecordsOfOneCourse = professorService.filterAcademicRecordsByCourse(courseId, academicRecords)
+
+    const academicRecordsOfOnePeriod = professorService.getAcademicRecordsByPeriod(Number(period), academicRecordsOfOneCourse)
+
+    const average = professorService.getAverageFromPeriod(academicRecordsOfOnePeriod)
+    res.status(200).send({ data: { average, name: course?.nombre, comment: course?.descripcion } })
+  } catch (e: any) {
+    const { message, status } = getErrorMessageAndStatus(e)
+    res.status(status).send({ message, err_details: e.message })
   }
 }

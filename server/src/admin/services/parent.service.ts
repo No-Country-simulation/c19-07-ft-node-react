@@ -1,4 +1,4 @@
-import { Parents } from '@prisma/client'
+import { Parents, Users } from '@prisma/client'
 import { ConflictError } from '../../errors/conflictError'
 import { PaginatedResponse, ResponseHandler } from '../../libs/response.lib'
 import { IParentFilter, IParentListFormat } from '../interface/parentInterface'
@@ -57,5 +57,10 @@ export class ParentService {
     }
     const updatedParent = await this.parentRepository.updateParent(parentId, data)
     return updatedParent
+  }
+
+  async getParentsNotAssociated (): Promise<Users[]> {
+    const parents = await this.parentRepository.getParentsNotAssociated()
+    return parents
   }
 }

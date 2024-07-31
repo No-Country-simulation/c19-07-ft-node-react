@@ -12,6 +12,7 @@ router.get('/users', userCtrl.getAllUsers)
 router.get('/active-students', userCtrl.getActiveUsersByTypeUser)
 router.get('/parents', parentCtrl.getAllParents)
 router.get('/dashboard', dashboardctrl.getDashboardData)
+router.get('/parents-not-registered', parentCtrl.getParentsNotAssociated)
 
 router.post('/create-user', userCtrl.createUser)
 router.post('/create-parent', parentCtrl.createParent)

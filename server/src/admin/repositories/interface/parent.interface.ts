@@ -1,4 +1,4 @@
-import { Parents } from '@prisma/client'
+import { Parents, Users } from '@prisma/client'
 import { CreateParentSchema, UpdateParentSchema } from '../../schemas/parent.schema'
 import { IParentFilter } from '../../interface/parentInterface'
 
@@ -13,4 +13,5 @@ export interface IParentRepository {
   createParent: (data: CreateParentSchema) => Promise<Parents>
   updateParent: (userId: string, data: UpdateParentSchema) => Promise<Parents>
   countFilteredParents: (filtros: IParentFilter) => Promise<number>
+  getParentsNotAssociated: () => Promise<Users[]>
 }
