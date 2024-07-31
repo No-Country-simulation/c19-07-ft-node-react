@@ -99,9 +99,9 @@ export const getAcademicRecordsByCourseId = async (req: Request, res: Response):
     if (evaluations.length <= 0) return res.status(404).send({ err: 'No evaluations found' })
 
     res.status(200).send({ data: evaluations })
-  } catch (e: any) {
-    const { status, message } = getErrorMessageAndStatus(e)
-    res.status(status).send({ err: message, error_details: e.message })
+  } catch (err: any) {
+    const { status, message } = getErrorMessageAndStatus(err)
+    res.status(status).send({ err: message, error_details: err.message })
   }
 }
 
@@ -114,7 +114,7 @@ export const getResultsFromOneAcademicRecord = async (req: Request, res: Respons
     res.status(200).send({ data: results })
   } catch (err: any) {
     const { status, message } = getErrorMessageAndStatus(err)
-    res.status(status).send({ err: message, error_details: err })
+    res.status(status).send({ err: message, error_details: err.message })
   }
 }
 
@@ -124,14 +124,13 @@ export const getAssignedStudents = async (req: Request, res: Response): Promise<
     if (id.length <= 0) return res.status(404).send({ err: 'Invalid Id' })
 
     const courses: Courses[] = await professorService.getAssignedCourses(id)
-
     if (courses.length <= 0) return res.status(404).send({ err: 'This professor have not any assigned courses' })
     const coursesAndStudents = await professorService.studentsFromCourses(courses)
 
     res.status(200).send({ data: coursesAndStudents })
   } catch (err: any) {
     const { status, message } = getErrorMessageAndStatus(err)
-    res.status(status).send({ err: message, error_details: err })
+    res.status(status).send({ err: message, error_details: err.message })
   }
 }
 
@@ -145,7 +144,7 @@ export const updateAcademicRecordById = async (req: Request, res: Response): Pro
     res.status(204).send()
   } catch (err: any) {
     const { status, message } = getErrorMessageAndStatus(err)
-    res.status(status).send({ err: message, error_details: err })
+    res.status(status).send({ err: message, error_details: err.message })
   }
 }
 
