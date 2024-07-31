@@ -15,9 +15,29 @@ import { truncate } from 'fs'
 import { PERIOD_ONE, PERIOD_THREE, PERIOD_TWO } from '../constants/date.const'
 import { NOTFOUND } from 'dns'
 
-export const getAllProfessors = async (): Promise<Professors[]> => {
-  return await professorRepository.getAllProfessors()
+// export const getAllProfessors = async (): Promise<Professors[]> => {
+//   return await professorRepository.getAllProfessors()
+// }
+
+export const getAllProfessors = async () => {
+  const data = await professorRepository.getAllProfessors()
+
+  return data.map(professor => ({
+    professor_id: professor.professor_id,
+    user_id: professor.user_id,
+    academic_area_id: professor.area_academica_id,
+    hiring_date: professor.fecha_contratacion,
+    employed_state: professor.estado_empleado,
+    education_level_id: professor.educational_level_id,
+    createdAt: professor.createdAt,
+    updatedAt: professor.updatedAt,
+    deletedAt: professor.deletedAt,
+    name: professor.user.name
+  }))
+
 }
+
+
 
 export const createProfessor = async (data: Omit<Professors, 'professor_id' | 'deletedAt'>): Promise<Professors> => {
   return await professorRepository.createProfessor(data)
