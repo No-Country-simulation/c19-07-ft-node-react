@@ -63,33 +63,38 @@ export class UserRepository implements IUserRepository {
         deletedAt: new Date()
       }
     })
-
-    await this.prisma.parents.update({
-      where: {
-        user_id: userId
-      },
-      data: {
-        deletedAt: new Date()
-      }
-    })
-
-    await this.prisma.students.update({
-      where: {
-        user_id: userId
-      },
-      data: {
-        deletedAt: new Date()
-      }
-    })
-
-    await this.prisma.professors.update({
-      where: {
-        user_id: userId
-      },
-      data: {
-        deletedAt: new Date()
-      }
-    })
+    switch (user.type_user) {
+      case 'PARENTS':
+        await this.prisma.parents.update({
+          where: {
+            user_id: userId
+          },
+          data: {
+            deletedAt: new Date()
+          }
+        })
+        break
+      case 'STUDENT':
+        await this.prisma.students.update({
+          where: {
+            user_id: userId
+          },
+          data: {
+            deletedAt: new Date()
+          }
+        })
+        break
+      case 'PROFESSOR':
+        await this.prisma.professors.update({
+          where: {
+            user_id: userId
+          },
+          data: {
+            deletedAt: new Date()
+          }
+        })
+        break
+    }
     return user
   }
 

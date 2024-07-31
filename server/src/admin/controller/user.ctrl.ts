@@ -59,6 +59,7 @@ export class UserCtrl {
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'User deleted successfully', user)
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
+        console.log(error)
         return new ResponseHandler(res).sendError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'server error')
       }
       if (error instanceof CustomError && error.name === 'NotFoundError') {
