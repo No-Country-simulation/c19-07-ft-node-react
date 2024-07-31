@@ -32,7 +32,7 @@ El objetivo es lograr facilitar la entrega de las notas y del seguimiento academ
 
 #### Para ejecutar la api
 - ```cd server```
-- ```npm install``
+- ```npm install```
 - ```npm run dev```
 
 #### Para ejecutar el frontend
