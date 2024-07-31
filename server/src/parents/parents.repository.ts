@@ -1,5 +1,5 @@
 // src/modules/professors/repositories/professor.repository.ts
-import { PrismaClient, Parents } from '@prisma/client'
+import { PrismaClient, Parents, Students, Users, Courses, Professors } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export const getAllParent = async (): Promise<Parents[]> => {
@@ -56,7 +56,68 @@ export const getAllStudentsWithDetailsRepository = async () => {
 
   return data
 }
+//---------------------//---------------------//---------------------
+//---------------------//---------------------//---------------------
 
+interface IStudentsWitchCourses extends Students {
+  user: Users
+  courses: IcourseWitchProfessor[]
+}
+
+interface IcourseWitchProfessor extends Courses {
+  professor: IProfessorWitchUsers
+}
+
+interface IProfessorWitchUsers extends Professors {
+  user: Users
+}
+export const getStudentsWitchDetails = async (studentId: string): Promise<IStudentsWitchCourses | null> => {
+  // Obtener los datos del estudiante
+  const studentWithCourses = await prisma.students.findUnique({
+    where: {
+      student_id: studentId
+    },
+    include: {
+      user: true,
+      courses: {
+        include: {
+          professor: {
+            include: {
+              user: true
+            }
+          }
+        }
+      }// Incluye la relaciÃ³n de los cursos
+    }
+  })
+
+  return studentWithCourses
+}
+interface ItemplateData {
+  student: {
+    grade: string
+    section: string
+    studentId: string
+    name: string
+  }
+  course: {
+    courseId: string
+    courseName: string
+  }
+  profesor: Array<{}>
+}
+
+
+
+
+
+
+
+
+
+
+
+//---------------------//---------------------//---------------------
 // GET BY ID
 // repositorio
 export const getStudentByIdRepository = async (id: string) => {
