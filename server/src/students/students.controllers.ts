@@ -75,7 +75,6 @@ export const deleteStudent = async (req: Request, res: Response): Promise<void> 
 
 export const getAcademicRecords = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log(typeof (req.params.id))
     if (!(typeof (req.params.id) === 'string')) res.status(400).send({ error: 'Invalid id' })
 
     const { id } = req.params

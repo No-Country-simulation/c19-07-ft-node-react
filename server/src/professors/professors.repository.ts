@@ -5,13 +5,27 @@ import { CreateAcademicRecord } from '../types/professors.type'
 import { DatabaseError } from '../errors/databaseError'
 const prisma = new PrismaClient()
 
-export const getAllProfessors = async (): Promise<Professors[]> => {
-  try {
-    return await prisma.professors.findMany()
-  } catch (e: any) {
-    throw new DatabaseError(e.message)
-  }
+// export const getAllProfessors = async (): Promise<Professors[]> => {
+//   try {
+//     return await prisma.professors.findMany()
+//   } catch (e: any) {
+//     throw new DatabaseError(e.message)
+//   }
+// }
+
+export const getAllProfessors = async () => {
+  return await prisma.professors.findMany({
+    include: {
+      user:{
+        select:{
+          name:true,
+        }
+      }
+    }
+  })
 }
+
+
 
 export const createProfessor = async (data: Omit<Professors, ('professor_id' | 'createdAt' | 'updateAt' | 'deletedAt')>): Promise<Professors> => {
   try {
@@ -62,7 +76,7 @@ export const getAcademicRecordsByCourseId = async (curso_id: string): Promise<Ac
   }
 }
 
-export const getAcademicRecords = async (historial_id: string): Promise<Academic_records[]> => {
+export const getAcademicRecords = async (historial_id: undefined | string): Promise<Academic_records[]> => {
   try {
     return await prisma.academic_records.findMany({ where: { historial_id } })
   } catch (e: any) {
@@ -116,6 +130,22 @@ export const updateStudentEvaluations = async (historial_id: string, body: Parti
     return await prisma.academic_records.update({ where: { historial_id }, data: { ...body } })
   } catch (err: any) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    throw new DatabaseError(`Error updating the student: ${err.message}`)
+    throw new DatabaseError(err.message)
+  }
+}
+
+export const getAcademicRecordsByStudent = async (student_id: string): Promise<Academic_records[]> => {
+  try {
+    return await prisma.academic_records.findMany({ where: { student_id } })
+  } catch (err: any) {
+    throw new DatabaseError(err.message)
+  }
+}
+
+export const getCourseById = async (cursos_id: string): Promise<Courses | null> => {
+  try {
+    return await prisma.courses.findFirst({ where: { cursos_id } })
+  } catch (err: any) {
+    throw new DatabaseError(err.message)
   }
 }
