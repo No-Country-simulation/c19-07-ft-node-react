@@ -80,12 +80,15 @@ export const getAssignedCourses = async (id: string): Promise<Courses[]> => {
   return await professorRepository.getAssignedCourses(id)
 }
 
-export const studentsFromCourses = async (courses: Courses[]): Promise<StudentsAndCourse[]> => {
+export const studentsFromCourses = async (courses: Courses[]): Promise<StudentsAndCourse[] | undefined> => {
   const coursesAndStudents: StudentsAndCourse[] = []
   try {
     for (const course of courses) {
       const students = await studentsFromCourse(course.cursos_id)
+      // console.log(students)
+      if (students.length <= 0) continue
       const studentsWithData = await getStudentData(students, course.cursos_id)
+      console.log(studentsWithData)
       const courseAndStudents = {
         course,
         students: studentsWithData
@@ -99,6 +102,7 @@ export const studentsFromCourses = async (courses: Courses[]): Promise<StudentsA
     })
   } catch (e: any) {
     if (e instanceof DatabaseError) throw e
+    if (e instanceof LogicError) throw e
     throw new Error(e.message)
   }
 }
@@ -112,8 +116,9 @@ const getStudentData = async (students: Students[], courseId: string): Promise<S
 
       const mark = await getStudentMark(courseId, student.student_id)
       if (typeof mark !== 'number') throw new LogicError('Error cannot calculate mark for student')
-
+      console.log(mark)
       const educationalLevel = await getStudentEducationalLevel(student.educational_level_id)
+      console.log(educationalLevel)
       const studentWithData = {
         ...student,
         name: user?.name,
@@ -133,10 +138,10 @@ const getStudentData = async (students: Students[], courseId: string): Promise<S
   }
 }
 
-const getStudentMark = async (courseId: string, studentId: string): Promise<number> => {
+const getStudentMark = async (courseId: string, studentId: string): Promise<number | undefined> => {
   try {
     const records = await getStudentMarksByCourse(courseId, studentId)
-    if (records.length <= 0) throw new DatabaseError('Marks not found')
+    if (records.length <= 0) return 0
     const sumMarks = records.reduce((total, record) => total + record.mark, 0)
     return sumMarks / records.length
   } catch (e: any) {

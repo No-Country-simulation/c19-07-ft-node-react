@@ -44,7 +44,11 @@ export const getStudentsByCourse = async (cursos_id: string): Promise<Students[]
   try {
     return await prisma.students.findMany({
       where: {
-        courses: { every: { cursos_id } }
+        courses: {
+          some: {
+            cursos_id
+          }
+        }
       }
     })
   } catch (e: any) {
