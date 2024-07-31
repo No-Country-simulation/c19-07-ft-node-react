@@ -1,27 +1,31 @@
 import type { PropsWithChildren } from "react";
 
+import { Close } from "@mui/icons-material";
 import {
   Dialog,
+  type Theme,
   IconButton,
   DialogTitle,
+  type SxProps,
   DialogContent,
 } from "@mui/material";
-import { Close } from "@mui/icons-material";
 
 type CustomDialogProps = PropsWithChildren & {
   open: boolean;
   title: string;
+  sx?: SxProps<Theme>;
   onClose: () => void;
 };
 
 export const CustomDialog = ({
+  sx = { width: "100%" },
   open,
   title,
   onClose,
   children,
 }: CustomDialogProps) => {
   return (
-    <Dialog open={open} fullWidth>
+    <Dialog open={open} PaperProps={{ sx }}>
       <DialogTitle>{title}</DialogTitle>
 
       <IconButton
