@@ -2,9 +2,23 @@
 import { PrismaClient, Parents, Students, Users, Courses, Professors } from '@prisma/client'
 const prisma = new PrismaClient()
 
-export const getAllParent = async (): Promise<Parents[]> => {
-  return await prisma.parents.findMany()
+// export const getAllParent = async (): Promise<Parents[]> => {
+//   return await prisma.parents.findMany()
+// }
+
+export const getAllParent = async () => {
+  return await prisma.parents.findMany({
+    include: {
+      user: { 
+        select: {
+          name: true, 
+        },
+      },
+    },
+  })
 }
+
+
 
 export const createParent = async (data: Omit<Parents, 'parent_id' | 'deletedAt'>): Promise<Parents> => {
   return await prisma.parents.create({ data })
