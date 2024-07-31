@@ -6,12 +6,12 @@ import { parentEditFormFields } from "../../constants";
 import { EditParentFormData, editParentFormSchema } from "../../schemas";
 
 interface ParentEditFormProps {
-  userToEdit: EditParentFormData;
+  parentToEdit: EditParentFormData;
   onSubmit: (data: EditParentFormData) => void;
 }
 
 export const ParentEditForm = ({
-  userToEdit,
+  parentToEdit,
   onSubmit,
 }: ParentEditFormProps) => {
   const {
@@ -20,7 +20,7 @@ export const ParentEditForm = ({
     formState: { errors, isSubmitting },
   } = useForm<EditParentFormData>({
     resolver: zodResolver(editParentFormSchema),
-    defaultValues: userToEdit,
+    defaultValues: parentToEdit,
   });
 
   return (

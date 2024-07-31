@@ -6,12 +6,12 @@ import { acAreaEditFormFields } from "../../constants";
 import { EditAcAreaFormData, editAcAreaFormSchema } from "../../schemas";
 
 interface AcAreaEditFormProps {
-  userToEdit: EditAcAreaFormData;
+  acAreaToEdit: EditAcAreaFormData;
   onSubmit: (data: EditAcAreaFormData) => void;
 }
 
 export const AcAreaEditForm = ({
-  userToEdit,
+  acAreaToEdit,
   onSubmit,
 }: AcAreaEditFormProps) => {
   const {
@@ -20,7 +20,7 @@ export const AcAreaEditForm = ({
     formState: { errors, isSubmitting },
   } = useForm<EditAcAreaFormData>({
     resolver: zodResolver(editAcAreaFormSchema),
-    defaultValues: userToEdit,
+    defaultValues: acAreaToEdit,
   });
 
   return (

@@ -1,16 +1,18 @@
 import { z } from "zod";
 
 export const createParentFormSchema = z.object({
-  user_id: z.string().min(1, "User is required"),
-  relation: z.string().refine((value) => {
-    return ["MOTHER", "FATHER", "OTHER"].includes(value);
-  }, "Please select a kinship"),
+  user_id: z.string({ message: "required" }).cuid("Invalid user id"),
+  relation: z
+    .string()
+    .min(5, "Relation must be at least 5 characters")
+    .max(25, "Relation must be at most 25 characters"),
 });
 
 export const editParentFormSchema = z.object({
-  relation: z.string().refine((value) => {
-    return ["MOTHER", "FATHER", "OTHER"].includes(value);
-  }, "Please select a kinship"),
+  relation: z
+    .string()
+    .min(5, "Relation must be at least 5 characters")
+    .max(25, "Relation must be at most 25 characters"),
 });
 
 export type CreateParentFormData = z.infer<typeof createParentFormSchema>;

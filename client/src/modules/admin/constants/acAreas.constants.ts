@@ -12,11 +12,25 @@ export const acAreaTableColumns = [
 export const acAreaCreateFormFields = [
   { name: "name", label: "Name", type: "text" },
   { name: "description", label: "Description", multiline: true },
-  { name: "educational_level", label: "Educational Level" },
+  {
+    name: "educational_level",
+    label: "Educational Level",
+    select: [
+      { value: "PRIMARY", label: "Primary" },
+      { value: "SECONDARY", label: "Secondary" },
+    ],
+  },
 ];
 
 export const acAreaEditFormFields = [
   { name: "name", label: "Name", type: "text" },
   { name: "description", label: "Description", multiline: true },
-  { name: "educational_level", label: "Educational Level" },
+  {
+    name: "educational_level",
+    label: "Educational Level",
+    select: [
+      { value: "PRIMARY", label: "Primary" },
+      { value: "SECONDARY", label: "Secondary" },
+    ],
+  },
 ];

@@ -18,16 +18,9 @@ export const ParentTable = ({
   openCreateModal,
   closeCreateModal,
 }: ParentTableProps) => {
-  // const [isDeletingUser, setIsDeletingUser] = useState(false);
-
   const { closeModal, openModal, modalState } = useModal();
-  const {
-    parent,
-    filter,
-    setFilter,
-    createParent,
-    updateParent,
-  } = useContextParent();
+  const { parent, filter, setFilter, createParent, updateParent } =
+    useContextParent();
 
   // ? Creation
   const handleSubmitCreateForm = async (data: CreateParentFormData) => {
@@ -54,32 +47,12 @@ export const ParentTable = ({
     await updateParent(modalState.payload?.user_id, data)
       .then((res) => {
         showStatusSnackbar(res);
-        closeCreateModal();
+        closeModal();
       })
       .catch((error) => {
         showStatusSnackbar(error);
       });
   };
-
-  // ? Deletion
-  // const handleDelete = (row: any) => {
-  //   openModal("delete", row);
-  // };
-
-  // const handleConfirmDeletion = async () => {
-  //   setIsDeletingUser(true);
-
-  //   await deleteParent(modalState.payload?.user_id)
-  //     .then((res) => {
-  //       showStatusSnackbar(res);
-  //       closeModal();
-  //       setIsDeletingUser(false);
-  //     })
-  //     .catch((error) => {
-  //       setIsDeletingUser(false);
-  //       showStatusSnackbar(error);
-  //     });
-  // };
 
   // ? Pagination
   const handleChangePage = (_: any, newPage: number) => {
@@ -127,7 +100,7 @@ export const ParentTable = ({
         sx={{ width: "450px" }}
       >
         <ParentEditForm
-          userToEdit={modalState.payload}
+          parentToEdit={modalState.payload}
           onSubmit={handleSubmitEditForm}
         />
       </CustomDialog>
@@ -139,14 +112,6 @@ export const ParentTable = ({
       >
         <ParentCreateForm onSubmit={handleSubmitCreateForm} />
       </CustomDialog>
-
-      {/* <ConfirmModal
-        open={modalState.type === "delete"}
-        isLoading={isDeletingUser}
-        onClose={closeModal}
-        confirmText={`Are you sure to delete the parent "${modalState.payload?.name}"?`}
-        onConfirm={handleConfirmDeletion}
-      /> */}
     </CustomTable>
   );
 };

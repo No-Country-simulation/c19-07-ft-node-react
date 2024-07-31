@@ -37,7 +37,7 @@ export const AcAreaProvider = ({ children }: AcAreaContextProps) => {
 
   const getAcAreas = async () => {
     const response = await api.get<AcademicAreasResponse>(
-      `/academic-area/?page=${filter.page}&limit=${filter.limit}`
+      `/academic-area/?page=${filter.page}&limit=${filter.limit}&name=${filter.name}`
     );
     setAcArea(response.data);
   };

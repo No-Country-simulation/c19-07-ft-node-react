@@ -6,9 +6,9 @@ export const createAcAreaFormSchema = z.object({
     .string()
     .min(15, "Description must be at least 15 characters long")
     .max(50, "Description must be at most 50 characters long"),
-  educational_level: z
-    .string()
-    .min(3, "Educational level must be at least 3 characters long"),
+  educational_level: z.string().refine((value) => {
+    return ["PRIMARY", "SECONDARY"].includes(value);
+  }, "Please select an educational level"),
 });
 
 export const editAcAreaFormSchema = z.object({
@@ -17,9 +17,9 @@ export const editAcAreaFormSchema = z.object({
     .string()
     .min(15, "Description must be at least 15 characters long")
     .max(50, "Description must be at most 50 characters long"),
-  educational_level: z
-    .string()
-    .min(3, "Educational level must be at least 3 characters long"),
+  educational_level: z.string().refine((value) => {
+    return ["PRIMARY", "SECONDARY"].includes(value);
+  }, "Please select an educational level"),
 });
 
 export type CreateAcAreaFormData = z.infer<typeof createAcAreaFormSchema>;

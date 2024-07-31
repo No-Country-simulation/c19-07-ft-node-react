@@ -11,25 +11,7 @@ export const parentTableColumns = [
 
 export const parentCreateFormFields = [
   { name: "user_id", label: "User", select: [] },
-  {
-    name: "relation",
-    label: "Kinship",
-    select: [
-      { value: "MOTHER", label: "Father" },
-      { value: "FATHER", label: "Mother" },
-      { value: "OTHER", label: "Other" },
-    ],
-  },
+  { name: "relation", label: "Kinship" },
 ];
 
-export const parentEditFormFields = [
-  {
-    name: "relation",
-    label: "Kinship",
-    select: [
-      { value: "MOTHER", label: "Father" },
-      { value: "FATHER", label: "Mother" },
-      { value: "OTHER", label: "Other" },
-    ],
-  },
-];
+export const parentEditFormFields = [{ name: "relation", label: "Kinship" }];

@@ -59,6 +59,7 @@ export const AcAreaTable = ({
   };
 
   const handleSubmitEditForm = async (data: EditAcAreaFormData) => {
+    console.log({ data });
     await updateAcArea(modalState.payload?.academic_area_id, data)
       .then((res) => {
         showStatusSnackbar(res);
@@ -111,6 +112,7 @@ export const AcAreaTable = ({
 
   return (
     <CustomTable
+      actions={["edit"]}
       rows={acArea.data.items}
       columns={acAreaTableColumns}
       onEdit={handleEdit}
@@ -133,7 +135,7 @@ export const AcAreaTable = ({
         title="Edit Academic Area"
       >
         <AcAreaEditForm
-          userToEdit={modalState.payload}
+          acAreaToEdit={modalState.payload}
           onSubmit={handleSubmitEditForm}
         />
       </CustomDialog>

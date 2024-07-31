@@ -1,9 +1,9 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 
 import { Filter } from "../interfaces";
-import { userMessage } from "../constants";
+import { parentMessage } from "../constants";
 import { useAxiosPrivate } from "../../../hooks";
-import { Message, ParentsResponse } from "../../../interfaces";
+import { StatusRespMsg, ParentsResponse } from "../../../interfaces";
 
 interface ParentContextProps {
   children: ReactNode;
@@ -15,9 +15,9 @@ export interface ParentContextValue {
   filter: Filter;
   setFilter: React.Dispatch<React.SetStateAction<Filter>>;
   getParents: () => Promise<void>;
-  createParent: (data: any) => Promise<Message>;
-  deleteParent: (id: string) => Promise<Message>;
-  updateParent: (id: string, data: any) => Promise<Message>;
+  createParent: (data: any) => Promise<StatusRespMsg>;
+  deleteParent: (id: string) => Promise<StatusRespMsg>;
+  updateParent: (id: string, data: any) => Promise<StatusRespMsg>;
 }
 
 export const ParentContext = createContext<ParentContextValue | undefined>(
@@ -42,51 +42,54 @@ export const ParentProvider = ({ children }: ParentContextProps) => {
     setParent(response.data);
   };
 
-  const createParent = async (data: any): Promise<Message> => {
+  const createParent = async (data: any): Promise<StatusRespMsg> => {
     try {
       const response = await api.post("/admin/create-parent", data);
 
       if (response.data.success) {
         await getParents();
 
-        return { ok: true, msg: userMessage.success.create };
+        return { ok: true, msg: parentMessage.success.create };
       }
 
-      return { ok: false, msg: userMessage.wrong };
+      return { ok: false, msg: parentMessage.wrong };
     } catch (error) {
-      return { ok: false, msg: userMessage.error };
+      return { ok: false, msg: parentMessage.error };
     }
   };
 
-  const updateParent = async (id: string, data: any): Promise<Message> => {
+  const updateParent = async (
+    id: string,
+    data: any
+  ): Promise<StatusRespMsg> => {
     try {
       const response = await api.put(`/admin/update-parent/${id}`, data);
 
       if (response.data.success) {
         await getParents();
 
-        return { ok: true, msg: userMessage.success.update };
+        return { ok: true, msg: parentMessage.success.update };
       }
 
-      return { ok: false, msg: userMessage.wrong };
+      return { ok: false, msg: parentMessage.wrong };
     } catch (error) {
-      return { ok: false, msg: userMessage.error };
+      return { ok: false, msg: parentMessage.error };
     }
   };
 
-  const deleteParent = async (id: string): Promise<Message> => {
+  const deleteParent = async (id: string): Promise<StatusRespMsg> => {
     try {
       const response = await api.delete(`/admin/delete-parent/${id}`);
 
       if (response.data.success) {
         getParents();
 
-        return { ok: true, msg: userMessage.success.delete };
+        return { ok: true, msg: parentMessage.success.delete };
       }
 
-      return { ok: false, msg: userMessage.wrong };
+      return { ok: false, msg: parentMessage.wrong };
     } catch (error) {
-      return { ok: false, msg: userMessage.error };
+      return { ok: false, msg: parentMessage.error };
     }
   };
 
