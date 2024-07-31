@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Parents, Prisma, PrismaClient, Users } from '@prisma/client'
-import { IParentFilter, IParentRepository } from './interface/parent.interface'
-import { CreateParentSchema, DeleteParentSchema } from '../schemas/parent.schema'
+import { IParentRepository } from './interface/parent.interface'
+import { CreateParentSchema, UpdateParentSchema } from '../schemas/parent.schema'
+import { IParentFilter } from '../interface/parentInterface'
 
 export class ParentRepository implements IParentRepository {
   constructor (private readonly prisma: PrismaClient) {}
@@ -15,7 +16,22 @@ export class ParentRepository implements IParentRepository {
     return parent
   }
 
+  async findParentByParentId (parentId: string): Promise<Parents | null> {
+    const parent = await this.prisma.parents.findFirst({
+      where: {
+        parent_id: parentId
+      }
+    })
+    return parent
+  }
+
   async getAllParents (page: number, limit: number, filtro: IParentFilter): Promise<IParentWithUser[]> {
+    const whereConditions: Prisma.ParentsWhereInput = {}
+    if (filtro?.viewDeleted === 'only') {
+      whereConditions.deletedAt = { not: null }
+    } else if (filtro?.viewDeleted !== 'include') {
+      whereConditions.deletedAt = null
+    }
     const userWhereConditions: Prisma.UsersWhereInput = {
       AND: [
         filtro.name ? { name: { contains: filtro.name, mode: 'insensitive' } } : {},
@@ -27,6 +43,7 @@ export class ParentRepository implements IParentRepository {
       skip: (page - 1) * limit,
       take: limit,
       where: {
+        ...whereConditions,
         user: {
           ...userWhereConditions
         }
@@ -49,16 +66,7 @@ export class ParentRepository implements IParentRepository {
     return parent
   }
 
-  async deleteParent (data: DeleteParentSchema): Promise<Parents> {
-    const parent = await this.prisma.parents.delete({
-      where: {
-        parent_id: data.parentId
-      }
-    })
-    return parent
-  }
-
-  async updateParentAd (id: string, data: Partial<Parents>): Promise<Parents> {
+  async updateParent (id: string, data: UpdateParentSchema): Promise<Parents> {
     const parent = await this.prisma.parents.update({
       where: { parent_id: id },
       data
@@ -67,6 +75,12 @@ export class ParentRepository implements IParentRepository {
   }
 
   async countFilteredParents (filtros: IParentFilter): Promise<number> {
+    const whereConditions: Prisma.ParentsWhereInput = {}
+    if (filtros?.viewDeleted === 'only') {
+      whereConditions.deletedAt = { not: null }
+    } else if (filtros?.viewDeleted !== 'include') {
+      whereConditions.deletedAt = null
+    }
     const userWhereConditions: Prisma.UsersWhereInput = {
       AND: [
         filtros.name ? { name: { contains: filtros.name, mode: 'insensitive' } } : {},
@@ -75,6 +89,7 @@ export class ParentRepository implements IParentRepository {
     }
     const count = await this.prisma.parents.count({
       where: {
+        ...whereConditions,
         user: {
           ...userWhereConditions
         }

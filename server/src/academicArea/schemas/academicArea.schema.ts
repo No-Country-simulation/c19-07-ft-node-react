@@ -1,12 +1,9 @@
 import z from 'zod'
-import { Academic_areas } from '@prisma/client'
 
 export const academicAreaIdSchema = z.string().cuid()
 export type AcademicAreaId = z.infer<typeof academicAreaIdSchema>
 
-export const academicAreaSchema: z.ZodType<
-Omit<Academic_areas, 'academic_area_id' | 'createdAt' | 'updatedAt'>
-> = z.object({
+export const createAcademicAreaSchema = z.object({
   name: z
     .string()
     .min(3, { message: 'Name must be at least 3 characters long' })
@@ -19,9 +16,9 @@ Omit<Academic_areas, 'academic_area_id' | 'createdAt' | 'updatedAt'>
     .min(3, { message: 'Educational level must be at least 3 characters long' })
     .transform((level) => level.toUpperCase())
 })
-export type AcademicArea = z.infer<typeof academicAreaSchema>
+export type CreateAcademicAreaSchema = z.infer<typeof createAcademicAreaSchema>
 
-export const academicAreaPathSchema: z.ZodType<Partial<Academic_areas>> =
+export const updateAcademicAreaSchema =
   z.object({
     name: z
       .string()
@@ -38,4 +35,4 @@ export const academicAreaPathSchema: z.ZodType<Partial<Academic_areas>> =
       })
       .optional()
   })
-export type AcademicAreaPath = z.infer<typeof academicAreaPathSchema>
+export type UpdateAcademicAreaSchema = z.infer<typeof updateAcademicAreaSchema>

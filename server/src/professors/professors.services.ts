@@ -13,7 +13,7 @@ export const getAllProfessors = async (): Promise<Professors[]> => {
   return await professorRepository.getAllProfessors()
 }
 
-export const createProfessor = async (data: Omit<Professors, 'professor_id'>): Promise<Professors> => {
+export const createProfessor = async (data: Omit<Professors, 'professor_id' | 'deletedAt'>): Promise<Professors> => {
   return await professorRepository.createProfessor(data)
 }
 
