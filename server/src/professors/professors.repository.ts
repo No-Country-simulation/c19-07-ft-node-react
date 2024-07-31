@@ -62,7 +62,7 @@ export const getAcademicRecordsByCourseId = async (curso_id: string): Promise<Ac
   }
 }
 
-export const getAcademicRecords = async (historial_id: string): Promise<Academic_records[]> => {
+export const getAcademicRecords = async (historial_id: undefined | string): Promise<Academic_records[]> => {
   try {
     return await prisma.academic_records.findMany({ where: { historial_id } })
   } catch (e: any) {
@@ -117,5 +117,13 @@ export const updateStudentEvaluations = async (historial_id: string, body: Parti
   } catch (err: any) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     throw new DatabaseError(`Error updating the student: ${err.message}`)
+  }
+}
+
+export const getAcademicRecordsByStudent = async (student_id: string): Promise<Academic_records[]> => {
+  try {
+    return await prisma.academic_records.findMany({ where: { student_id } })
+  } catch (e: any) {
+    throw new DatabaseError('Error getting the academic records by the student id')
   }
 }

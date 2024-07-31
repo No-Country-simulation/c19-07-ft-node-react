@@ -4,6 +4,7 @@ import * as professorService from '../professors/professors.services'
 import { Courses } from '@prisma/client'
 import { getErrorMessageAndStatus } from '../utils/getErrorMessageAndStatus'
 import { any } from 'zod'
+import { ValidationError } from '../errors/validationError'
 
 export const getAllProfessors = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -158,5 +159,26 @@ export const getAllStudentsWithDetailsController = async (req: Request, res: Res
     // }
   } catch (error: any) {
     res.status(500).json({ error: error.message })
+  }
+}
+
+export const getPeriodMarks = async (req: Request, res: Response): Promise<any> => {
+  try {
+    if (req.params.id === undefined || req.params.id === null) throw new ValidationError('Invalid user Id')
+    professorService.validateQueryParameters(req.query)
+    const studentId = req.params.id
+    const courseId = req.query.courseId?.toString()
+    const period = req.query.period?.toString()
+    const academicRecords = await professorService.getAcademicRecordsByStudent(studentId)
+
+    const academicRecordsOfOneCourse = professorService.filterAcademicRecordsByCourse(courseId, academicRecords)
+
+    const academicRecordsOfOnePeriod = professorService.getAcademicRecordsByPeriod(Number(period), academicRecordsOfOneCourse)
+
+    const average = professorService.getAverageFromPeriod(academicRecordsOfOnePeriod)
+    res.status(200).send({ data: average })
+  } catch (e: any) {
+    const { message, status } = getErrorMessageAndStatus(e)
+    res.status(status).send({ message, err_details: e.message })
   }
 }

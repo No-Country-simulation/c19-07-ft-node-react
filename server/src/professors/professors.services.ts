@@ -8,6 +8,12 @@ import { getStudentEducationalLevel, getStudentMarksByCourse, studentsFromCourse
 import { DatabaseError } from '../errors/databaseError'
 import { LogicError } from '../errors/logicError'
 import { getUserByIdServices } from '../users/users.services'
+import { ValidationError } from '../errors/validationError'
+import { ParsedQs } from 'qs'
+import { NotFoundError } from '../errors/notFoundError'
+import { truncate } from 'fs'
+import { PERIOD_ONE, PERIOD_THREE, PERIOD_TWO } from '../constants/date.const'
+import { NOTFOUND } from 'dns'
 
 export const getAllProfessors = async (): Promise<Professors[]> => {
   return await professorRepository.getAllProfessors()
@@ -66,7 +72,7 @@ export const getAcademicRecordsByCourseId = async (id: string): Promise<Academic
   return await professorRepository.getAcademicRecordsByCourseId(id)
 }
 
-export const getAcademicRecords = async (id: string): Promise<Academic_records[]> => {
+export const getAcademicRecords = async (id: string | undefined): Promise<Academic_records[]> => {
   return await professorRepository.getAcademicRecords(id)
 }
 
@@ -245,4 +251,51 @@ export const isValidBody = (body: Partial<Academic_records>): boolean => {
 
 export const updateStudentEvaluations = async (id: string, body: Partial<Academic_records>): Promise<Academic_records> => {
   return await professorRepository.updateStudentEvaluations(id, body)
+}
+
+export const validateQueryParameters = (query: ParsedQs): void => {
+  if (query.courseId === undefined || query.period === undefined) throw new ValidationError('Invalid query parameters')
+}
+
+export const filterAcademicRecordsByCourse = (courseId: undefined | string, academicRecords: Academic_records[]): Academic_records[] => {
+  try {
+    const filteredAcademicRecords = academicRecords.filter(academicRecord => academicRecord.curso_id === courseId)
+    if (filteredAcademicRecords.length <= 0) throw new NotFoundError('Could not find any records for that course', 404)
+    return filteredAcademicRecords
+  } catch (e: any) {
+    throw new LogicError(e.message)
+  }
+}
+
+export const getAcademicRecordsByPeriod = (period: number, academicRecords: Academic_records[]): Academic_records[] => {
+  try {
+    const periodOne = new Date(PERIOD_ONE)
+    const periodTwo = new Date(PERIOD_TWO)
+    const periodThree = new Date(PERIOD_THREE)
+    switch (period) {
+      case 1:
+        return academicRecords.filter(record => record.date.getTime() >= periodOne.getTime() && record.date.getTime() < periodTwo.getTime())
+      case 2:
+        return academicRecords.filter(record => record.date.getTime() >= periodTwo.getTime() && record.date.getTime() < periodThree.getTime())
+      case 3:
+        return academicRecords.filter(record => record.date.getTime() <= periodThree.getTime() && record.date.getTime() > periodTwo.getTime())
+      default:
+        throw new NotFoundError('Invalid period number', 404)
+    }
+  } catch (e: any) {
+    throw new LogicError(e.message)
+  }
+}
+
+export const getAverageFromPeriod = (academicRecords: Academic_records[]): number => {
+  try {
+    const total = academicRecords.reduce((record, nextRecord) => record + nextRecord.mark, 0)
+    return total / academicRecords.length
+  } catch (e: any) {
+    throw new LogicError(e.message)
+  }
+}
+
+export const getAcademicRecordsByStudent = async (id: string): Promise<Academic_records[]> => {
+  return await professorRepository.getAcademicRecordsByStudent(id)
 }

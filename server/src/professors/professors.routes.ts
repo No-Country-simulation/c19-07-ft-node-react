@@ -22,5 +22,6 @@ professorRoutes.get('/evaluation_results/:id', professorController.getResultsFro
 professorRoutes.patch('/evaluations/:id', professorController.updateAcademicRecordById)
 // Assigned Students
 professorRoutes.get('/assigned_students/:id', professorController.getAssignedStudents)
-
+// Get Period Marks
+professorRoutes.get('/period_marks/:id', professorController.getPeriodMarks)
 export default professorRoutes
