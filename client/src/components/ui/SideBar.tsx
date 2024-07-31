@@ -9,6 +9,7 @@ import {
   SquareFoot,
   BorderColor,
   FamilyRestroom,
+  Class,
 } from "@mui/icons-material";
 import {
   Box,

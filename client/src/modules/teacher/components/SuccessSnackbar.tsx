@@ -11,7 +11,7 @@ const SuccessSnackbar: React.FC<SuccessSnackbarProps> = ({ open, onClose }) => {
   return (
     <Snackbar open={open} autoHideDuration={6000} onClose={onClose}>
       <Alert onClose={onClose} severity="success">
-        Nota actualizada exitosamente!
+      Note updated successfully!
       </Alert>
     </Snackbar>
   );

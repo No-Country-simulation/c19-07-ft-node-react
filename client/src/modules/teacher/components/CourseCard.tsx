@@ -14,9 +14,11 @@ const CourseCard = ({ course, onClick }: CourseCardProps) => {
     <Card
       sx={{
         cursor: "pointer",
+        transition: "transform 0.3s, box-shadow 0.3s",
+        transform: "perspective(1000px)",
         "&:hover": {
-          boxShadow: 6,
-          backgroundColor: "#e0f7fa",
+          transform: "perspective(1000px) translateZ(40px)",
+          boxShadow: "0px 20px 30px rgba(0, 0, 0, 0.486)",
         },
         border: "1px solid #b2ebf2",
         borderRadius: "8px",
