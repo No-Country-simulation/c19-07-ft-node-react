@@ -199,7 +199,8 @@ export const getAllStudentsWithDetailsService = async () => {
           recordId: record.historial_id,
           comment: record.comment,
           date: record.date,
-          mark: record.mark // Asegúrate de que este campo esté disponible y asignado correctamente
+          mark: record.mark,
+          name: record.name // Asegúrate de que este campo esté disponible y asignado correctamente
         }))
 
       // const evaluations = course.evaluations.map(evaluation => {
