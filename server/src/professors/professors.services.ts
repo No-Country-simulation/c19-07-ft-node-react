@@ -300,3 +300,7 @@ export const getAverageFromPeriod = (academicRecords: Academic_records[]): numbe
 export const getAcademicRecordsByStudent = async (id: string): Promise<Academic_records[]> => {
   return await professorRepository.getAcademicRecordsByStudent(id)
 }
+
+export const getCourseById = async (id: string): Promise<Courses | null> => {
+  return await professorRepository.getCourseById(id)
+}

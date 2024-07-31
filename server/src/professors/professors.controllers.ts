@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Request, Response } from 'express'
 import * as professorService from '../professors/professors.services'
@@ -171,12 +172,14 @@ export const getPeriodMarks = async (req: Request, res: Response): Promise<any> 
     const period = req.query.period?.toString()
     const academicRecords = await professorService.getAcademicRecordsByStudent(studentId)
 
+    const course = await professorService.getCourseById(courseId!)
+
     const academicRecordsOfOneCourse = professorService.filterAcademicRecordsByCourse(courseId, academicRecords)
 
     const academicRecordsOfOnePeriod = professorService.getAcademicRecordsByPeriod(Number(period), academicRecordsOfOneCourse)
 
     const average = professorService.getAverageFromPeriod(academicRecordsOfOnePeriod)
-    res.status(200).send({ data: average })
+    res.status(200).send({ data: { average, name: course?.nombre, comment: course?.descripcion } })
   } catch (e: any) {
     const { message, status } = getErrorMessageAndStatus(e)
     res.status(status).send({ message, err_details: e.message })
