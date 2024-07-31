@@ -31,11 +31,11 @@ El objetivo es lograr facilitar la entrega de las notas y del seguimiento academ
 ### Como ejecutar el proyecto
 
 #### Para ejecutar la api
-- cd server
-- npm install
-- npm run dev
+- ```cd server```
+- ```npm install``
+- ```npm run dev```
 
 #### Para ejecutar el frontend
-- cd client
-- npm install
-- npm run dev
+- ```cd client```
+- ```npm install```
+- ```npm run dev```
