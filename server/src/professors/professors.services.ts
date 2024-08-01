@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-extra-non-null-assertion */
 /* eslint-disable @typescript-eslint/naming-convention */
 // src/modules/professors/services/professor.service.ts
-import { Academic_records, Courses, Evaluation_results, Evaluations, Professors, Students, Users } from '@prisma/client'
+import { Academic_records, Courses, Evaluation_results, Evaluations, Parents, Professors, Students, Users } from '@prisma/client'
 import * as professorRepository from '../professors/professors.repository'
 import { CreateAcademicRecord, CreateProfessor, StudentsAndCourse, StudentsWithData } from '../types/professors.type'
 import z from 'zod'
@@ -14,6 +16,7 @@ import { NotFoundError } from '../errors/notFoundError'
 import { truncate } from 'fs'
 import { PERIOD_ONE, PERIOD_THREE, PERIOD_TWO } from '../constants/date.const'
 import { NOTFOUND } from 'dns'
+import { getParentById } from '../parents/parents.repository'
 
 // export const getAllProfessors = async (): Promise<Professors[]> => {
 //   return await professorRepository.getAllProfessors()
@@ -34,10 +37,7 @@ export const getAllProfessors = async () => {
     deletedAt: professor.deletedAt,
     name: professor.user.name
   }))
-
 }
-
-
 
 export const createProfessor = async (data: Omit<Professors, 'professor_id' | 'deletedAt'>): Promise<Professors> => {
   return await professorRepository.createProfessor(data)
@@ -105,10 +105,10 @@ export const studentsFromCourses = async (courses: Courses[]): Promise<StudentsA
   try {
     for (const course of courses) {
       const students = await studentsFromCourse(course.cursos_id)
-      // console.log(students)
       if (students.length <= 0) continue
+
       const studentsWithData = await getStudentData(students, course.cursos_id)
-      console.log(studentsWithData)
+
       const courseAndStudents = {
         course,
         students: studentsWithData
@@ -134,13 +134,14 @@ const getStudentData = async (students: Students[], courseId: string): Promise<S
       const user: Users | null = await getUserByIdServices(student.user_id)
       if (user === null) throw new DatabaseError('User not found')
 
-      const academicRecords = await getStudentMark(courseId, student.student_id)
-      console.log(academicRecords)
+      const academicRecords = await getStudentAcademicRecords(courseId, student.student_id)
+
       if (academicRecords === undefined || academicRecords.length <= 0) continue
       const educationalLevel = await getStudentEducationalLevel(student.educational_level_id)
-      console.log(educationalLevel)
+      const parentName = await getParentDataById(student.parentId)
       const studentWithData = {
         ...student,
+        parentName,
         name: user?.name,
         educationalLevel: educationalLevel?.name,
         academicRecords
@@ -154,20 +155,23 @@ const getStudentData = async (students: Students[], courseId: string): Promise<S
     })
   } catch (e: any) {
     if (e instanceof LogicError) throw new LogicError(e.message)
-    throw new DatabaseError(e.message)
+    if (e instanceof DatabaseError) throw new DatabaseError(e.message)
+    throw new Error(e.message)
   }
 }
 
-const getStudentMark = async (courseId: string, studentId: string): Promise<Academic_records[] | undefined> => {
-  try {
-    const records = await getStudentMarksByCourse(courseId, studentId)
-    if (records.length <= 0) return
-    return records
-  } catch (e: any) {
-    throw new DatabaseError(e)
-  }
+const getStudentAcademicRecords = async (courseId: string, studentId: string): Promise<Academic_records[] | undefined> => {
+  const records = await getStudentMarksByCourse(courseId, studentId)
+  if (records.length <= 0) return
+  return records
 }
 
+const getParentDataById = async (parentId: string): Promise<string | undefined> => {
+  const parentData = await getParentById(parentId)
+  if (parentData === undefined) return
+  const userParentData = await getUserByIdServices(parentData!!.user_id)
+  return userParentData?.name
+}
 // New
 // New Routes for Reports
 

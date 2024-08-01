@@ -6,8 +6,8 @@ import { Courses } from '@prisma/client'
 import { getErrorMessageAndStatus } from '../utils/getErrorMessageAndStatus'
 import { any } from 'zod'
 import { ValidationError } from '../errors/validationError'
-import { DatabaseError } from '../errors/databaseError'
 import { NotFoundError } from '../errors/notFoundError'
+import { DatabaseError } from '../errors/databaseError'
 
 export const getAllProfessors = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -126,6 +126,7 @@ export const getAssignedStudents = async (req: Request, res: Response): Promise<
     if (id.length <= 0) return res.status(404).send({ err: 'Invalid Id' })
 
     const courses: Courses[] = await professorService.getAssignedCourses(id)
+    if (courses.length <= 0) throw new NotFoundError(`Courses for the student  with id ${id} not found`, 404)
     if (courses.length <= 0) throw new NotFoundError(`Courses assigned to the professor with id ${id} not found`, 404)
 
     const coursesAndStudents = await professorService.studentsFromCourses(courses)
