@@ -1,7 +1,9 @@
-import { Evaluations } from '@prisma/client'
 
-import { IEvaluationsAndEvaluationsResults } from '../../interface/student.interface'
+import { IEvaluationsAndEvaluationsResults, IStudentsWitchCourses, IStudentsWitchUser } from '../../interface/student.interface'
+import { GetEvaluationsByPeriodoOfStudentSchema } from '../../schemas/student.schema'
 
-export interface IProfessorRepository {
-  getEvaluationsByPeriodoOfStudent: (periodo: Evaluations['periodo'], studentId: string, courseId: string) => Promise<IEvaluationsAndEvaluationsResults[]>
+export interface IStudenRepository {
+  getEvaluationsByPeriodoOfStudent: (data: GetEvaluationsByPeriodoOfStudentSchema) => Promise<IEvaluationsAndEvaluationsResults[]>
+  getStudenByStudentId: (studentId: string) => Promise<IStudentsWitchUser | null>
+  getCoursesOfStudent: (studentId: string) => Promise<IStudentsWitchCourses | null>
 }
