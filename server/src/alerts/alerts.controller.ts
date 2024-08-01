@@ -89,7 +89,8 @@ class AlertController {
   // Envio de Correos
   async sendGradesEmail (req: Request, res: Response): Promise<void> {
     try {
-      alertsService.validateEmailBody(req.body)
+      alertsService.validateAlertBody(req.body)
+      await alertsService.createAlert(req.body)
       const { studentId, email } = req.body
       const academicRecords = await alertRepository.getFeedback(studentId)
       if (academicRecords.length <= 0) throw new NotFoundError('Academic recrods not found', 404)

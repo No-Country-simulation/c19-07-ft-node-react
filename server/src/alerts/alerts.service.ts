@@ -33,7 +33,9 @@ const alertsSchema = z.object({
   message: z.string(),
   date: z.string(),
   typeAlert: z.string(),
-  parentId: z.string()
+  parentId: z.string(),
+  studentId: z.string(),
+  email: z.string().email()
 })
 
 export const validateAlertBody = (data: Alerts): void => {

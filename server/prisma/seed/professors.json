@@ -1,16 +1,16 @@
 [
   {
-    "user_id": "clzbjhuor000mev7mltej56d1",
-    "fecha_contratacion": "2024-08-01T17:18:22.883Z",
+    "user_id": "clzbsllfo000mdrfcl0gzuidy",
+    "fecha_contratacion": "2024-08-01T21:33:12.736Z",
     "estado_empleado": "ACTIVE",
-    "educational_level_id": "clzbjhsl5000cev7mbb6edisb",
-    "area_academica_id": "clzbjhse70000ev7m5iivbrv8"
+    "educational_level_id": "clzbslkmj000cdrfcrwd1sqnv",
+    "area_academica_id": "clzbslkkw0000drfc8uxv4eic"
   },
   {
-    "user_id": "clzbjhuow000nev7m5kpeo5gr",
-    "fecha_contratacion": "2024-08-01T17:18:22.886Z",
+    "user_id": "clzbsllfs000ndrfchtoobt3o",
+    "fecha_contratacion": "2024-08-01T21:33:12.737Z",
     "estado_empleado": "ACTIVE",
-    "educational_level_id": "clzbjhsl5000dev7mml0p2hdl",
-    "area_academica_id": "clzbjhsel0001ev7mgenmn3k8"
+    "educational_level_id": "clzbslkmj000ddrfcuhfvcn8s",
+    "area_academica_id": "clzbslkkw0001drfcmwmjbs4j"
   }
 ]

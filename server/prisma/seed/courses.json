@@ -2,13 +2,13 @@
   {
     "nombre": "Curso 1",
     "descripcion": "Descripción del curso 1",
-    "professor_id": "clzbjhvvy000xev7ms3j3wzbo",
-    "area_academica_id": "clzbjhse70000ev7m5iivbrv8"
+    "professor_id": "clzbslllu000xdrfcfpy7n07f",
+    "area_academica_id": "clzbslkkw0000drfc8uxv4eic"
   },
   {
     "nombre": "Curso 2",
     "descripcion": "Descripción del curso 2",
-    "professor_id": "clzbjhvvy000yev7m76e6txig",
-    "area_academica_id": "clzbjhsel0001ev7mgenmn3k8"
+    "professor_id": "clzbslllv000ydrfcrwtwj9wf",
+    "area_academica_id": "clzbslkkw0001drfcmwmjbs4j"
   }
 ]
