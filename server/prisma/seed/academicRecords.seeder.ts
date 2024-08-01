@@ -109,7 +109,7 @@ const seedAcademicRecords = async (): Promise<void> => {
   const courses: ICourses[] = await prisma.courses.findMany()
   const evaluationNames = ['Examen Parcial', 'Examen Final', 'Trabajo en Clase', 'Proyecto', 'Presentación']
   for (const student of students) {
-    const academicRecordCount = faker.number.int({ max: courses.length, min: 20 })
+    const academicRecordCount = faker.number.int({ max: courses.length + 10, min: 0 })
     for (let i = 0; i < academicRecordCount; i++) {
       await prisma.academic_records.create({
         data: {
@@ -136,6 +136,7 @@ const seedEvaluations = async (): Promise<void> => {
           curso_id: course.cursos_id,
           name: evaluationNames[faker.number.int({ min: 0, max: evaluationNames.length - 1 })],
           description: faker.lorem.words({ min: 4, max: 10 }),
+          periodo: 'PRIMER_PERIODO',
           date: faker.date.past()
         }
       })
@@ -162,8 +163,8 @@ const seedEvaluationResults = async (): Promise<void> => {
 
 export const mainAcademicRecords = async (): Promise<void> => {
   await seedAcademicRecords()
-  // await seedEvaluations()
-  // await seedEvaluationResults()
+  await seedEvaluations()
+  await seedEvaluationResults()
   console.log('Datos de registros académicos, evaluaciones y resultados de evaluaciones creados.')
 }
 

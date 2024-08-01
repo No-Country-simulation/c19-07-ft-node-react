@@ -6,6 +6,8 @@ import { Courses } from '@prisma/client'
 import { getErrorMessageAndStatus } from '../utils/getErrorMessageAndStatus'
 import { any } from 'zod'
 import { ValidationError } from '../errors/validationError'
+import { NotFoundError } from '../errors/notFoundError'
+import { DatabaseError } from '../errors/databaseError'
 
 export const getAllProfessors = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -81,7 +83,7 @@ export const createEvaluations = async (req: Request, res: Response): Promise<an
     if (!isValidBody) return res.status(400).send({ err: 'Invalid body' })
 
     const { historial_id } = await professorService.createAcademicRecord(req.body)
-    if (historial_id.length === 0) return res.status(503).send({ err: 'An error ocurred creating the evaluation' })
+    if (historial_id.length === 0) throw new DatabaseError('Can not crate academic record')
 
     res.status(204).send()
   } catch (e: any) {
@@ -108,10 +110,10 @@ export const getAcademicRecordsByCourseId = async (req: Request, res: Response):
 export const getResultsFromOneAcademicRecord = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params
-    if (id.length <= 0) res.status(400).send({ err: 'Invalid Id' })
-    const results = await professorService.getAcademicRecords(id)
-    if (results.length <= 0) return res.status(404).send({ err: 'No results found' })
-    res.status(200).send({ data: results })
+    if (id.length <= 0) throw new ValidationError(`Invalid Id: ${id}`)
+    const academicRecords = await professorService.getAcademicRecords(id)
+    if (academicRecords.length <= 0) throw new NotFoundError(`Academic records with id ${id} not found`, 404)
+    res.status(200).send({ data: academicRecords })
   } catch (err: any) {
     const { status, message } = getErrorMessageAndStatus(err)
     res.status(status).send({ err: message, error_details: err.message })
@@ -124,7 +126,8 @@ export const getAssignedStudents = async (req: Request, res: Response): Promise<
     if (id.length <= 0) return res.status(404).send({ err: 'Invalid Id' })
 
     const courses: Courses[] = await professorService.getAssignedCourses(id)
-    if (courses.length <= 0) return res.status(404).send({ err: 'This professor have not any assigned courses' })
+    if (courses.length <= 0) throw new NotFoundError(`Courses for the student  with id ${id} not found`, 404)
+
     const coursesAndStudents = await professorService.studentsFromCourses(courses)
 
     res.status(200).send({ data: coursesAndStudents })

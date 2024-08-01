@@ -29,7 +29,7 @@ const main = async (): Promise<void> => {
   // una vez cargado los usuarios comenta el siguiente bloque de codigo
   // solo descomentalo cada vez que quieras aumentar la cantidad de usaurios
   // --------------------------------------
-  // await ramdonUsers(50)
+  await ramdonUsers(10)
   // ---------------------------------------
   await seederAreaAcademic()
   await seederEducationalLevel()
