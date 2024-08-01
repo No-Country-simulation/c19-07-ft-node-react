@@ -182,3 +182,17 @@ export const getStudentParentDetailsControllers = async (req: Request, res: Resp
     }
   }
 }
+
+
+
+//get relation parent with student
+export const getRelationParentWithStudentController = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params
+    const parents = await parentsService.getRelationParentWithStudentService(id)
+    res.json(parents)
+  } catch (error) {
+    console.error('Error getting student details:', error)
+    res.status(500).json({ error: 'An error occurred while fetching student details' })
+  }
+}

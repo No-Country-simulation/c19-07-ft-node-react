@@ -18,4 +18,7 @@ parentRoutes.delete('/:id', parentController.deleteParents)
 parentRoutes.get('/', parentController.getAllParents)
 parentRoutes.post('/', parentController.createParents)
 
+//get parents by id relation with student
+parentRoutes.get('/relationwithstudent/:id', parentController.getRelationParentWithStudentController)
+
 export default parentRoutes
