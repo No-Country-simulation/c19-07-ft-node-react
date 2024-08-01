@@ -5,13 +5,27 @@ import { CreateAcademicRecord } from '../types/professors.type'
 import { DatabaseError } from '../errors/databaseError'
 const prisma = new PrismaClient()
 
-export const getAllProfessors = async (): Promise<Professors[]> => {
-  try {
-    return await prisma.professors.findMany()
-  } catch (e: any) {
-    throw new DatabaseError(e.message)
-  }
+// export const getAllProfessors = async (): Promise<Professors[]> => {
+//   try {
+//     return await prisma.professors.findMany()
+//   } catch (e: any) {
+//     throw new DatabaseError(e.message)
+//   }
+// }
+
+export const getAllProfessors = async () => {
+  return await prisma.professors.findMany({
+    include: {
+      user:{
+        select:{
+          name:true,
+        }
+      }
+    }
+  })
 }
+
+
 
 export const createProfessor = async (data: Omit<Professors, ('professor_id' | 'createdAt' | 'updateAt' | 'deletedAt')>): Promise<Professors> => {
   try {

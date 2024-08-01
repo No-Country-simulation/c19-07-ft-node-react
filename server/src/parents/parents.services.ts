@@ -4,9 +4,23 @@ import { CreateParents } from '../types/parents.type'
 import z, { any } from 'zod'
 import { NextFunction } from 'express'
 
-export const getAllParents = async (): Promise<Parents[]> => {
-  return await parentRepository.getAllParent()
+// export const getAllParents = async (): Promise<Parents[]> => {
+//   return await parentRepository.getAllParent()
+// }
+
+export const getAllParents = async ()=> {
+  const parents = await parentRepository.getAllParent()
+  return parents.map(parent => ({
+    parent_id: parent.parent_id,
+    user_id: parent.user_id,
+    relation: parent.relation,
+    createdAt: parent.createdAt,
+    updatedAt: parent.updatedAt,
+    deletedAt: parent.deletedAt,
+    name: parent.user.name  
+  }))
 }
+
 
 export const createParents = async (data: Omit<Parents, 'updateAt' | 'parent_id' | 'deletedAt'>): Promise<Parents> => {
   return await parentRepository.createParent(data)
