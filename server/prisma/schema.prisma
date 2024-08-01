@@ -181,6 +181,7 @@ model Evaluation_results {
   student       Students    @relation(fields: [student_id], references: [student_id])
   mark          Float
   comment       String
+  createdAt     DateTime    @default(now())
 }
 
 model Educational_levels {
