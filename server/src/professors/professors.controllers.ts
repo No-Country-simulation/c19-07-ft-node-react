@@ -127,7 +127,6 @@ export const getAssignedStudents = async (req: Request, res: Response): Promise<
 
     const courses: Courses[] = await professorService.getAssignedCourses(id)
     if (courses.length <= 0) throw new NotFoundError(`Courses for the student  with id ${id} not found`, 404)
-    if (courses.length <= 0) throw new NotFoundError(`Courses assigned to the professor with id ${id} not found`, 404)
 
     const coursesAndStudents = await professorService.studentsFromCourses(courses)
 
