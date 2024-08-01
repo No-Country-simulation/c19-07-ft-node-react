@@ -1,3 +1,4 @@
+import React from "react";
 import { Box } from "@mui/material";
 import {
   VictoryChart,
@@ -7,17 +8,19 @@ import {
   VictoryTooltip,
   VictoryLegend,
 } from "victory";
+import useFetchPeriodMarks from "./UseFetchPeriodMarks";
 
-const studentFakeGrades = [
-  { month: "Jan", math: 9.0, science: 4.0 },
-  { month: "Feb", math: 3.0, science: 9.0 },
-  { month: "Mar", math: 2.0, science: 2.0 },
-  { month: "Apr", math: 4.0, science: 6.0 },
-  { month: "May", math: 5.0, science: 7.0 },
-  { month: "Jun", math: 8.0, science: 9.0 },
-];
+interface ClassRoomChartProps {
+  studentId: string;
+  courseId: string;
+}
 
-const ClassRoomChart = () => {
+const ClassRoomChart: React.FC<ClassRoomChartProps> = () => {
+  const { data: studentMarks, loading, error } = useFetchPeriodMarks();
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
   return (
     <>
       <Box
@@ -30,13 +33,13 @@ const ClassRoomChart = () => {
           justifyContent: "center",
         }}
       >
-        Student report
+        Annual performance for {studentMarks.length > 0 ? studentMarks[0].name : "Course"}
       </Box>
       <div style={{ width: "100%", height: 400 }}>
         <VictoryChart theme={VictoryTheme.material} width={800} height={400}>
           <VictoryAxis
-            tickValues={studentFakeGrades.map((data) => data.month)}
-            tickFormat={studentFakeGrades.map((data) => data.month)}
+            tickValues={studentMarks.map((data) => data.period)}
+            tickFormat={studentMarks.map((data) => `Period ${data.period}`)}
             style={{
               tickLabels: {
                 fontSize: 15,
@@ -47,7 +50,7 @@ const ClassRoomChart = () => {
           />
           <VictoryAxis
             dependentAxis
-            domain={[0, 10]}
+            domain={[0, 100]}
             style={{
               tickLabels: {
                 fontSize: 15,
@@ -57,9 +60,9 @@ const ClassRoomChart = () => {
             }}
           />
           <VictoryLine
-            data={studentFakeGrades}
-            x="month"
-            y="math"
+            data={studentMarks}
+            x="period"
+            y="average"
             style={{
               data: { stroke: "#f9bc60" },
               labels: {
@@ -67,21 +70,7 @@ const ClassRoomChart = () => {
                 fill: "#f9bc60",
               },
             }}
-            labels={({ datum }) => `Math: ${datum.math}`}
-            labelComponent={<VictoryTooltip />}
-          />
-          <VictoryLine
-            data={studentFakeGrades}
-            x="month"
-            y="science"
-            style={{
-              data: { stroke: "#e16162" },
-              labels: {
-                fontSize: 12,
-                fill: "#e16162",
-              },
-            }}
-            labels={({ datum }) => `Science: ${datum.science}`}
+            labels={({ datum }) => `${datum.name}: ${datum.average}`}
             labelComponent={<VictoryTooltip />}
           />
           <VictoryLegend
@@ -96,8 +85,7 @@ const ClassRoomChart = () => {
               },
             }}
             data={[
-              { name: "Math", symbol: { fill: "#f9bc60" } },
-              { name: "Science", symbol: { fill: "#e16162" } },
+              { name: studentMarks.length > 0 ? studentMarks[0].name : "Course", symbol: { fill: "#f9bc60" } },
             ]}
           />
         </VictoryChart>

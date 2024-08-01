@@ -6,11 +6,6 @@ import {
   Paper,
   Box,
   Divider,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  SelectChangeEvent,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAxiosPrivate } from "../../../hooks";
@@ -49,8 +44,6 @@ const ClassRoomClass = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
-  const [selectedPeriod, setSelectedPeriod] =
-    useState<string>("Primer Trimestre");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -84,24 +77,14 @@ const ClassRoomClass = () => {
       )
       .filter((student) => {
         if (activeFilter === "all") return true;
-        if (activeFilter === "below50")
-          return student.mark !== undefined && student.mark < 50;
-        if (activeFilter === "between51and80")
-          return (
-            student.mark !== undefined &&
-            student.mark >= 50 &&
-            student.mark <= 80
-          );
-        if (activeFilter === "above80")
-          return student.mark !== undefined && student.mark > 80;
-        return true;
+        return `${student.grade}${student.section}` === activeFilter;
       });
 
     setFilteredStudents(filtered);
   }, [searchTerm, students, activeFilter]);
 
   const handleCardClick = async (courseId: string) => {
-    console.log('Curso clickeado con ID:', courseId);
+    console.log("Curso clickeado con ID:", courseId);
     try {
       const response = await api.get(
         `/professors/assigned_students/${user.Professors[0].professor_id}`
@@ -121,14 +104,12 @@ const ClassRoomClass = () => {
   };
 
   const handleStudentClick = (studentId: string) => {
-    console.log(studentId);
-    navigate(`/teacher/class/student/report/${studentId}`);
-  };
-
-  const handleEditClick = (studentId: string, currentGrade?: number) => {
-    setSelectedStudent(studentId);
-    setGrade(currentGrade || "");
-    setOpen(true);
+    if (selectedCourse) {
+      console.log("Selected Course ID:", selectedCourse.cursos_id); // Verifica el valor aquí
+      navigate(`/teacher/class/student/report/${studentId}/${selectedCourse.cursos_id}`);
+    } else {
+      console.error("No course selected");
+    }
   };
 
   const handleSave = async (newGrade: number) => {
@@ -158,10 +139,6 @@ const ClassRoomClass = () => {
     setSnackbarOpen(false);
   };
 
-  const handlePeriodChange = (event: SelectChangeEvent<string>) => {
-    setSelectedPeriod(event.target.value);
-  };
-
   const handleFilterChange = (filter: string) => {
     setActiveFilter(filter);
   };
@@ -177,12 +154,10 @@ const ClassRoomClass = () => {
             color: "#fffffffd",
             fontWeight: "bold",
             fontSize: { xs: "2.5rem", sm: "3.5rem", md: "3rem" },
-            marginBottom:"2px",
+            marginBottom: "2px",
             padding: 2,
-            //background: "linear-gradient(45deg, #509c7d 30%, #9ce0f0 90%)",
             borderRadius: 2,
             boxShadow: "0 3px 5px 2px rgba(33, 203, 243, .3)",
-            //display: "inline-block",
           }}
         >
           Management of Notes by Subject
@@ -209,7 +184,14 @@ const ClassRoomClass = () => {
 
         {selectedCourse && (
           <Grid item xs={12}>
-            <Paper sx={{ padding: 2, borderRadius: 2, boxShadow: 3,backgroundColor: "rgba(255, 255, 255, 0.829)",}}>
+            <Paper
+              sx={{
+                padding: 2,
+                borderRadius: 2,
+                boxShadow: 3,
+                backgroundColor: "rgba(255, 255, 255, 0.829)",
+              }}
+            >
               <Typography variant="h6" component="div" gutterBottom>
                 Students in{" "}
                 <Box
@@ -225,38 +207,17 @@ const ClassRoomClass = () => {
                   {selectedCourse.nombre}
                 </Box>
               </Typography>
-              <Box sx={{ marginBottom: 2 }}>
-                <FormControl fullWidth>
-                  <InputLabel>Period</InputLabel>
-                  <Select
-                    value={selectedPeriod}
-                    onChange={handlePeriodChange}
-                    label="Period"
-                  >
-                    <MenuItem value="Primer Trimestre">
-                      Period 1: February - April
-                    </MenuItem>
-                    <MenuItem value="Segundo Trimestre">
-                      Period 2: May - July
-                    </MenuItem>
-                    <MenuItem value="Tercer Trimestre">
-                      Period 3: August - November
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
               <StudentFilter
                 searchTerm={searchTerm}
                 onSearchTermChange={(e) => setSearchTerm(e.target.value)}
-                onFilterChange={handleFilterChange} 
-                activeFilter={activeFilter} 
+                onFilterChange={handleFilterChange}
+                activeFilter={activeFilter}
               />
               <Divider sx={{ marginY: 2 }} />
               <StudentTable
                 students={filteredStudents}
-                onEditClick={handleEditClick}
                 onStudentClick={handleStudentClick}
-                activeFilter={activeFilter} 
+                activeFilter={activeFilter}
               />
             </Paper>
           </Grid>

@@ -1,5 +1,33 @@
-import React from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { TextField, Box, Button, ButtonGroup } from "@mui/material";
+import { useAuthStore } from '../../../hooks/useAuthStore'; 
+import { useAxiosPrivate } from "../../../hooks";
+
+interface Student {
+  student_id: string;
+  user_id: string;
+  telephone: string | null;
+  age: number | null;
+  grade: string;
+  section: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  parentId: string;
+  educational_level_id: string;
+  feedback: string;
+  name: string;
+  educationalLevel: string;
+  academicRecords: {
+    historial_id: string;
+    name: string;
+    curso_id: string;
+    mark: number;
+    comment: string;
+    date: string;
+    student_id: string;
+  }[];
+}
 
 interface StudentFilterProps {
   searchTerm: string;
@@ -14,6 +42,42 @@ const StudentFilter: React.FC<StudentFilterProps> = ({
   onFilterChange,
   activeFilter,
 }) => {
+  const [students, setStudents] = useState<Student[]>([]);
+  const { user } = useAuthStore();
+  const api = useAxiosPrivate();
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      if (user && user.user_id) {
+        try {
+          const response = await api.get(
+            `/professors/assigned_students/${user.Professors[0].professor_id}`
+          );
+          if (Array.isArray(response.data.data)) {
+            const assignedStudents = response.data.data.flatMap(
+              (item: any) => item.students
+            );
+            setStudents(assignedStudents);
+          } else {
+            console.error("Unexpected response format:", response.data);
+          }
+        } catch (error) {
+          console.error("Error fetching students:", error);
+        }
+      }
+    };
+
+    fetchStudents();
+  }, [user]);
+
+  const gradeSections = useMemo(() => {
+    const uniqueCombinations = new Set<string>();
+    students.forEach(student => {
+      uniqueCombinations.add(`${student.grade}${student.section}`);
+    });
+    return Array.from(uniqueCombinations);
+  }, [students]);
+
   return (
     <Box sx={{ marginBottom: 2 }}>
       <TextField
@@ -31,24 +95,15 @@ const StudentFilter: React.FC<StudentFilterProps> = ({
           >
             All
           </Button>
-          <Button
-            variant={activeFilter === "below50" ? "contained" : "outlined"}
-            onClick={() => onFilterChange("below50")}
-          >
-            Below 49
-          </Button>
-          <Button
-            variant={activeFilter === "between51and80" ? "contained" : "outlined"}
-            onClick={() => onFilterChange("between51and80")}
-          >
-            50 - 80
-          </Button>
-          <Button
-            variant={activeFilter === "above80" ? "contained" : "outlined"}
-            onClick={() => onFilterChange("above80")}
-          >
-            Above 80
-          </Button>
+          {gradeSections.map((gradeSection) => (
+            <Button
+              key={gradeSection}
+              variant={activeFilter === gradeSection ? "contained" : "outlined"}
+              onClick={() => onFilterChange(gradeSection)}
+            >
+              {gradeSection}
+            </Button>
+          ))}
         </ButtonGroup>
       </Box>
     </Box>
@@ -56,4 +111,3 @@ const StudentFilter: React.FC<StudentFilterProps> = ({
 };
 
 export default StudentFilter;
-
