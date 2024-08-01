@@ -1,7 +1,7 @@
-import { PrismaClient, Students } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 import { IStudenRepository } from './interface/student.interface'
-import { IEvaluationsAndEvaluationsResults, IStudentsWitchCourses } from '../interface/student.interface'
+import { IEvaluationsAndEvaluationsResults, IStudentsWitchCourses, IStudentsWitchUser } from '../interface/student.interface'
 import { GetEvaluationsByPeriodoOfStudentSchema } from '../schemas/student.schema'
 
 export class StudentRepository implements IStudenRepository {
@@ -9,7 +9,7 @@ export class StudentRepository implements IStudenRepository {
   async getEvaluationsByPeriodoOfStudent (data: GetEvaluationsByPeriodoOfStudentSchema): Promise<IEvaluationsAndEvaluationsResults[]> {
     const evaluations = await this.prisma.evaluations.findMany({
       where: {
-        periodo: data.periodo,
+        // periodo: data.periodo,
         curso_id: data.courseId
       },
       include: {
@@ -24,10 +24,13 @@ export class StudentRepository implements IStudenRepository {
     return evaluations
   }
 
-  async getStudenByStudentId (studentId: string): Promise<Students | null> {
+  async getStudenByStudentId (studentId: string): Promise<IStudentsWitchUser | null> {
     const student = await this.prisma.students.findUnique({
       where: {
         student_id: studentId
+      },
+      include: {
+        user: true
       }
     })
     return student

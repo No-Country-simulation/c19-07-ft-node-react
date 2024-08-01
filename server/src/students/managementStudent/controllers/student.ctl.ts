@@ -5,7 +5,7 @@ import { StudentService } from '../student.service'
 import { PrismaClient } from '@prisma/client'
 import { ResponseHandler } from '../../../libs/response.lib'
 import { formattedErrorsZod } from '../../../libs/formatedErrorsZod'
-import { getEvaluationsByPeriodoOfStudentSchema } from '../schemas/student.schema'
+import { getEvaluationsByPeriodoOfStudentSchema, queryPeriodoSchema } from '../schemas/student.schema'
 import HTTP_STATUS from '../../../constants/statusCodeServer.const'
 import { ZodError } from 'zod'
 import { CustomError } from '../../../errors/customError'
@@ -37,11 +37,16 @@ export class StudentCtl {
 
   async getDashboardData (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const data = await studentService.getDashboardData(req.params.studentId)
+      const periodo = queryPeriodoSchema.parse(req.query).periodo
+      const data = await studentService.getDashboardData(req.params.studentId, periodo)
       new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'sucessfully', data)
     } catch (error) {
       if (error instanceof CustomError && error.name === 'ConflictError') {
         new ResponseHandler(res).sendError(error.statusCode, error.message, error.errors)
+      }
+      if (error instanceof ZodError) {
+        const formattedError = formattedErrorsZod(error)
+        new ResponseHandler(res).sendError(HTTP_STATUS.BAD_REQUEST, 'validation Error', formattedError)
       }
       next(error)
     }
