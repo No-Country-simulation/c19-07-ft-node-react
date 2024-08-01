@@ -3,7 +3,7 @@ import { Evaluations } from '@prisma/client'
 import { StudentRepository } from './repositories/student.repository'
 import { ConflictError } from '../../errors/conflictError'
 import HTTP_STATUS from '../../constants/statusCodeServer.const'
-import { GetEvaluationsByPeriodoOfStudentSchema } from './schemas/student.schema'
+import { GetEvaluationsByPeriodoOfStudentSchema, QueryPeriodoSchema } from './schemas/student.schema'
 
 export class StudentService {
   constructor (private readonly studentRepository: StudentRepository) { }
@@ -14,7 +14,7 @@ export class StudentService {
     return evaluations
   }
 
-  async getDashboardData (studentId: string, periodo: string): Promise<{
+  async getDashboardData (studentId: string, periodo: QueryPeriodoSchema['periodo']): Promise<{
     infoStudent: { grade: string, section: string, name: string }
     courses: Array<{ name: string }>
     overallAverageByPeriod: Array<{ period: string, average: number }>
@@ -29,7 +29,7 @@ export class StudentService {
     }))
     if (listCourse === undefined) throw Error('Course not found')
 
-    const allEvaluations = await this.studentRepository.getEvaluationsByPeriodoOfStudent({ studentId, courseId: undefined, periodo: 'PRIMER_PERIODO' })
+    const allEvaluations = await this.studentRepository.getEvaluationsByPeriodoOfStudent({ studentId, courseId: undefined, periodo })
     if (allEvaluations === null) throw new ConflictError('Could not find', HTTP_STATUS.NOT_FOUND)
 
     const evaluationsByPeriod = allEvaluations.reduce((acc: { [key: string]: Array<{ evaluationId: string, courseId: string, nameEvaluation: string, nameCourse: string, evaluationResult: { mark: number, coment: string } }> }, evaluation) => {
@@ -75,5 +75,20 @@ export class StudentService {
       overallAverageByPeriod,
       evaluationsByPeriod: formattedEvaluationsByPeriod
     }
+  }
+
+  async getLast10EvaluationResults (studentId: string): Promise<Array<{ evaluationId: string, nameEvaluation: string, nameCourse: string, mark: number, comment: string, createdAt: Date }>> {
+    const evaluations = await this.studentRepository.getLast10EvaluationResults(studentId)
+    if (evaluations === null) throw new ConflictError('Could not find', HTTP_STATUS.NOT_FOUND)
+    const formattedEvaluations = evaluations.map(result => ({
+      evaluationId: result.evaluation_id,
+      nameEvaluation: result.evaluation.name,
+      nameCourse: result.evaluation.curso.nombre,
+      mark: result.mark,
+      comment: result.comment,
+      createdAt: result.createdAt
+    }))
+    if (formattedEvaluations.length === 0) throw new ConflictError('Could not find', HTTP_STATUS.NOT_FOUND)
+    else return formattedEvaluations
   }
 }

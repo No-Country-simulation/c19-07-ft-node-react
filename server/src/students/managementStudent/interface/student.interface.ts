@@ -12,3 +12,11 @@ export interface IStudentsWitchCourses extends Students {
 export interface IStudentsWitchUser extends Students {
   user: Users
 }
+
+export interface IEvaluationResultsWitchEvaluationAndCourse extends Evaluation_results {
+  evaluation: IEvaluationsWitchCourse
+}
+
+export interface IEvaluationsWitchCourse extends Evaluations {
+  curso: Courses
+}
