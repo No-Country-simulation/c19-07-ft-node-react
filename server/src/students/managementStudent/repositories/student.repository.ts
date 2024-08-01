@@ -9,7 +9,7 @@ export class StudentRepository implements IStudenRepository {
   async getEvaluationsByPeriodoOfStudent (data: GetEvaluationsByPeriodoOfStudentSchema): Promise<IEvaluationsAndEvaluationsResults[]> {
     const evaluations = await this.prisma.evaluations.findMany({
       where: {
-        // periodo: data.periodo,
+        //  periodo: data.periodo,
         curso_id: data.courseId
       },
       include: {
