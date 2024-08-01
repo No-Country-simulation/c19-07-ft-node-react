@@ -4,22 +4,28 @@ import { CustomCard } from "../ui/CustomCard";
 import { EvaluationResultsChart } from "./EvaluationResultsChart";
 
 interface OverviewProps {
-  view: "student" | "parents";
-  // courses?: any;
-  // gradeSection?: string;
-  // overallAverage?: number;
-  // overallFeedback?: string;
-  // evaluationResults?: any;
+  parentView?: boolean;
+  studentName?: string;
+  courses?: any;
+  grade?: string;
+  section?: string;
+  overallAverage?: number;
+  overallFeedback?: string;
+  evaluationResults?: any;
 }
 
-export const Overview = ({
-  view,
-  // overallFeedback,
-}: OverviewProps) => {
-  const feedbackSubheading =
-    view === "student"
-      ? "What teachers say about my performance..."
-      : "What teachers say about son my performance...";
+export const Overview = ({ parentView, studentName }: OverviewProps) => {
+  const gradeTopText = parentView ? "Grade" : "My grade";
+  const gradeSubheading = "Currently in 5°, section A";
+
+  const coursesHeading = parentView ? "Courses" : "My courses";
+  const coursesSubheading = parentView
+    ? "Courses my child is enrolled in"
+    : "Courses I'm enrolled in";
+
+  const feedbackSubheading = parentView
+    ? "What teachers say about son my performance..."
+    : "What teachers say about my performance...";
 
   return (
     <Box height="100%" display="flex" flexDirection="column" gap={2}>
@@ -35,11 +41,15 @@ export const Overview = ({
           flexDirection={{ xs: "column", sm: "row", md: "column" }}
           gap={2}
         >
+          {parentView && (
+            <CustomCard heading={studentName} headingVariant="h5" />
+          )}
+
           <CustomCard
             heading="5A"
             headingVariant="h1"
-            topText="My course"
-            subHeading="Currently in 5° in section A"
+            topText={gradeTopText}
+            subHeading={gradeSubheading}
             sx={{ width: "100%", height: "100%" }}
           />
 
@@ -68,12 +78,20 @@ export const Overview = ({
         flexDirection={{ xs: "column", sm: "row" }}
         gap={2}
       >
+        {/* un despleglabe por cada area academica (adentro los cursos) o una lista */}
         <CustomCard
-          heading="My courses"
-          subHeading={feedbackSubheading}
+          heading={coursesHeading}
+          headingVariant="h5"
+          subHeading={coursesSubheading}
           sx={{ width: "100%" }}
         ></CustomCard>
-        <CustomCard heading="General Feedback" sx={{ width: "100%" }}>
+        {/* carousel o background image */}
+        <CustomCard
+          heading="Overall Feedback"
+          headingVariant="h5"
+          subHeading={feedbackSubheading}
+          sx={{ width: "100%" }}
+        >
           {/* {overallFeedback} */}
         </CustomCard>
       </Box>

@@ -1,11 +1,17 @@
 import { Box } from "@mui/material";
 import { CustomCard } from "../ui/CustomCard";
 
+interface PerformanceProps {
+  view: "student" | "parents";
+}
+
 export const Performance = () => {
-  /* Mostrar el rendimiento de 4 formas distintas */
-  /* Una tabla simple con las notas de cada materia */
-  /* Feedback general */
-  /* Un grafico con las notas de los últimos parciales */
+  /*
+  * 1. Promedio por periodo => promedio final
+  * 2. Notas generales de cada curso (materia)
+  * 3. Resultados de evaluciones => últimas 10 resultados de evaluaciones
+  * 4. feedback específico de cada curso (materia)
+  */
 
   return (
     <Box height="100%" display="flex" flexDirection="column" gap={2}>
@@ -15,8 +21,8 @@ export const Performance = () => {
         flexDirection={{ xs: "column", md: "row" }}
         gap={2}
       >
-        <CustomCard sx={{ width: "100%" }}></CustomCard>
-        <CustomCard sx={{ width: "100%" }}></CustomCard>
+        <CustomCard heading="" sx={{ width: "100%" }}></CustomCard>
+        <CustomCard heading="" sx={{ width: "100%" }}></CustomCard>
       </Box>
 
       <Box
@@ -25,8 +31,8 @@ export const Performance = () => {
         flexDirection={{ xs: "column", md: "row" }}
         gap={2}
       >
-        <CustomCard sx={{ width: "100%" }}></CustomCard>
-        <CustomCard sx={{ width: "100%" }}></CustomCard>
+        <CustomCard heading="" sx={{ width: "100%" }}></CustomCard>
+        <CustomCard heading="" sx={{ width: "100%" }}></CustomCard>
       </Box>
     </Box>
   );

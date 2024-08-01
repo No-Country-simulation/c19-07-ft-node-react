@@ -1,5 +1,5 @@
 import { Overview } from "../../../components";
 
 export default function ParentsOverviewPage() {
-  return <Overview />;
+  return <Overview parentView />;
 }
