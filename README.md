@@ -8,7 +8,6 @@ El objetivo es lograr facilitar la entrega de las notas y del seguimiento academ
 
 ### Colaboradores
 - **Darvin Ricardo Alania Inocencio** - Programador Backend: www.linkedin.com/in/darvin-ricardo-alania-inocencio-7927392a9/
-- **Fernando Martínez** - Programador Backend
 - **Juan santiago usca mamani** - Programador Backend: www.linkedin.com/in/santiagousca
 - **Ramiro Carnicer Souble** - Programador Backend: www.linkedin.com/in/ramirocarnicersouble
 - **Juan Manuel Gutiérrez Gómez** - Programador Frontend: www.linkedin.com/in/jumagu
@@ -29,7 +28,7 @@ El objetivo es lograr facilitar la entrega de las notas y del seguimiento academ
 
 ### Como ejecutar el proyecto
 
-#### Para ejecutar la api
+#### Para ejecutar la API
 - ```cd server```
 - ```npm install```
 - ```npm run dev```
