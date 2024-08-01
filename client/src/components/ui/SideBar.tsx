@@ -41,7 +41,7 @@ const parentOptions = [
   },
   {
     text: "Chat",
-    path: "parents/contacts",
+    path: "/parents/contacts",
     icon: <Chat></Chat>,
   },
 ];
