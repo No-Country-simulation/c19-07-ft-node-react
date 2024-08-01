@@ -23,6 +23,7 @@ export default function AdminDashboardPage() {
 
         if (resp.data.success) {
           setDashboardData(resp.data.data);
+          return;
         }
 
         setDashboardData({

@@ -1,6 +1,5 @@
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
-// import type { ChartData } from "chart.js/auto";
 
 import { TopStudent } from "../../interfaces";
 import { Box } from "@mui/material";
@@ -12,22 +11,6 @@ interface DashboardChartProps {
 }
 
 export const DashboardChart = ({ topStudents }: DashboardChartProps) => {
-  // const labels = topStudents.map(
-  //   ({ name, grade, section }) => `${name} - ${grade}${section}`
-  // );
-
-  // const data = {
-  //   labels,
-  //   datasets: [
-  //     {
-  //       label: "Results",
-  //       data: topStudents.map((student) => +student.averageMark),
-  //       backgroundColor: colors,
-  //       borderColor: colors,
-  //     },
-  //   ],
-  // };
-
   const data = {
     labels: [""],
     datasets: topStudents.map((student, index) => ({
@@ -37,8 +20,6 @@ export const DashboardChart = ({ topStudents }: DashboardChartProps) => {
       borderColor: colors[index],
     })),
   };
-
-  console.log(data);
 
   return (
     <Box
