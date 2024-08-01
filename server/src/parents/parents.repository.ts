@@ -1,5 +1,6 @@
 // src/modules/professors/repositories/professor.repository.ts
 import { PrismaClient, Parents, Students, Users, Courses, Professors } from '@prisma/client'
+import { DatabaseError } from '../errors/databaseError'
 const prisma = new PrismaClient()
 
 // export const getAllParent = async (): Promise<Parents[]> => {
@@ -9,23 +10,25 @@ const prisma = new PrismaClient()
 export const getAllParent = async () => {
   return await prisma.parents.findMany({
     include: {
-      user: { 
+      user: {
         select: {
-          name: true, 
-        },
-      },
-    },
+          name: true
+        }
+      }
+    }
   })
 }
-
-
 
 export const createParent = async (data: Omit<Parents, 'parent_id' | 'deletedAt'>): Promise<Parents> => {
   return await prisma.parents.create({ data })
 }
 
 export const getParentById = async (id: string): Promise<Parents | null> => {
-  return await prisma.parents.findUnique({ where: { parent_id: id } })
+  try {
+    return await prisma.parents.findUnique({ where: { parent_id: id } })
+  } catch (e: any) {
+    throw new DatabaseError(e.message)
+  }
 }
 
 export const updateParent = async (id: string, data: Partial<Parents>): Promise<Parents> => {
@@ -70,8 +73,8 @@ export const getAllStudentsWithDetailsRepository = async () => {
 
   return data
 }
-//---------------------//---------------------//---------------------
-//---------------------//---------------------//---------------------
+// ---------------------//---------------------//---------------------
+// ---------------------//---------------------//---------------------
 
 interface IStudentsWitchCourses extends Students {
   user: Users
@@ -121,17 +124,7 @@ interface ItemplateData {
   profesor: Array<{}>
 }
 
-
-
-
-
-
-
-
-
-
-
-//---------------------//---------------------//---------------------
+// ---------------------//---------------------//---------------------
 // GET BY ID
 // repositorio
 export const getStudentByIdRepository = async (id: string) => {
@@ -198,3 +191,41 @@ export const getStudentParentDetailsRepository = async (): Promise<Array<{ stude
 
   return data
 }
+
+
+//get relation parent with student
+ export const getRelationParentWithStudentRepository = async (id: string) => {
+  //  const data = await prisma.students.findUnique({
+  //    where: { student_id: studentId },
+  //    include: {
+  //      parent: true
+  //    }
+  //  })
+   const data = await prisma.parents.findUnique({
+    where: { parent_id: id },
+    include: {
+      user: {
+        select: {
+          name: true
+        },
+      },
+      student: {
+        select: {
+          user: {
+            select: {
+              name: true,
+              Students: {
+                select: {
+                  student_id: true
+                }
+              }
+            },
+          }
+        }
+      }
+    }
+  })
+
+
+   return data
+ }

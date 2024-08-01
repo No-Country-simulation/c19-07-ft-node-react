@@ -136,6 +136,7 @@ const seedEvaluations = async (): Promise<void> => {
           curso_id: course.cursos_id,
           name: evaluationNames[faker.number.int({ min: 0, max: evaluationNames.length - 1 })],
           description: faker.lorem.words({ min: 4, max: 10 }),
+          periodo: 'PRIMER_PERIODO',
           date: faker.date.past()
         }
       })
@@ -162,8 +163,8 @@ const seedEvaluationResults = async (): Promise<void> => {
 
 export const mainAcademicRecords = async (): Promise<void> => {
   await seedAcademicRecords()
-  // await seedEvaluations()
-  // await seedEvaluationResults()
+  await seedEvaluations()
+  await seedEvaluationResults()
   console.log('Datos de registros académicos, evaluaciones y resultados de evaluaciones creados.')
 }
 
