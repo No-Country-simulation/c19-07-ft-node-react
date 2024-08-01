@@ -51,4 +51,16 @@ export class StudentCtl {
       next(error)
     }
   }
+
+  async get10EvaluationsResults (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const data = await studentService.getLast10EvaluationResults(req.params.studentId)
+      new ResponseHandler(res).sendResponse(HTTP_STATUS.OK, 'sucessfully', data)
+    } catch (error) {
+      if (error instanceof CustomError && error.name === 'ConflictError') {
+        new ResponseHandler(res).sendError(error.statusCode, error.message, error.errors)
+      }
+      next(error)
+    }
+  }
 }
