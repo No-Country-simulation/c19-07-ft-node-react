@@ -11,7 +11,8 @@ export const getAllParent = async () => {
     include: {
       user: { 
         select: {
-          name: true, 
+          name: true,
+          email: true, 
         },
       },
     },

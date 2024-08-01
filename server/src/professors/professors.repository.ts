@@ -19,6 +19,7 @@ export const getAllProfessors = async () => {
       user:{
         select:{
           name:true,
+          email: true,
         }
       }
     }
