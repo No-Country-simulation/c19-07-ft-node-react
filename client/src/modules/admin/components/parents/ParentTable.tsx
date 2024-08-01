@@ -7,6 +7,7 @@ import { CreateParentFormData, EditParentFormData } from "../../schemas";
 
 import { ParentEditForm } from "./ParentEditForm";
 import { ParentCreateForm } from "./ParentCreateForm";
+import { StatusRespMsg } from "../../../../interfaces";
 import { showStatusSnackbar } from "../../../../helpers";
 
 interface ParentTableProps {
@@ -19,19 +20,18 @@ export const ParentTable = ({
   closeCreateModal,
 }: ParentTableProps) => {
   const { closeModal, openModal, modalState } = useModal();
-  const { parent, filter, setFilter, createParent, updateParent } =
+  const { parent, filter, setFilter, isLoading, createParent, updateParent } =
     useContextParent();
 
   // ? Creation
   const handleSubmitCreateForm = async (data: CreateParentFormData) => {
-    await createParent(data)
-      .then((res) => {
-        showStatusSnackbar(res);
-        closeCreateModal();
-      })
-      .catch((error) => {
-        showStatusSnackbar(error);
-      });
+    try {
+      const res = await createParent(data);
+      showStatusSnackbar(res);
+      closeCreateModal();
+    } catch (error) {
+      showStatusSnackbar(error as StatusRespMsg);
+    }
   };
 
   // ? Update
@@ -44,14 +44,13 @@ export const ParentTable = ({
   };
 
   const handleSubmitEditForm = async (data: EditParentFormData) => {
-    await updateParent(modalState.payload?.user_id, data)
-      .then((res) => {
-        showStatusSnackbar(res);
-        closeModal();
-      })
-      .catch((error) => {
-        showStatusSnackbar(error);
-      });
+    try {
+      const res = await updateParent(modalState.payload?.user_id, data);
+      showStatusSnackbar(res);
+      closeModal();
+    } catch (error) {
+      showStatusSnackbar(error as StatusRespMsg);
+    }
   };
 
   // ? Pagination
@@ -72,25 +71,24 @@ export const ParentTable = ({
     }));
   };
 
-  if (parent === null) return <p>Loading...</p>;
-
   return (
     <CustomTable
       actions={["edit"]}
-      rows={parent.data.items}
+      rows={parent?.data.items || []}
       columns={parentTableColumns}
       onEdit={handleEdit}
       onDelete={() => {}}
-      isLoading={false}
+      isLoading={isLoading}
     >
       <TablePagination
         rowsPerPageOptions={[10, 20, 30, 40, 50]}
         component="div"
-        count={parent.data.meta.totalItems}
+        count={parent?.data.meta.totalItems || 0}
         rowsPerPage={Number(filter.limit)}
         page={Number(filter.page) - 1}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        disabled={isLoading}
       />
 
       <CustomDialog
