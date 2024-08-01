@@ -40,7 +40,7 @@ interface Student {
   name: string;
   grade: string;
   section: string;
-  parentId: string;
+  parentName: string;
   educationalLevel: string;
   feedback: string;
   academicRecords: AcademicRecord[];
@@ -197,7 +197,7 @@ const GeneratePdfDocument = () => {
 
   if (!selectedStudent) return <Typography variant="h6">Loading...</Typography>;
 
-  const { name, grade, section, parentId, educationalLevel } = selectedStudent;
+  const { name, grade, section, parentName, educationalLevel } = selectedStudent;
 
   return (
     <>
@@ -248,7 +248,7 @@ const GeneratePdfDocument = () => {
               <strong>Educational Level:</strong> {educationalLevel || "N/A"}
             </Typography>
             <Typography variant="body1" sx={{ fontSize: "1.5rem" }}>
-              <strong>Parent:</strong> {parentId}
+              <strong>Parent:</strong> {parentName}
             </Typography>
           </Box>
           <ClassRoomChart  studentId={studentId} courseId={courseId} />

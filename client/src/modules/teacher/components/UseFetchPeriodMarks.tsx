@@ -20,8 +20,8 @@ const useFetchPeriodMarks = () => {
   const [error, setError] = useState<ApiError | null>(null);
   const { studentId, courseId } = useParams<{ studentId: string; courseId: string }>();
 
-  // console.log("Student ID:", studentId);
-  // console.log("Course ID:", courseId);
+   console.log("Student ID:", studentId);
+   console.log("Course ID:", courseId);
 
   useEffect(() => {
     const fetchMarks = async () => {
