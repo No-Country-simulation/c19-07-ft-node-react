@@ -1,1 +1,73 @@
-[{"name":"Mariano Santos","password":"pdYt9OmX","email":"0mariano.santos@example.com","state":"ACTIVE","type_user":"STUDENT"},{"name":"Gustavo Moya","password":"2E4RSF0l","email":"1gustavo.moya@example.com","state":"ACTIVE","type_user":"STUDENT"},{"name":"Rocío Arias","password":"A5Uh72RA","email":"2rocio.arias@example.com","state":"ACTIVE","type_user":"STUDENT"},{"name":"Alberto Moya","password":"tt3vOvjm","email":"3alberto.moya@example.com","state":"ACTIVE","type_user":"STUDENT"},{"name":"María Herrera","password":"15XuNg8O","email":"4maria.herrera@example.com","state":"ACTIVE","type_user":"STUDENT"},{"name":"Rodrigo Jiménez","password":"iPxws5e4","email":"5rodrigo.jimenez@example.com","state":"ACTIVE","type_user":"STUDENT"},{"name":"Vicenta Parra","password":"ICMGTwez","email":"6vicenta.parra@example.com","state":"ACTIVE","type_user":"STUDENT"},{"name":"Inés Pérez","password":"Q7BOQ1un","email":"7ines.perez@example.com","state":"ACTIVE","type_user":"STUDENT"},{"name":"José Aguilar","password":"M0kWy9J4","email":"8jose.aguilar@example.com","state":"ACTIVE","type_user":"PARENTS"},{"name":"Laura Jiménez","password":"aLLrDEAm","email":"9laura.jimenez@example.com","state":"ACTIVE","type_user":"PARENTS"},{"name":"Pilar Blanco","password":"0muqBRXW","email":"10pilar.blanco@example.com","state":"ACTIVE","type_user":"PARENTS"},{"name":"Francisco Ruiz","password":"KHGjtsKF","email":"11francisco.ruiz@example.com","state":"ACTIVE","type_user":"PARENTS"},{"name":"Olga Muñoz","password":"ejzTVmiP","email":"12olga.munoz@example.com","state":"ACTIVE","type_user":"PARENTS"},{"name":"Asunción Vega","password":"be63L60U","email":"13asuncion.vega@example.com","state":"ACTIVE","type_user":"PARENTS"},{"name":"Isaac Gallardo","password":"Aed3WwXd","email":"14isaac.gallardo@example.com","state":"ACTIVE","type_user":"PARENTS"},{"name":"Amparo Carmona","password":"MtIert73","email":"15amparo.carmona@example.com","state":"ACTIVE","type_user":"PARENTS"},{"name":"Yolanda Calvo","password":"FhFhrbXQ","email":"16yolanda.calvo@example.com","state":"ACTIVE","type_user":"PROFESSOR"},{"name":"Raúl Carrasco","password":"VlYkkuLo","email":"17raul.carrasco@example.com","state":"ACTIVE","type_user":"PROFESSOR"},{"name":"Josefina Duran","password":"S67da08l","email":"18josefina.duran@example.com","state":"ACTIVE","type_user":"PROFESSOR"},{"name":"Inés Cano","password":"w4Phd0wg","email":"19ines.cano@example.com","state":"ACTIVE","type_user":"PROFESSOR"}]
+[
+    {
+        "name": "Samuel Castro",
+        "password": "bGDn2lV0",
+        "email": "0samuel.castro@example.com",
+        "state": "ACTIVE",
+        "type_user": "STUDENT"
+    },
+    {
+        "name": "Luisa Lorenzo",
+        "password": "Av9Qj9Be",
+        "email": "1luisa.lorenzo@example.com",
+        "state": "ACTIVE",
+        "type_user": "STUDENT"
+    },
+    {
+        "name": "Vanesa Esteban",
+        "password": "W9gh6Mgs",
+        "email": "2vanesa.esteban@example.com",
+        "state": "ACTIVE",
+        "type_user": "STUDENT"
+    },
+    {
+        "name": "Javier Alonso",
+        "password": "PXOaHgkR",
+        "email": "3javier.alonso@example.com",
+        "state": "ACTIVE",
+        "type_user": "STUDENT"
+    },
+    {
+        "name": "Alejandro Sáez",
+        "password": "8aacaBig",
+        "email": "4alejandro.saez@example.com",
+        "state": "ACTIVE",
+        "type_user": "PARENTS"
+    },
+    {
+        "name": "Francisca Soto",
+        "password": "eonkloqq",
+        "email": "5francisca.soto@example.com",
+        "state": "ACTIVE",
+        "type_user": "PARENTS"
+    },
+    {
+        "name": "Jordi Marín",
+        "password": "WSafnioH",
+        "email": "6jordi.marin@example.com",
+        "state": "ACTIVE",
+        "type_user": "PARENTS"
+    },
+    {
+        "name": "Vanesa Duran",
+        "password": "loXkCWTs",
+        "email": "7vanesa.duran@example.com",
+        "state": "ACTIVE",
+        "type_user": "PARENTS"
+    },
+    {
+        "name": "Gerardo Vidal",
+        "password": "mZK5aolP",
+        "email": "8gerardo.vidal@example.com",
+        "state": "ACTIVE",
+        "type_user": "PROFESSOR"
+    },
+    {
+        "name": "Héctor Prieto",
+        "password": "gA5aJGjW",
+        "email": "9hector.prieto@example.com",
+        "state": "ACTIVE",
+        "type_user": "PROFESSOR"
+    }
+]
+

@@ -8,6 +8,7 @@ const parentRoutes = Router()
 // Rutas más específicas primero
 parentRoutes.get('/details/:id', parentController.getStudentByIdController)
 parentRoutes.get('/details', parentController.getStudentsWithDetailsController)
+parentRoutes.get('/students-Witch-Courses/:id', parentController.getStudent)
 parentRoutes.get('/info', parentController.getStudentParentDetailsControllers)
 
 // Rutas menos específicas después
@@ -16,5 +17,8 @@ parentRoutes.put('/:id', parentController.updateParents)
 parentRoutes.delete('/:id', parentController.deleteParents)
 parentRoutes.get('/', parentController.getAllParents)
 parentRoutes.post('/', parentController.createParents)
+
+//get parents by id relation with student
+parentRoutes.get('/relationwithstudent/:id', parentController.getRelationParentWithStudentController)
 
 export default parentRoutes

@@ -1,17 +1,35 @@
 // src/modules/professors/repositories/professor.repository.ts
-import { PrismaClient, Parents } from '@prisma/client'
+import { PrismaClient, Parents, Students, Users, Courses, Professors } from '@prisma/client'
+import { DatabaseError } from '../errors/databaseError'
 const prisma = new PrismaClient()
 
-export const getAllParent = async (): Promise<Parents[]> => {
-  return await prisma.parents.findMany()
+// export const getAllParent = async (): Promise<Parents[]> => {
+//   return await prisma.parents.findMany()
+// }
+
+export const getAllParent = async () => {
+  return await prisma.parents.findMany({
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true, 
+        },
+      },
+    },
+  })
 }
 
-export const createParent = async (data: Omit<Parents, 'parent_id'>): Promise<Parents> => {
+export const createParent = async (data: Omit<Parents, 'parent_id' | 'deletedAt'>): Promise<Parents> => {
   return await prisma.parents.create({ data })
 }
 
 export const getParentById = async (id: string): Promise<Parents | null> => {
-  return await prisma.parents.findUnique({ where: { parent_id: id } })
+  try {
+    return await prisma.parents.findUnique({ where: { parent_id: id } })
+  } catch (e: any) {
+    throw new DatabaseError(e.message)
+  }
 }
 
 export const updateParent = async (id: string, data: Partial<Parents>): Promise<Parents> => {
@@ -56,7 +74,58 @@ export const getAllStudentsWithDetailsRepository = async () => {
 
   return data
 }
+// ---------------------//---------------------//---------------------
+// ---------------------//---------------------//---------------------
 
+interface IStudentsWitchCourses extends Students {
+  user: Users
+  courses: IcourseWitchProfessor[]
+}
+
+interface IcourseWitchProfessor extends Courses {
+  professor: IProfessorWitchUsers
+}
+
+interface IProfessorWitchUsers extends Professors {
+  user: Users
+}
+export const getStudentsWitchDetails = async (studentId: string): Promise<IStudentsWitchCourses | null> => {
+  // Obtener los datos del estudiante
+  const studentWithCourses = await prisma.students.findUnique({
+    where: {
+      student_id: studentId
+    },
+    include: {
+      user: true,
+      courses: {
+        include: {
+          professor: {
+            include: {
+              user: true
+            }
+          }
+        }
+      }// Incluye la relaciÃ³n de los cursos
+    }
+  })
+
+  return studentWithCourses
+}
+interface ItemplateData {
+  student: {
+    grade: string
+    section: string
+    studentId: string
+    name: string
+  }
+  course: {
+    courseId: string
+    courseName: string
+  }
+  profesor: Array<{}>
+}
+
+// ---------------------//---------------------//---------------------
 // GET BY ID
 // repositorio
 export const getStudentByIdRepository = async (id: string) => {
@@ -123,3 +192,60 @@ export const getStudentParentDetailsRepository = async (): Promise<Array<{ stude
 
   return data
 }
+
+
+//get relation parent with student
+ export const getRelationParentWithStudentRepository = async (id: string) => {
+  //  const data = await prisma.students.findUnique({
+  //    where: { student_id: studentId },
+  //    include: {
+  //      parent: true
+  //    }
+  //  })
+   const data = await prisma.parents.findUnique({
+    where: { parent_id: id },
+    include: {
+      user: {
+        select: {
+          name: true
+        },
+      },
+      student: {
+        select: {
+          user: {
+            select: {
+              name: true,
+              Students: {
+                select: {
+                  student_id: true
+                }
+              }
+            },
+          }
+        }
+      }
+    }
+  })
+
+  if (data) {
+    const { user_id, relation, createdAt, updatedAt, deletedAt, ...rest } = data;
+
+    if (data.student && data.student.user && data.student.user.Students?.student_id) {
+      const transformedData = {
+        ...rest,
+        student: {
+          name: data.student.user.name,
+          student_id: data.student.user.Students?.student_id
+        }
+      };
+
+      return transformedData;
+    }
+    return {
+      ...rest,
+      user: data.user
+    };
+  }
+
+   return null
+ }

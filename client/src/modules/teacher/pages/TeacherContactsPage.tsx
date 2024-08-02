@@ -2,55 +2,50 @@ import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import {
-  Paper,
-  Table,
-  TableRow,
-  TableCell,
-  TableBody,
-  TableHead,
-  TableContainer,
-} from "@mui/material";
-
-import { Parent } from "../../../interfaces";
 import { useAxiosPrivate } from "../../../hooks";
+import { ContactsTable } from "../../../components";
 
 export default function TeacherContactsPage() {
-  const navigate = useNavigate();
   const api = useAxiosPrivate();
-  const [parents, setParents] = useState<Parent[]>([]);
+  const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [parents, setParents] = useState<any[]>([]);
+
+  const handleClickRow = (row: any) => {
+    navigate(`/teacher/chat/${row.user_id}`, {
+      state: {
+        parentName: row.name,
+        parentEmail: row.email,
+      },
+    });
+  };
 
   useEffect(() => {
-    api.get<Parent[]>("/parents").then((res) => {
-      setParents(res.data);
-    });
+    const fetchParents = async () => {
+      try {
+        const resp = await api.get("/parents");
+        if (resp.status === 200) {
+          setParents(resp.data);
+          setIsLoading(false);
+          return;
+        }
+
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+      }
+    };
+
+    fetchParents();
   }, []);
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Parents</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {parents!.map((parent) => (
-            <TableRow
-              key={parent.user_id}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              onClick={() => {
-                navigate(`/teacher/chat/${parent.user_id}`);
-                console.log(parent);
-              }}
-            >
-              <TableCell component="th" scope="row">
-                {parent.user_id}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <ContactsTable
+      heading="Parents"
+      rows={parents}
+      isLoading={isLoading}
+      onClickRow={handleClickRow}
+    />
   );
 }

@@ -2,25 +2,13 @@
   {
     "nombre": "Curso 1",
     "descripcion": "Descripción del curso 1",
-    "professor_id": "clzcxfzdt001827b7n2fpq93n",
-    "area_academica_id": "clzcxfkbk000027b79hffi5sk"
+    "professor_id": "clzcw59dp000xywro3m4wzt49",
+    "area_academica_id": "clzcw58rl0000ywro9ebcw6fc"
   },
   {
     "nombre": "Curso 2",
     "descripcion": "Descripción del curso 2",
-    "professor_id": "clzcxfzdt001927b7asbkfkgm",
-    "area_academica_id": "clzcxfkbm000127b735bixo8g"
-  },
-  {
-    "nombre": "Curso 3",
-    "descripcion": "Descripción del curso 3",
-    "professor_id": "clzcxfzdt001a27b740hxsye5",
-    "area_academica_id": "clzcxfkbm000227b73no70l8x"
-  },
-  {
-    "nombre": "Curso 4",
-    "descripcion": "Descripción del curso 4",
-    "professor_id": "clzcxfzdt001b27b7ih00g8kv",
-    "area_academica_id": "clzcxfkbn000327b7bcydabv1"
+    "professor_id": "clzcw59dp000yywroazyuaz10",
+    "area_academica_id": "clzcw58rm0001ywro853okb3b"
   }
 ]

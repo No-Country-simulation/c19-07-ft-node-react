@@ -1,20 +1,24 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
+    "version": "1.0.0",
     "configurations": [
         {
-            "type": "node",
+            "name": "Service",
+            "runtimeVersion": "20.13.1",
+            // "preLaunchTask": "npm: build", // npm run build
+            "runtimeArgs": ["run","dev"], // npm run start
             "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${file}",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ]
+            "runtimeExecutable": "npm",
+            "type": "node",
+            "skipFiles": ["<node_internals>/**"],
+        },
+        {
+            "name": "Watch",
+            "runtimeVersion": "16.0.0",
+            "runtimeArgs": ["start", "dev"], // npm run start:dev
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "type": "node",
+            "skipFiles": ["<node_internals>/**"],
         }
     ]
 }

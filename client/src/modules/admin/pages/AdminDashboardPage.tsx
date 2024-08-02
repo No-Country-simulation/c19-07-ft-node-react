@@ -1,37 +1,96 @@
-import { Grid } from "@mui/material";
+import { useEffect, useState } from "react";
 
+import { Box } from "@mui/material";
+
+import { dashboardMessage } from "../constants";
+import { showSnackbar } from "../../../helpers";
+import { useAxiosPrivate } from "../../../hooks";
 import { CustomCard } from "../../../components";
-import { DashboardChart } from "../components";
+import { DashboardData, DashboardResponse } from "../interfaces";
+import { DashboardChart, DashboardSkeleton } from "../components";
 
 export default function AdminDashboardPage() {
+  const api = useAxiosPrivate();
+  const [dashboardData, setDashboardData] = useState<DashboardData | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resp = await api.get<DashboardResponse>("/admin/dashboard");
+
+        if (resp.data.success) {
+          setDashboardData(resp.data.data);
+          return;
+        }
+
+        setDashboardData({
+          activeStudents: 0,
+          numberOfTeachers: 0,
+          overallAverage: 0,
+          numberofUsers: 0,
+          topStudents: [],
+        });
+        showSnackbar(dashboardMessage.wrong, "warning");
+      } catch (error) {
+        setDashboardData({
+          activeStudents: 0,
+          numberOfTeachers: 0,
+          overallAverage: 0,
+          numberofUsers: 0,
+          topStudents: [],
+        });
+        showSnackbar(dashboardMessage.error, "error");
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (!dashboardData) return <DashboardSkeleton />;
+
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} sm={4}>
+    <Box display="flex" flexDirection="column" height="100%">
+      <Box
+        display="flex"
+        flexDirection={{ xs: "column", sm: "row" }}
+        justifyContent="space-between"
+        gap={2}
+      >
         <CustomCard
+          sx={{ width: "100%", textAlign: { xs: "center", sm: "left" } }}
           topText="Overall Cumulative Average"
-          heading="8.5"
+          heading={dashboardData.overallAverage.toFixed(2)}
           headingVariant="h2"
         />
-      </Grid>
-      <Grid item xs={12} sm={4}>
         <CustomCard
-          topText="Acrive Students"
-          heading="1000"
+          sx={{ width: "100%", textAlign: { xs: "center", sm: "left" } }}
+          topText="Active Students"
+          heading={dashboardData.activeStudents}
           headingVariant="h2"
         />
-      </Grid>
-      <Grid item xs={12} sm={4}>
         <CustomCard
+          sx={{ width: "100%", textAlign: { xs: "center", sm: "left" } }}
           topText="No. of Teachers"
-          heading="50"
+          heading={dashboardData.numberOfTeachers}
           headingVariant="h2"
         />
-      </Grid>
-      <Grid item xs={12}>
-        <CustomCard heading="Top Students">
-          <DashboardChart />
+      </Box>
+
+      <Box height="100%" mt={2}>
+        <CustomCard
+          sx={{
+            height: "100%",
+            position: "relative",
+            textAlign: { xs: "center", sm: "left" },
+          }}
+          heading="Top 5 Students"
+          headingVariant="h5"
+        >
+          <DashboardChart topStudents={dashboardData.topStudents} />
         </CustomCard>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 }

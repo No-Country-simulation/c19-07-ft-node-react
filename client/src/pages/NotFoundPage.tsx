@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { HomeOutlined } from "@mui/icons-material";
 import { Box, Typography, Button } from "@mui/material";
 
-import { CompassIcon } from "../components/icons/CompassIcon";
+import { CompassIcon } from "../components";
 
 export default function NotFoundPage() {
   return (

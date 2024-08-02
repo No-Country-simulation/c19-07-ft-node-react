@@ -1,2 +1,0 @@
-export { Classmate } from "./Classmate";
-

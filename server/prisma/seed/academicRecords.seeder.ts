@@ -107,16 +107,21 @@ const seedAcademicRecords = async (): Promise<void> => {
   console.log('Empezando a cargar notas de evaluaciones en la base de datos')
   const students: IStudents[] = await prisma.students.findMany()
   const courses: ICourses[] = await prisma.courses.findMany()
+  const evaluationNames = ['Examen Parcial', 'Examen Final', 'Trabajo en Clase', 'Proyecto', 'Presentación']
   for (const student of students) {
-    await prisma.academic_records.create({
-      data: {
-        student_id: student.student_id,
-        curso_id: courses[faker.number.int({ min: 0, max: courses.length - 1 })].cursos_id,
-        mark: faker.number.float({ max: 20, min: 0, fractionDigits: 1 }), // Nota máxima 20
-        comment: faker.lorem.words({ min: 4, max: 10 }),
-        date: new Date()
-      }
-    })
+    const academicRecordCount = faker.number.int({ max: courses.length + 10, min: 1 })
+    for (let i = 0; i < academicRecordCount; i++) {
+      await prisma.academic_records.create({
+        data: {
+          student_id: student.student_id,
+          curso_id: courses[faker.number.int({ min: 0, max: courses.length - 1 })].cursos_id,
+          mark: faker.number.float({ max: 100, min: 0, fractionDigits: 1 }), // Nota máxima 20
+          comment: faker.lorem.words({ min: 4, max: 10 }),
+          date: new Date(),
+          name: evaluationNames[faker.number.int({ min: 0, max: 4 })]
+        }
+      })
+    }
   }
 }
 
@@ -131,6 +136,7 @@ const seedEvaluations = async (): Promise<void> => {
           curso_id: course.cursos_id,
           name: evaluationNames[faker.number.int({ min: 0, max: evaluationNames.length - 1 })],
           description: faker.lorem.words({ min: 4, max: 10 }),
+          periodo: 'PRIMER_PERIODO',
           date: faker.date.past()
         }
       })

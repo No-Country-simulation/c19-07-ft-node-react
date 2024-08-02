@@ -1,10 +1,15 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { Chat } from "../../../components";
 
 export default function TeacherChatPage() {
+  const location = useLocation();
   const { parentId } = useParams();
 
-  // TODO manejar exepción
+  const receiver = {
+    id: parentId!,
+    name: location.state.parentName,
+    email: location.state.parentEmail,
+  };
 
-  return <Chat receiverId={parentId!} />;
+  return <Chat receiver={receiver} />;
 }

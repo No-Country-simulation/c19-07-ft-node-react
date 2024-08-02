@@ -21,7 +21,7 @@ const ClassRoom = () => {
               {/* Contenedor Classs y chat */}
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6} md={6} lg={6}>
-                  <Link to="/class" style={{ textDecoration: "none" }}>
+                  <Link to="/teacher/class/" style={{ textDecoration: "none" }}>
                     <Box
                       component="div"
                       sx={{

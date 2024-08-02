@@ -1,30 +1,37 @@
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 
-const data = {
-  labels: ["January", "February", "March", "April", "May", "June", "July"],
-  datasets: [
-    {
-      label: "First dataset",
-      data: [33, 53, 85, 41, 44, 65, 34],
-      fill: false,
-      backgroundColor: "rgb(75, 192, 192)",
-      borderColor: "rgba(75, 192, 192, 0.2)",
-    },
-    {
-      label: "Second dataset",
-      data: [33, 25, 35, 51, 54, 76, 34],
-      fill: false,
-      backgroundColor: "rgb(75, 192, 192)",
-      borderColor: "rgba(75, 192, 192, 0.2)",
-    },
-  ],
-};
+import { Box } from "@mui/material";
 
-export const DashboardChart = () => {
+import { TopStudent } from "../../interfaces";
+
+const colors = ["#87CEEB", "#98FB98", "#FF7F50", "#FFD700", "#B1B1FF"];
+
+interface DashboardChartProps {
+  topStudents: TopStudent[];
+}
+
+export const DashboardChart = ({ topStudents }: DashboardChartProps) => {
+  const data = {
+    labels: [""],
+    datasets: topStudents.map((student, index) => ({
+      label: `${student.name} - ${student.grade}${student.section}`,
+      data: [+student.averageMark],
+      backgroundColor: colors[index],
+      borderColor: colors[index],
+    })),
+  };
+
   return (
-    <div>
-      <Bar data={data} />
-    </div>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100%"
+      mt={2}
+      px={{ md: 10 }}
+    >
+      <Bar data={data} style={{ maxHeight: "500px" }} />
+    </Box>
   );
 };

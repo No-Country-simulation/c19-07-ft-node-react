@@ -1,40 +1,36 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 
+import { Filter } from "../interfaces";
 import { userMessage } from "../constants";
 import { useAxiosPrivate } from "../../../hooks";
-import { Message, UsersResponse } from "../../../interfaces";
+import { StatusRespMsg, UsersResponse } from "../../../interfaces";
 
 interface UserContextProps {
   children: ReactNode;
 }
 
-export interface IFilter {
-  name?: string;
-  page?: string;
-  limit?: string;
-  typeUser?: string;
-}
-
-export interface IUserContextValue {
+export interface UserContextValue {
   user: UsersResponse | null;
   setUser: React.Dispatch<React.SetStateAction<UsersResponse | null>>;
-  filter: IFilter;
-  setFilter: React.Dispatch<React.SetStateAction<IFilter>>;
+  isLoading: boolean;
+  filter: Filter;
+  setFilter: React.Dispatch<React.SetStateAction<Filter>>;
   getUsers: () => Promise<void>;
-  createUser: (userData: any) => Promise<Message>;
-  deleteUser: (userId: string) => Promise<Message>;
-  updateUser: (userId: string, userData: any) => Promise<Message>;
+  createUser: (userData: any) => Promise<StatusRespMsg>;
+  deleteUser: (userId: string) => Promise<StatusRespMsg>;
+  updateUser: (userId: string, userData: any) => Promise<StatusRespMsg>;
 }
 
-export const UserContext = createContext<IUserContextValue | undefined>(
+export const UserContext = createContext<UserContextValue | undefined>(
   undefined
 );
 
 export const UserProvider = ({ children }: UserContextProps) => {
   const api = useAxiosPrivate();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<UsersResponse | null>(null);
-  const [filter, setFilter] = useState<IFilter>({
+  const [filter, setFilter] = useState<Filter>({
     name: "",
     page: "1",
     limit: "10",
@@ -42,15 +38,19 @@ export const UserProvider = ({ children }: UserContextProps) => {
   });
 
   const getUsers = async () => {
+    setIsLoading(true);
+
     const response = await api.get<UsersResponse>(
       `/admin/users?page=${filter.page}&limit=${filter.limit}&name=${filter.name}&type-user=${filter.typeUser}`
     );
+
     setUser(response.data);
+    setIsLoading(false);
   };
 
-  const createUser = async (userData: any): Promise<Message> => {
+  const createUser = async (data: any): Promise<StatusRespMsg> => {
     try {
-      const response = await api.post("/admin/create-user", userData);
+      const response = await api.post("/admin/create-user", data);
 
       if (response.data.success) {
         await getUsers();
@@ -64,12 +64,9 @@ export const UserProvider = ({ children }: UserContextProps) => {
     }
   };
 
-  const updateUser = async (
-    userId: string,
-    userData: any
-  ): Promise<Message> => {
+  const updateUser = async (id: string, data: any): Promise<StatusRespMsg> => {
     try {
-      const response = await api.put(`/admin/update-user/${userId}`, userData);
+      const response = await api.put(`/admin/update-user/${id}`, data);
 
       if (response.data.success) {
         await getUsers();
@@ -83,9 +80,9 @@ export const UserProvider = ({ children }: UserContextProps) => {
     }
   };
 
-  const deleteUser = async (userId: string): Promise<Message> => {
+  const deleteUser = async (id: string): Promise<StatusRespMsg> => {
     try {
-      const response = await api.delete(`/admin/delete-user/${userId}`);
+      const response = await api.delete(`/admin/delete-user/${id}`);
 
       if (response.data.success) {
         getUsers();
@@ -111,6 +108,7 @@ export const UserProvider = ({ children }: UserContextProps) => {
         setUser,
         getUsers,
         setFilter,
+        isLoading,
         deleteUser,
         createUser,
         updateUser,

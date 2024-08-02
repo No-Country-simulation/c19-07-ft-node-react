@@ -1,9 +1,10 @@
 import {
   Chat,
+  Class,
   Close,
   People,
   School,
-  Campaign,
+  GridView,
   AutoGraph,
   Dashboard,
   SquareFoot,
@@ -30,32 +31,32 @@ const drawerBackgroundColor = "#abd1c6";
 
 const parentOptions = [
   {
+    text: "Overview",
+    path: "/parents/my-child/overview",
+    icon: <GridView></GridView>,
+  },
+  {
     text: "Performance",
-    path: "/parents/performance",
+    path: "/parents/my-child/performance",
     icon: <AutoGraph></AutoGraph>,
   },
   {
-    text: "Classmates",
-    path: "/parents/classmates",
-    icon: <People></People>,
-  },
-  {
     text: "Chat",
-    path: "parents/contacts",
+    path: "/parents/contacts",
     icon: <Chat></Chat>,
   },
 ];
 
 const studentOptions = [
   {
-    text: "Performance",
-    path: "",
-    icon: <AutoGraph></AutoGraph>,
+    text: "Overview",
+    path: "/student/overview",
+    icon: <GridView></GridView>,
   },
   {
-    text: "Announcements",
-    path: "",
-    icon: <Campaign></Campaign>,
+    text: "Performance",
+    path: "/student/performance",
+    icon: <AutoGraph></AutoGraph>,
   },
 ];
 
@@ -63,7 +64,7 @@ const professorOptions = [
   {
     text: "Classes",
     path: "/teacher/class",
-    icon: <School></School>,
+    icon: <Class></Class>,
   },
   {
     text: "Chat",

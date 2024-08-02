@@ -15,12 +15,15 @@ professorRoutes.post('/', professorController.createProfessor)
 professorRoutes.get('/:id', professorController.getProfessorById)
 professorRoutes.patch('/:id', professorController.updateProfessor)
 professorRoutes.delete('/:id', professorController.deleteProfessor)
+
 // Evaluations Routes
 professorRoutes.post('/evaluations', professorController.createEvaluations)
-professorRoutes.get('/evaluations/:id', professorController.getEvaluationsByCourse)
+professorRoutes.get('/evaluations/:id', professorController.getAcademicRecordsByCourseId)
 professorRoutes.get('/evaluation_results/:id', professorController.getResultsFromOneAcademicRecord)
-professorRoutes.patch('/evaluations/:id', professorController.updateEvaluationById)
+professorRoutes.patch('/evaluations/:id', professorController.updateAcademicRecordById)
+professorRoutes.delete('/evaluations/:id', professorController.deleteAcademicRecordById)
 // Assigned Students
 professorRoutes.get('/assigned_students/:id', professorController.getAssignedStudents)
-
+// Get Period Marks
+professorRoutes.get('/period_marks/:id', professorController.getPeriodMarks)
 export default professorRoutes

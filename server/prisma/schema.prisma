@@ -26,6 +26,12 @@ enum type_state {
   INACTIVE
 }
 
+enum type_periodo_evaluation {
+  PRIMER_PERIODO
+  SEGUNDO_PERIODO
+  TERCER_PERIODO
+  CUARTO_PERIODO
+}
 model Users {
   user_id      String         @id @default(cuid())
   name         String
@@ -53,6 +59,7 @@ model Students {
   section                String
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
+  deletedAt              DateTime?
   user                   Users                @relation(fields: [user_id], references: [user_id])
   parentId               String               @unique // Agregamos el campo parentId para la relación
   parent                 Parents?             @relation(fields: [parentId], references: [parent_id])
@@ -84,6 +91,7 @@ model Parents {
   relation  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
   user      Users     @relation(fields: [user_id], references: [user_id])
   student   Students?
   alerts    Alerts[] // Relación uno a muchos con Alerts
@@ -100,13 +108,14 @@ model Alerts {
 
 model Professors {
   professor_id         String             @id @default(cuid())
-  user_id              String
+  user_id              String             @unique
   area_academica_id    String
   fecha_contratacion   String
   estado_empleado      String
   educational_level_id String
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
+  deletedAt            DateTime?
   user                 Users              @relation(fields: [user_id], references: [user_id])
   educational_level    Educational_levels @relation(fields: [educational_level_id], references: [level_id])
   academic_area        Academic_areas     @relation(fields: [area_academica_id], references: [academic_area_id])
@@ -120,6 +129,7 @@ model Academic_areas {
   educational_level String
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
+  deletedAt         DateTime?
   courses           Courses[]
   professors        Professors[]
 }
@@ -130,6 +140,9 @@ model Courses {
   descripcion       String
   professor_id      String
   area_academica_id String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  deletedAt         DateTime?
   academic_area     Academic_areas     @relation(fields: [area_academica_id], references: [academic_area_id])
   academic_record   Academic_records[]
   evaluations       Evaluations[]
@@ -139,7 +152,7 @@ model Courses {
 
 model Academic_records {
   historial_id String   @id @default(cuid())
-  name String? @default("")
+  name String 
   curso_id     String
   curso        Courses  @relation(fields: [curso_id], references: [cursos_id])
   mark         Float
@@ -155,6 +168,7 @@ model Evaluations {
   curso             Courses              @relation(fields: [curso_id], references: [cursos_id])
   name              String
   description       String
+  periodo           type_periodo_evaluation?
   date              DateTime             @default(now())
   evaluation_result Evaluation_results[]
 }
@@ -167,6 +181,7 @@ model Evaluation_results {
   student       Students    @relation(fields: [student_id], references: [student_id])
   mark          Float
   comment       String
+  createdAt     DateTime    @default(now())
 }
 
 model Educational_levels {

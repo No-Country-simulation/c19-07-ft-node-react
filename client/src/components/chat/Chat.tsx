@@ -19,11 +19,17 @@ type Message = {
   userReceiveId: string;
 };
 
+type Receiver = {
+  id: string;
+  name: string;
+  email: string;
+};
+
 interface ChatProps {
-  receiverId: string;
+  receiver: Receiver;
 }
 
-export const Chat = ({ receiverId }: ChatProps) => {
+export const Chat = ({ receiver }: ChatProps) => {
   const { user } = useAuthStore();
 
   const msgsContainerRef = useRef<HTMLDivElement>(null);
@@ -35,11 +41,10 @@ export const Chat = ({ receiverId }: ChatProps) => {
   };
 
   useEffect(() => {
-    if (user?.user_id && receiverId) {
-      console.log("Registering socket with user ID:", user.user_id);
+    if (user?.user_id && receiver.id) {
       socket.emit("register", {
         userId: user.user_id,
-        userReceiveId: receiverId,
+        userReceiveId: receiver.id,
       });
 
       const handleMessageHistory = (messages: Message[]) => {
@@ -52,8 +57,6 @@ export const Chat = ({ receiverId }: ChatProps) => {
       };
 
       const handleMessage = (msg: Message) => {
-        console.log("Message received:", msg);
-
         setMessages((prevMessages) => {
           if (prevMessages.some((m) => m.message_id === msg.message_id)) {
             return prevMessages;
@@ -71,21 +74,16 @@ export const Chat = ({ receiverId }: ChatProps) => {
         socket.off("messageHistory", handleMessageHistory);
       };
     }
-  }, [user?.user_id, receiverId]);
-
-  useEffect(() => {
-    console.log(messages);
-  }, [messages]);
+  }, [user?.user_id, receiver.id]);
 
   const handleSendMessage = (message: string) => {
-    if (user?.user_id && receiverId) {
+    if (user?.user_id && receiver.id) {
       const messageData = {
         message,
         userSendID: user.user_id,
-        userReceiveId: receiverId,
+        userReceiveId: receiver.id,
       };
 
-      console.log("Sending message data:", messageData);
       socket.emit("sendMessage", messageData);
 
       setMessages((prevMessages) => [
@@ -106,7 +104,11 @@ export const Chat = ({ receiverId }: ChatProps) => {
       height="100%"
       borderRadius={1}
     >
-      <ChatParticipants onClearChat={() => setMessages([])} />
+      <ChatParticipants
+        receiverName={receiver.name}
+        receiverEmail={receiver.email}
+        onClearChat={() => setMessages([])}
+      />
 
       <Box
         px={2}

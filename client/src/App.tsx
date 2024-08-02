@@ -6,12 +6,7 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 
-import {
-  HomePage,
-  WelcomePage,
-  NotFoundPage,
-  ParentStudientPrincipalPage,
-} from "./pages";
+import { HomePage, WelcomePage, NotFoundPage } from "./pages";
 import {
   RequireRole,
   PublicRoute,
@@ -23,6 +18,7 @@ import { LoginPage, AuthLayout } from "./modules/auth/";
 import {
   TeacherClass,
   TeacherLayout,
+  TeacherReport,
   TeacherCalendar,
   TeacherChatPage,
   TeacherClassChosen,
@@ -30,10 +26,12 @@ import {
   TeacherClassStudents,
 } from "./modules/teacher";
 import {
-  Classmates,
   ParentsLayout,
+  ParentProvider,
   ParentsChatPage,
   ParentsContactsPage,
+  ParentsOverviewPage,
+  ParentsPerformancePage,
 } from "./modules/parents";
 import {
   AdminLayout,
@@ -44,8 +42,12 @@ import {
   AdminDashboardPage,
   AdminAcademicAreasPage,
 } from "./modules/admin";
-
-import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
+import {
+  StudentLayout,
+  StudentProvider,
+  StudentOverviewPage,
+  StudentPerformancePage,
+} from "./modules/student";
 
 import { useAuthStore } from "./hooks";
 
@@ -94,8 +96,8 @@ const router = createBrowserRouter([
             element: <TeacherChatPage />,
           },
           {
-            path: "classNewStudents",
-            element: <TeacherClassNewStudents />,
+            path: "class/student/report/:studentId/:courseId",
+            element: <TeacherReport />,
           },
           {
             path: "calendar",
@@ -112,17 +114,19 @@ const router = createBrowserRouter([
         path: "parents/*",
         element: (
           <RequireRole allowedRoles={["PARENTS"]}>
-            <ParentsLayout />
+            <ParentProvider>
+              <ParentsLayout />
+            </ParentProvider>
           </RequireRole>
         ),
         children: [
           {
-            path: "performance",
-            element: <ParentStudientPrincipalPage />,
+            path: "my-child/overview",
+            element: <ParentsOverviewPage />,
           },
           {
-            path: "classmates",
-            element: <Classmates />,
+            path: "my-child/performance",
+            element: <ParentsPerformancePage />,
           },
           {
             path: "contacts",
@@ -143,10 +147,25 @@ const router = createBrowserRouter([
         path: "student",
         element: (
           <RequireRole allowedRoles={["STUDENT"]}>
-            <ParentStudientPrincipalPage />
+            <StudentProvider>
+              <StudentLayout />
+            </StudentProvider>
           </RequireRole>
         ),
-        children: [],
+        children: [
+          {
+            path: "overview",
+            element: <StudentOverviewPage />,
+          },
+          {
+            path: "performance",
+            element: <StudentPerformancePage />,
+          },
+          {
+            path: "*",
+            element: <Navigate to="overview" replace />,
+          },
+        ],
       },
       // Admin
       {

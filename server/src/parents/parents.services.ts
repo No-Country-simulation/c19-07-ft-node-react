@@ -2,12 +2,28 @@ import { Parents } from '@prisma/client'
 import * as parentRepository from '../parents/parents.repository'
 import { CreateParents } from '../types/parents.type'
 import z, { any } from 'zod'
+import { NextFunction } from 'express'
 
-export const getAllParents = async (): Promise<Parents[]> => {
-  return await parentRepository.getAllParent()
+// export const getAllParents = async (): Promise<Parents[]> => {
+//   return await parentRepository.getAllParent()
+// }
+
+export const getAllParents = async ()=> {
+  const parents = await parentRepository.getAllParent()
+  return parents.map(parent => ({
+    parent_id: parent.parent_id,
+    user_id: parent.user_id,
+    name: parent.user.name,
+    email: parent.user.email,
+    relation: parent.relation,
+    createdAt: parent.createdAt,
+    updatedAt: parent.updatedAt,
+    deletedAt: parent.deletedAt,
+  }))
 }
 
-export const createParents = async (data: Omit<Parents, 'updateAt' | 'parent_id'>): Promise<Parents> => {
+
+export const createParents = async (data: Omit<Parents, 'updateAt' | 'parent_id' | 'deletedAt'>): Promise<Parents> => {
   return await parentRepository.createParent(data)
 }
 
@@ -166,6 +182,63 @@ export const getStudentsWithDetailsService = async (): Promise<StudentDetails[]>
 
   return data2
 }
+//---------------------//---------------------//---------------------
+//---------------------//---------------------//---------------------
+
+// export const getStudent = async (req: ICustomRequest, res: Response, next: NextFunction): Promise<void> => {
+//   try {
+//     const data = await parentRepository.getStudentsWitchDetails(req.params.id)
+//     if (data === null) throw new Error('Student not found')
+//     const formatedData = [data].map((student) => {
+//       return {
+//         grade: student.grade,
+//         section: student.section,
+//         student_id: student.student_id,
+//         name: student.user.name,
+//         courses: student.courses.map((course) => {
+//           return {
+//             course_id: course.cursos_id,
+//             name: course.nombre,
+//             professor: course.professor.user.name
+//           }
+//         })
+//       }
+//     })
+//     const templateData = formatedData.map((data) => {
+//       return {
+//         student: {
+//           grade: data.grade,
+//           section: data.section,
+//           studentId: data.student_id,
+//           data: data.name
+//         },
+//         course: data.courses.map((course) => {
+//           return {
+//             courseId: course.course_id,
+//             courseName: course.name
+//           }
+//         }),
+//         professor: data.courses.map(course => course.professor)
+
+//       }
+//     })
+//     res.status(200).json(formatedData)
+//   } catch (error) {
+//     console.log(error)
+//     next(error)
+//   }
+// }
+
+
+
+
+
+
+//---------------------//---------------------//---------------------
+//---------------------//---------------------//---------------------
+
+
+
 
 // GET BY ID
 export const getStudentByIdService = async (id: string): Promise<StudentDetails | null> => {
@@ -214,6 +287,13 @@ export const getStudentByIdService = async (id: string): Promise<StudentDetails 
 
 export const getStudentParentDetailsServices = async () => {
   const data = await parentRepository.getStudentParentDetailsRepository()
+
+  return data
+}
+
+//get relation parent with student
+export const getRelationParentWithStudentService = async (id: string) => {
+  const data = await parentRepository.getRelationParentWithStudentRepository(id)
 
   return data
 }

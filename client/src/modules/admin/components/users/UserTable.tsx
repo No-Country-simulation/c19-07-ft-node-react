@@ -13,6 +13,7 @@ import { CreateUserFormData, EditUserFormData } from "../../schemas";
 
 import { UserEditForm } from "./UserEditForm";
 import { UserCreateForm } from "./UserCreateForm";
+import { StatusRespMsg } from "../../../../interfaces";
 import { showStatusSnackbar } from "../../../../helpers";
 
 interface UserTableProps {
@@ -24,22 +25,28 @@ export const UserTable = ({
   openCreateModal,
   closeCreateModal,
 }: UserTableProps) => {
-  const [isDeletingUser, setIsDeletingUser] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { closeModal, openModal, modalState } = useModal();
-  const { user, createUser, updateUser, deleteUser, filter, setFilter } =
-    useContextUser();
+  const {
+    user,
+    filter,
+    setFilter,
+    isLoading,
+    updateUser,
+    deleteUser,
+    createUser,
+  } = useContextUser();
 
   // ? User creation
   const handleSubmitCreateForm = async (data: CreateUserFormData) => {
-    await createUser(data)
-      .then((res) => {
-        showStatusSnackbar(res);
-        closeCreateModal();
-      })
-      .catch((error) => {
-        showStatusSnackbar(error);
-      });
+    try {
+      const res = await createUser(data);
+      showStatusSnackbar(res);
+      closeCreateModal();
+    } catch (error) {
+      showStatusSnackbar(error as StatusRespMsg);
+    }
   };
 
   // ? User update
@@ -52,14 +59,13 @@ export const UserTable = ({
   };
 
   const handleSubmitEditForm = async (data: EditUserFormData) => {
-    await updateUser(modalState.payload?.user_id, data)
-      .then((res) => {
-        showStatusSnackbar(res);
-        closeCreateModal();
-      })
-      .catch((error) => {
-        showStatusSnackbar(error);
-      });
+    try {
+      const res = await updateUser(modalState.payload?.user_id, data);
+      showStatusSnackbar(res);
+      closeModal();
+    } catch (error) {
+      showStatusSnackbar(error as StatusRespMsg);
+    }
   };
 
   // ? User deletion
@@ -68,18 +74,17 @@ export const UserTable = ({
   };
 
   const handleConfirmDeletion = async () => {
-    setIsDeletingUser(true);
+    setIsDeleting(true);
 
-    await deleteUser(modalState.payload?.user_id)
-      .then((res) => {
-        showStatusSnackbar(res);
-        closeModal();
-        setIsDeletingUser(false);
-      })
-      .catch((error) => {
-        setIsDeletingUser(false);
-        showStatusSnackbar(error);
-      });
+    try {
+      const res = await deleteUser(modalState.payload?.user_id);
+      showStatusSnackbar(res);
+      closeModal();
+    } catch (error) {
+      showStatusSnackbar(error as StatusRespMsg);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // ? Pagination
@@ -100,24 +105,23 @@ export const UserTable = ({
     }));
   };
 
-  if (user === null) return <p>...cargando</p>;
-
   return (
     <CustomTable
-      rows={user.data.items}
+      rows={user?.data.items || []}
       columns={userTableColumns}
       onEdit={handleEditUser}
       onDelete={handleDeleteUser}
-      isLoading={false}
+      isLoading={isLoading}
     >
       <TablePagination
         rowsPerPageOptions={[10, 20, 30, 40, 50]}
         component="div"
-        count={user.data.meta.totalItems}
+        count={user?.data.meta.totalItems || 0}
         rowsPerPage={Number(filter.limit)}
         page={Number(filter.page) - 1}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        disabled={isLoading}
       />
 
       <CustomDialog
@@ -141,7 +145,7 @@ export const UserTable = ({
 
       <ConfirmModal
         open={modalState.type === "delete"}
-        isLoading={isDeletingUser}
+        isLoading={isDeleting}
         onClose={closeModal}
         confirmText={`Are you sure to delete the user "${modalState.payload?.name}"?`}
         onConfirm={handleConfirmDeletion}
