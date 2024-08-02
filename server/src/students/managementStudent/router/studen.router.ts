@@ -6,5 +6,5 @@ const router = Router()
 
 router.get('/dashboard/:studentId/', studentctl.getDashboardData)
 router.get('/get-evaluations-by-periodo', studentctl.getEvaluationsByPeriodoOfStudent)
-router.get('/get-10-evaluations-results', studentctl.get10EvaluationsResults)
+router.get('/get-10-evaluations-results/:studentId', studentctl.get10EvaluationsResults)
 export default router
