@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-extra-non-null-assertion */
 /* eslint-disable @typescript-eslint/naming-convention */
 // src/modules/professors/services/professor.service.ts
-import { Academic_records, Courses, Evaluation_results, Evaluations, Parents, Professors, Students, Users } from '@prisma/client'
+import { Academic_records, Courses, Professors, Students, Users } from '@prisma/client'
 import * as professorRepository from '../professors/professors.repository'
 import { CreateAcademicRecord, CreateProfessor, StudentsAndCourse, StudentsWithData } from '../types/professors.type'
 import z from 'zod'
@@ -13,9 +13,7 @@ import { getUserByIdServices } from '../users/users.services'
 import { ValidationError } from '../errors/validationError'
 import { ParsedQs } from 'qs'
 import { NotFoundError } from '../errors/notFoundError'
-import { truncate } from 'fs'
 import { PERIOD_ONE, PERIOD_THREE, PERIOD_TWO } from '../constants/date.const'
-import { NOTFOUND } from 'dns'
 import { getParentById } from '../parents/parents.repository'
 
 // export const getAllProfessors = async (): Promise<Professors[]> => {
