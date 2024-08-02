@@ -7,8 +7,11 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-env/.env.*
-!env/.env.sample
+# Archivos de configuración locales
+.env
+/env/*.env
+/env/.env.*
+!/env/.env.sample
 
 node_modules
 dist
