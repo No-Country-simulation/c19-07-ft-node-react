@@ -1,7 +1,6 @@
 import type { PropsWithChildren } from "react";
 
 import {
-  // Box,
   Card,
   Typography,
   CardContent,

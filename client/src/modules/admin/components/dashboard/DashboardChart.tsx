@@ -1,8 +1,9 @@
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 
-import { TopStudent } from "../../interfaces";
 import { Box } from "@mui/material";
+
+import { TopStudent } from "../../interfaces";
 
 const colors = ["#87CEEB", "#98FB98", "#FF7F50", "#FFD700", "#B1B1FF"];
 

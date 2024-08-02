@@ -1,22 +1,35 @@
-import { Box } from "@mui/material";
+import { Box, Chip, Stack } from "@mui/material";
+
+import { OverviewData } from "../../interfaces";
+import { generateRandomColor } from "../../utils";
 
 import { CustomCard } from "../ui/CustomCard";
+import { FeedbackSlider } from "./FeedbackSlider";
 import { EvaluationResultsChart } from "./EvaluationResultsChart";
+
+const periods: Record<string, string> = {
+  PRIMER_PERIODO: "1st Period",
+  SEGUNDO_PERIODO: "2nd Period",
+  TERCER_PERIODO: "3rd Period",
+  CUARTO_PERIODO: "4th Period",
+};
 
 interface OverviewProps {
   parentView?: boolean;
-  studentName?: string;
-  courses?: any;
-  grade?: string;
-  section?: string;
-  overallAverage?: number;
-  overallFeedback?: string;
-  evaluationResults?: any;
+  overviewData: OverviewData;
 }
 
-export const Overview = ({ parentView, studentName }: OverviewProps) => {
+export const Overview = ({ parentView, overviewData }: OverviewProps) => {
+  const { courses, infoStudent, evaluationsByPeriod, overallAverageByPeriod } =
+    overviewData;
+
   const gradeTopText = parentView ? "Grade" : "My grade";
-  const gradeSubheading = "Currently in 5°, section A";
+  const gradeSubheading = `Currently in ${infoStudent.grade}°, section ${infoStudent.section}`;
+
+  const overallAverage = overallAverageByPeriod[0].average.toFixed(2);
+  const currentPeriod = `Corresponds to the ${
+    periods[overallAverageByPeriod[0].period]
+  }`;
 
   const coursesHeading = parentView ? "Courses" : "My courses";
   const coursesSubheading = parentView
@@ -26,9 +39,18 @@ export const Overview = ({ parentView, studentName }: OverviewProps) => {
   const feedbackSubheading = parentView
     ? "What teachers say about son my performance..."
     : "What teachers say about my performance...";
+  const comments = evaluationsByPeriod[0].evaluations.map(
+    (ev) => ev.evaluationResult.coment
+  );
 
   return (
-    <Box height="100%" display="flex" flexDirection="column" gap={2}>
+    <Box
+      height={{ sm: "100%" }}
+      width="100%"
+      display="flex"
+      flexDirection="column"
+      gap={2}
+    >
       <Box
         height={{ md: "50%" }}
         display="flex"
@@ -42,23 +64,35 @@ export const Overview = ({ parentView, studentName }: OverviewProps) => {
           gap={2}
         >
           {parentView && (
-            <CustomCard heading={studentName} headingVariant="h5" />
+            <CustomCard
+              heading={infoStudent.name}
+              headingVariant="h5"
+              sx={{ width: "100%" }}
+            />
           )}
 
           <CustomCard
-            heading="5A"
-            headingVariant="h1"
+            heading={`${infoStudent.grade}${infoStudent.section}`}
+            headingVariant="h2"
             topText={gradeTopText}
             subHeading={gradeSubheading}
-            sx={{ width: "100%", height: "100%" }}
+            sx={{
+              width: "100%",
+              height: "100%",
+              textAlign: { xs: "center", sm: "left" },
+            }}
           />
 
           <CustomCard
-            heading="8.5"
-            headingVariant="h1"
+            heading={overallAverage}
+            headingVariant="h2"
             topText="Overall average"
-            subHeading="Current period: 3"
-            sx={{ width: "100%", height: "100%" }}
+            subHeading={currentPeriod}
+            sx={{
+              width: "100%",
+              height: "100%",
+              textAlign: { xs: "center", sm: "left" },
+            }}
           />
         </Box>
 
@@ -68,7 +102,9 @@ export const Overview = ({ parentView, studentName }: OverviewProps) => {
           subHeading="Rating obtained in the last 5 evaluations of the current period"
           sx={{ width: { md: "70%" } }}
         >
-          <EvaluationResultsChart />
+          <EvaluationResultsChart
+            evaluations={evaluationsByPeriod[0].evaluations}
+          />
         </CustomCard>
       </Box>
 
@@ -78,21 +114,42 @@ export const Overview = ({ parentView, studentName }: OverviewProps) => {
         flexDirection={{ xs: "column", sm: "row" }}
         gap={2}
       >
-        {/* un despleglabe por cada area academica (adentro los cursos) o una lista */}
         <CustomCard
           heading={coursesHeading}
           headingVariant="h5"
           subHeading={coursesSubheading}
-          sx={{ width: "100%" }}
-        ></CustomCard>
-        {/* carousel o background image */}
+          sx={{ width: { sm: "50%" }, height: "100%" }}
+        >
+          <Stack
+            mt={2}
+            gap={2}
+            height="100%"
+            direction="row"
+            flexWrap="wrap"
+            alignItems="center"
+            justifyContent="center"
+          >
+            {courses.map(({ name }) => (
+              <Chip
+                label={name}
+                sx={{
+                  p: 4,
+                  color: "white",
+                  fontSize: "2rem",
+                  bgcolor: generateRandomColor(),
+                }}
+              />
+            ))}
+          </Stack>
+        </CustomCard>
+
         <CustomCard
           heading="Overall Feedback"
           headingVariant="h5"
           subHeading={feedbackSubheading}
-          sx={{ width: "100%" }}
+          sx={{ width: { sm: "50%" } }}
         >
-          {/* {overallFeedback} */}
+          <FeedbackSlider comments={comments} />
         </CustomCard>
       </Box>
     </Box>

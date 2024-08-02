@@ -1,24 +1,38 @@
-import { Box } from "@mui/material";
 import "chart.js/auto";
 import { Pie } from "react-chartjs-2";
 
-const data = {
-  labels: ["Red", "Blue", "Yellow"],
-  datasets: [
-    {
-      label: "My First Dataset",
-      data: [300, 50, 100],
-      backgroundColor: [
-        "rgb(255, 99, 132)",
-        "rgb(54, 162, 235)",
-        "rgb(255, 205, 86)",
-      ],
-      hoverOffset: 4,
-    },
-  ],
-};
+import { Box } from "@mui/material";
+import { Evaluation } from "../../interfaces";
 
-export const EvaluationResultsChart = () => {
+const colors = [
+  "#FF7F7F", // Soft Red
+  "#FFB27F", // Soft Orange
+  "#FFF47F", // Soft Yellow
+  "#7FFF9F", // Soft Green
+  "#7FD4FF", // Soft Blue
+  "#B27FFF", // Soft Violet
+  "#FF7FB2", // Bright Pink
+  "#FFA77F", // Soft Coral
+];
+
+interface EvalutionResultsChartProps {
+  evaluations: Evaluation[];
+}
+
+export const EvaluationResultsChart = ({
+  evaluations,
+}: EvalutionResultsChartProps) => {
+  const data = {
+    labels: evaluations.map((ev) => ev.nameEvaluation),
+    datasets: [
+      {
+        data: evaluations.map((ev) => ev.evaluationResult.mark),
+        backgroundColor: evaluations.map((_, i) => colors[i]),
+        hoverOffset: 4,
+      },
+    ],
+  };
+
   return (
     <Box
       display="flex"

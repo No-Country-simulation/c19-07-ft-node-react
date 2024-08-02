@@ -49,6 +49,7 @@ import {
 import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
 
 import { useAuthStore } from "./hooks";
+import { StudentProvider } from "./modules/student/contexts/StudentContext";
 
 const router = createBrowserRouter([
   {
@@ -144,7 +145,9 @@ const router = createBrowserRouter([
         path: "student",
         element: (
           <RequireRole allowedRoles={["STUDENT"]}>
-            <StudentLayout />
+            <StudentProvider>
+              <StudentLayout />
+            </StudentProvider>
           </RequireRole>
         ),
         children: [
