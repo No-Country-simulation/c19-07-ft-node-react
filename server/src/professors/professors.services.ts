@@ -4,7 +4,7 @@
 // src/modules/professors/services/professor.service.ts
 import { Academic_records, Courses, Professors, Students, Users } from '@prisma/client'
 import * as professorRepository from '../professors/professors.repository'
-import { CreateAcademicRecord, CreateProfessor, StudentsAndCourse, StudentsWithData } from '../types/professors.type'
+import { CreateAcademicRecord, CreateProfessor, RecordsWithPeriod, StudentsAndCourse, StudentsWithData } from '../types/professors.type'
 import z from 'zod'
 import { getStudentEducationalLevel, getStudentMarksByCourse, studentsFromCourse } from '../students/students.services'
 import { DatabaseError } from '../errors/databaseError'
@@ -158,10 +158,18 @@ const getStudentData = async (students: Students[], courseId: string): Promise<S
   }
 }
 
-const getStudentAcademicRecords = async (courseId: string, studentId: string): Promise<Academic_records[] | undefined> => {
+const getStudentAcademicRecords = async (courseId: string, studentId: string): Promise<RecordsWithPeriod[] | undefined> => {
   const records = await getStudentMarksByCourse(courseId, studentId)
   if (records.length <= 0) return
-  return records
+  const periodOne = new Date(PERIOD_ONE)
+  const periodTwo = new Date(PERIOD_TWO)
+  const periodThree = new Date(PERIOD_THREE)
+  const recordsWithPeriod: RecordsWithPeriod[] = records.map(record => {
+    if (record.date.getTime() >= periodOne.getTime() && record.date.getTime() < periodTwo.getTime()) return { ...record, period: 1 }
+    if (record.date.getTime() >= periodTwo.getTime() && record.date.getTime() < periodThree.getTime()) return { ...record, period: 2 }
+    return { ...record, period: 3 }
+  })
+  return recordsWithPeriod
 }
 
 const getParentDataById = async (parentId: string): Promise<string | undefined> => {
