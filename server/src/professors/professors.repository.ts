@@ -16,9 +16,10 @@ const prisma = new PrismaClient()
 export const getAllProfessors = async () => {
   return await prisma.professors.findMany({
     include: {
-      user: {
-        select: {
-          name: true
+      user:{
+        select:{
+          name:true,
+          email: true,
         }
       }
     }

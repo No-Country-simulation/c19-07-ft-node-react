@@ -1,16 +1,15 @@
 import {
   Chat,
+  Class,
   Close,
   People,
   School,
   GridView,
   AutoGraph,
   Dashboard,
-  Assessment,
   SquareFoot,
   BorderColor,
   FamilyRestroom,
-  Class,
 } from "@mui/icons-material";
 import {
   Box,
@@ -33,7 +32,7 @@ const drawerBackgroundColor = "#abd1c6";
 const parentOptions = [
   {
     text: "Overview",
-    path: "/student/my-child/overview",
+    path: "/parents/my-child/overview",
     icon: <GridView></GridView>,
   },
   {
@@ -42,13 +41,8 @@ const parentOptions = [
     icon: <AutoGraph></AutoGraph>,
   },
   {
-    text: "Assessments",
-    path: "/parents/my-child/assessments",
-    icon: <Assessment></Assessment>,
-  },
-  {
     text: "Chat",
-    path: "parents/contacts",
+    path: "/parents/contacts",
     icon: <Chat></Chat>,
   },
 ];
@@ -63,11 +57,6 @@ const studentOptions = [
     text: "Performance",
     path: "/student/performance",
     icon: <AutoGraph></AutoGraph>,
-  },
-  {
-    text: "Assessments",
-    path: "/student/assessments",
-    icon: <Assessment></Assessment>,
   },
 ];
 

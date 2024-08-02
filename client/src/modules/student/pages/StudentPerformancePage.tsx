@@ -1,16 +1,14 @@
-import { Box } from "@mui/material";
+import { useContextStudent } from "../hooks";
+import { Performance } from "../../../components";
 
 export default function StudentPerformancePage() {
+  const { overviewData } = useContextStudent();
+
+  if (overviewData === null) return <p>Loading...</p>;
+
   return (
-    <Box>
-      {/* Mostrar el rendimiento de 4 formas distintas */}
-      {/* Una tabla simple con las notas de cada materia */}
-
-      {/*  */}
-
-      {/* Feedback general */}
-
-      {/* Un grafico con las notas de los últimos parciales */}
-    </Box>
+    <Performance
+      evaluations={overviewData.evaluationsByPeriod[0].evaluations}
+    />
   );
 }

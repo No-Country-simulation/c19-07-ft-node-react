@@ -1,13 +1,10 @@
-import { Box } from "@mui/material";
+import { useContextStudent } from "../hooks";
+import { Overview, OverviewSkeleton } from "../../../components";
 
 export default function StudentOverviewPage() {
-  return (
-    <Box>
-     {/* Grade - Section */}
+  const { overviewData } = useContextStudent();
 
-     {/* Overall Average */}
+  if (overviewData === null) return <OverviewSkeleton />;
 
-     {/* Chart */}
-    </Box>
-  );
+  return <Overview overviewData={overviewData} />;
 }

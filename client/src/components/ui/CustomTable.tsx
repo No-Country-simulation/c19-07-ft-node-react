@@ -3,12 +3,12 @@ import {
   Table,
   Tooltip,
   TableRow,
+  Skeleton,
   TableCell,
   TableBody,
   TableHead,
   IconButton,
   TableContainer,
-  CircularProgress,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
@@ -117,16 +117,18 @@ export const CustomTable = ({
                 </TableCell>
               </TableRow>
             )}
-            {isLoading && (
-              <TableRow>
-                <TableCell
-                  colSpan={actions ? columns.length + 1 : columns.length}
-                  align="center"
-                >
-                  <CircularProgress />
-                </TableCell>
-              </TableRow>
-            )}
+            {isLoading &&
+              Array.from({ length: rows.length ? rows.length : 10 }).map(
+                (_, index) => (
+                  <TableRow key={index}>
+                    <TableCell
+                      colSpan={actions ? columns.length + 1 : columns.length}
+                    >
+                      <Skeleton height="40px" />
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
           </TableBody>
         </Table>
       </TableContainer>

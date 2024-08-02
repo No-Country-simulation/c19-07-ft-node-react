@@ -40,10 +40,6 @@ export const LoginForm = () => {
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
-    defaultValues: {
-      email: "49luisa.garcia@example.com",
-      password: "yyRmeNQJ",
-    },
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof loginFormSchema>> = async (

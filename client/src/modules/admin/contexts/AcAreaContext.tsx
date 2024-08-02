@@ -12,6 +12,7 @@ interface AcAreaContextProps {
 export interface AcAreaContextValue {
   acArea: AcademicAreasResponse | null;
   setAcArea: React.Dispatch<React.SetStateAction<AcademicAreasResponse | null>>;
+  isLoading: boolean;
   filter: Filter;
   setFilter: React.Dispatch<React.SetStateAction<Filter>>;
   getAcAreas: () => Promise<void>;
@@ -27,6 +28,7 @@ export const AcAreaContext = createContext<AcAreaContextValue | undefined>(
 export const AcAreaProvider = ({ children }: AcAreaContextProps) => {
   const api = useAxiosPrivate();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [acArea, setAcArea] = useState<AcademicAreasResponse | null>(null);
   const [filter, setFilter] = useState<Filter>({
     name: "",
@@ -36,10 +38,14 @@ export const AcAreaProvider = ({ children }: AcAreaContextProps) => {
   });
 
   const getAcAreas = async () => {
+    setIsLoading(true);
+
     const response = await api.get<AcademicAreasResponse>(
       `/academic-area/?page=${filter.page}&limit=${filter.limit}&name=${filter.name}`
     );
+
     setAcArea(response.data);
+    setIsLoading(false);
   };
 
   const createAcArea = async (data: any): Promise<StatusRespMsg> => {
@@ -104,6 +110,7 @@ export const AcAreaProvider = ({ children }: AcAreaContextProps) => {
         filter,
         setFilter,
         setAcArea,
+        isLoading,
         getAcAreas,
         deleteAcArea,
         createAcArea,

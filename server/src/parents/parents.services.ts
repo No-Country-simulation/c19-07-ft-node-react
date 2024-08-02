@@ -13,11 +13,12 @@ export const getAllParents = async ()=> {
   return parents.map(parent => ({
     parent_id: parent.parent_id,
     user_id: parent.user_id,
+    name: parent.user.name,
+    email: parent.user.email,
     relation: parent.relation,
     createdAt: parent.createdAt,
     updatedAt: parent.updatedAt,
     deletedAt: parent.deletedAt,
-    name: parent.user.name  
   }))
 }
 

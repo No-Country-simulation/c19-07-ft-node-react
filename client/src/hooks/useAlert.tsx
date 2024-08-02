@@ -1,30 +1,30 @@
-import { useEffect, useState } from "react"
-import { useAxiosPrivate } from "./useAxiosPrivate"
+import { useEffect, useState } from "react";
+
 import { useAppSelector } from "./reduxTypedHooks";
-
-
+import { useAxiosPrivate } from "./useAxiosPrivate";
 
 export const useAlert = () => {
-    const { user } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
 
-    const [alert, setAlert] = useState<any>([]);
+  const api = useAxiosPrivate();
 
-    console.log(user)
-    const api = useAxiosPrivate()
-    useEffect(() => {
-        api.get(`/alerts/${user?.user_id}`).then((res) => {
-        if(res.status === 200){ setAlert(res.data) }
+  const [alert, setAlert] = useState<any>([]);
 
-        }).catch((error:any) => {
-            console.log(error)
-        })
+  useEffect(() => {
+    api
+      .get(`/alerts/${user?.user_id}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setAlert(res.data);
+        }
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
+  }, []);
 
-    }
-
-    , [])
-
-    return {
-        alert,setAlert
-    }
-
-}
+  return {
+    alert,
+    setAlert,
+  };
+};
