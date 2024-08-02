@@ -39,14 +39,7 @@ class Server {
 
   routes (): void {
     this.app.use('/api/v1/auth', authRoutes)
-<<<<<<< Updated upstream
     this.app.use('/api/v1', verifyToken, router)
-=======
-    this.app.use('/api/v1'
-      , verifyToken
-      , router)
-
->>>>>>> Stashed changes
     this.app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
   }
 
