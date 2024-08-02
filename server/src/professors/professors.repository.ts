@@ -26,8 +26,6 @@ export const getAllProfessors = async () => {
   })
 }
 
-
-
 export const createProfessor = async (data: Omit<Professors, ('professor_id' | 'createdAt' | 'updateAt' | 'deletedAt')>): Promise<Professors> => {
   try {
     return await prisma.professors.create({ data })
@@ -146,6 +144,14 @@ export const getAcademicRecordsByStudent = async (student_id: string): Promise<A
 export const getCourseById = async (cursos_id: string): Promise<Courses | null> => {
   try {
     return await prisma.courses.findFirst({ where: { cursos_id } })
+  } catch (err: any) {
+    throw new DatabaseError(err.message)
+  }
+}
+
+export const deleteAcademicRecordById = async (historial_id: string): Promise<Academic_records> => {
+  try {
+    return await prisma.academic_records.delete({ where: { historial_id } })
   } catch (err: any) {
     throw new DatabaseError(err.message)
   }

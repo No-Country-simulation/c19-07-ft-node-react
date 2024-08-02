@@ -290,3 +290,10 @@ export const getStudentParentDetailsServices = async () => {
 
   return data
 }
+
+//get relation parent with student
+export const getRelationParentWithStudentService = async (id: string) => {
+  const data = await parentRepository.getRelationParentWithStudentRepository(id)
+
+  return data
+}

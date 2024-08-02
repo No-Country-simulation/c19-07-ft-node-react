@@ -90,6 +90,7 @@ const getUserProfile = async () => {
 
     return response.data.data;
   } catch (error) {
+    console.error(error)
     throw new Error("User profile could not be obtained");
   }
 };
