@@ -68,6 +68,7 @@ export const Performance = ({ evaluations }: PerformanceProps) => {
 
         <CustomCard
           heading=" Global Evaluation by Course"
+          headingVariant="h5"
           sx={{ width: "100%" }}
         >
           <RadarChart data={data} />
@@ -82,6 +83,7 @@ export const Performance = ({ evaluations }: PerformanceProps) => {
       >
         <CustomCard
           heading="Distribution of Grades by Evaluation"
+          headingVariant="h5"
           sx={{ width: "100%" }}
         >
           <DoughnutChart evaluations={evaluations} />
