@@ -15,11 +15,16 @@ import {
 import { useNavigate } from "react-router-dom";
 
 interface ChatParticipantsProps {
-  // participants: User[];
+  receiverName: string;
+  receiverEmail: string;
   onClearChat: () => void;
 }
 
-export const ChatParticipants = ({ onClearChat }: ChatParticipantsProps) => {
+export const ChatParticipants = ({
+  receiverName,
+  receiverEmail,
+  onClearChat,
+}: ChatParticipantsProps) => {
   const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -31,12 +36,12 @@ export const ChatParticipants = ({ onClearChat }: ChatParticipantsProps) => {
     >
       <Toolbar>
         <Box display="flex" alignItems="center" gap={1} flexGrow="1">
-          <Tooltip title="Juan">
-            <Avatar alt="Juan" src="/static/images/avatar/2.jpg" />
+          <Tooltip title={receiverEmail}>
+            <Avatar alt={receiverName} src="/static/images/avatar/2.jpg" />
           </Tooltip>
 
           <Typography variant="h6" color="primary">
-            Juan
+            {receiverName}
           </Typography>
         </Box>
 

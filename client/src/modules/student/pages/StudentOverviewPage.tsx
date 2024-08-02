@@ -1,13 +1,21 @@
-import { Box } from "@mui/material";
+import { useEffect } from "react";
+
+import { useContextStudent } from "../hooks";
+import { useAuthStore } from "../../../hooks";
+import { Overview, OverviewSkeleton } from "../../../components";
 
 export default function StudentOverviewPage() {
-  return (
-    <Box>
-     {/* Grade - Section */}
+  const { user } = useAuthStore();
+  const { overviewData, setStudentId } = useContextStudent();
 
-     {/* Overall Average */}
+  useEffect(() => {
+    if (user === null) return;
+    if (user.Students?.student_id === undefined) return;
 
-     {/* Chart */}
-    </Box>
-  );
+    setStudentId(user.Students.student_id);
+  }, []);
+
+  if (overviewData === null) return <OverviewSkeleton />;
+
+  return <Overview overviewData={overviewData} />;
 }
