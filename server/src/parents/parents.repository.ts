@@ -226,6 +226,25 @@ export const getStudentParentDetailsRepository = async (): Promise<Array<{ stude
     }
   })
 
+  if (data) {
+    const { user_id, relation, createdAt, updatedAt, deletedAt, ...rest } = data;
 
-   return data
+    if (data.student && data.student.user && data.student.user.Students?.student_id) {
+      const transformedData = {
+        ...rest,
+        student: {
+          name: data.student.user.name,
+          student_id: data.student.user.Students?.student_id
+        }
+      };
+
+      return transformedData;
+    }
+    return {
+      ...rest,
+      user: data.user
+    };
+  }
+
+   return null
  }
