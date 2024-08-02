@@ -1,75 +1,729 @@
+// import { useState, useEffect } from "react";
+// import {
+//   Box,
+//   Container,
+//   Grid,
+//   IconButton,
+//   Button,
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableContainer,
+//   TableHead,
+//   TableRow,
+//   Paper,
+//   Checkbox,
+//   Snackbar,
+//   Alert,
+// } from "@mui/material";
+// import { ArrowBack } from "@mui/icons-material";
+// import { useNavigate } from "react-router-dom";
+// import { useAxiosPrivate } from "../../../hooks";
+// import { Student } from "../../../interfaces";
+
+// type AlignType = "left" | "right" | "center";
+
+// const headers: { name: string; align: AlignType }[] = [
+//   { name: "Selection", align: "left" },
+//   { name: "Student", align: "left" },
+//   { name: "Math", align: "right" },
+//   { name: "Science", align: "right" },
+//   { name: "English", align: "right" },
+//   { name: "History", align: "right" },
+//   { name: "Average", align: "right" },
+//   { name: "Report", align: "right" },
+// ];
+
+// const ClassRoomStudents = () => {
+//   const navigate = useNavigate();
+//   const api = useAxiosPrivate();
+//   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+//   const [openSnackbar, setOpenSnackbar] = useState(false);
+//   const [students, setStudents] = useState<Student[]>([]);
+
+//   const fetchStudents = async () => {
+//     try {
+//       const response = await api.get<Student[]>(`/students`);
+//       setStudents(response.data);
+//       console.log(response.data);
+//     } catch (error) {
+//       console.error("Error fetching students:", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchStudents();
+//   }, [api]);
+
+//   const handleBackButtonClick = () => {
+//     navigate(-1);
+//   };
+
+//   const handleEditButtonClick = () => {
+//     if (selectedRows.length === 1) {
+//       navigate(`/classNewStudents/`);
+//     } else {
+//       setOpenSnackbar(true);
+//     }
+//   };
+
+//   const handleReportButtonClick = () => {
+//     navigate(`/teacher/class/student/report`);
+//   };
+
+//   const handleCheckboxChange = (id: string) => {
+//     if (selectedRows.includes(id)) {
+//       setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
+//     } else {
+//       setSelectedRows([...selectedRows, id]);
+//     }
+//   };
+
+//   const handleCloseSnackbar = () => {
+//     setOpenSnackbar(false);
+//   };
+
+//   return (
+//     <Container disableGutters>
+//       <Grid container spacing={3}>
+//         <Grid item xs={12}>
+//           <Grid container spacing={3}>
+//             <Grid
+//               item
+//               xs={12}
+//               sx={{
+//                 backgroundColor: "#004643",
+//                 padding: "4vh",
+//               }}
+//             >
+//               <Box
+//                 sx={{
+//                   display: "flex",
+//                   alignItems: "center",
+//                   justifyContent: "space-between",
+//                   marginBottom: "4vh",
+//                 }}
+//               >
+//                 <IconButton
+//                   onClick={handleBackButtonClick}
+//                   sx={{
+//                     color: "black",
+//                     fontWeight: "bold",
+//                     height: "5vh",
+//                     width: "50px",
+//                     borderRadius: "0px",
+//                     "&:hover": {
+//                       backgroundColor: "#f9bc60",
+//                     },
+//                   }}
+//                 >
+//                   <ArrowBack />
+//                 </IconButton>
+//                 <Box>
+//                   <Button
+//                     variant="contained"
+//                     onClick={handleEditButtonClick}
+//                     sx={{
+//                       color: "black",
+//                       fontWeight: "bold",
+//                       marginRight: "10px",
+//                       "&:hover": {
+//                         backgroundColor: "#e16162",
+//                       },
+//                     }}
+//                   >
+//                     Editar
+//                   </Button>
+//                 </Box>
+//               </Box>
+//               <TableContainer component={Paper}>
+//                 <Table
+//                   sx={{ minWidth: 650, backgroundColor: "#f9bc60" }}
+//                   aria-label="simple table"
+//                 >
+//                   <TableHead>
+//                     <TableRow>
+//                       {headers.map((header) => (
+//                         <TableCell
+//                           key={header.name}
+//                           align={header.align}
+//                           sx={{ color: "black", fontWeight: "bold" }}
+//                         >
+//                           {header.name}
+//                         </TableCell>
+//                       ))}
+//                     </TableRow>
+//                   </TableHead>
+//                   <TableBody>
+//                     {students.map((student) => (
+//                       <TableRow key={student.student_id}>
+//                         <TableCell>
+//                           <Checkbox
+//                             checked={selectedRows.includes(student.student_id)}
+//                             onChange={() =>
+//                               handleCheckboxChange(student.student_id)
+//                             }
+//                           />
+//                         </TableCell>
+//                         <TableCell
+//                           component="th"
+//                           scope="row"
+//                           sx={{ color: "black", fontWeight: "bold" }}
+//                         >
+//                           {student.user_id}
+//                         </TableCell>
+//                         <TableCell align="right" sx={{ color: "black" }}>
+//                           {/* Aquí puedes poner las notas de Math si las tienes */}
+//                           8.2
+//                         </TableCell>
+//                         <TableCell align="right" sx={{ color: "black" }}>
+//                           {/* Aquí puedes poner las notas de Science si las tienes */}
+//                           5.2
+//                         </TableCell>
+//                         <TableCell align="right" sx={{ color: "black" }}>
+//                           {/* Aquí puedes poner las notas de English si las tienes */}
+//                           9.8
+//                         </TableCell>
+//                         <TableCell align="right" sx={{ color: "black" }}>
+//                           {/* Aquí puedes poner las notas de History si las tienes */}
+//                           9.0
+//                         </TableCell>
+//                         <TableCell align="right" sx={{ color: "black" }}>
+//                           {/* Aquí puedes calcular el promedio si tienes las notas */}
+//                           promedio
+//                         </TableCell>
+//                         <TableCell align="right">
+//                           <Button
+//                             variant="contained"
+//                             onClick={handleReportButtonClick}
+//                             sx={{
+//                               backgroundColor: "#f9bc60",
+//                               color: "white",
+//                               "&:hover": {
+//                                 backgroundColor: "#e16162",
+//                               },
+//                             }}
+//                           >
+//                             Informe
+//                           </Button>
+//                         </TableCell>
+//                       </TableRow>
+//                     ))}
+//                   </TableBody>
+//                 </Table>
+//               </TableContainer>
+//             </Grid>
+//           </Grid>
+//         </Grid>
+//       </Grid>
+
+//       <Snackbar
+//         open={openSnackbar}
+//         autoHideDuration={6000}
+//         onClose={handleCloseSnackbar}
+//       >
+//         <Alert
+//           onClose={handleCloseSnackbar}
+//           severity="warning"
+//           sx={{ width: "100%" }}
+//         >
+//           {selectedRows.length === 0
+//             ? "Debe seleccionar primero un estudiante antes de realizar esta acción."
+//             : "Solo debe haber un estudiante seleccionado para realizar esta acción."}
+//         </Alert>
+//       </Snackbar>
+//     </Container>
+//   );
+// };
+
+// export default ClassRoomStudents;
+
+// import { useState } from "react";
+// import {
+//   Box,
+//   Container,
+//   Grid,
+//   Button,
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableContainer,
+//   TableHead,
+//   TableRow,
+//   Paper,
+//   Dialog,
+//   DialogTitle,
+//   DialogContent,
+//   DialogActions,
+//   TextField,
+//   IconButton,
+// } from "@mui/material";
+// import { Add, Remove } from "@mui/icons-material";
+// import { useNavigate } from "react-router-dom";
+
+// type Subject = "Math" | "Science" | "English" | "History";
+
+// interface GradeDetail {
+//   name: string;
+//   grade: number;
+// }
+
+// interface Student {
+//   student_id: string;
+//   user_id: string;
+//   grades: {
+//     [key in Subject]: GradeDetail[];
+//   };
+// }
+
+// const headers: { name: string; align: "left" | "right" | "center" }[] = [
+//   { name: "No.", align: "left" },
+//   { name: "Student", align: "left" },
+//   { name: "Math", align: "right" },
+//   { name: "Science", align: "right" },
+//   { name: "English", align: "right" },
+//   { name: "History", align: "right" },
+//   { name: "Average", align: "right" },
+//   { name: "Report", align: "right" },
+// ];
+
+// const initialStudents: Student[] = [
+//   {
+//     student_id: "1",
+//     user_id: "student1",
+//     grades: {
+//       Math: [
+//         { name: "Taller 1", grade: 8 },
+//         { name: "Taller 2", grade: 9 },
+//       ],
+//       Science: [
+//         { name: "Taller 1", grade: 7 },
+//         { name: "Taller 2", grade: 6 },
+//       ],
+//       English: [
+//         { name: "Taller 1", grade: 9 },
+//         { name: "Taller 2", grade: 10 },
+//       ],
+//       History: [
+//         { name: "Taller 1", grade: 8 },
+//         { name: "Taller 2", grade: 7 },
+//       ],
+//     },
+//   },
+//   {
+//     student_id: "2",
+//     user_id: "student2",
+//     grades: {
+//       Math: [
+//         { name: "Taller 1", grade: 7 },
+//         { name: "Taller 2", grade: 8 },
+//       ],
+//       Science: [
+//         { name: "Taller 1", grade: 6 },
+//         { name: "Taller 2", grade: 7 },
+//       ],
+//       English: [
+//         { name: "Taller 1", grade: 8 },
+//         { name: "Taller 2", grade: 9 },
+//       ],
+//       History: [
+//         { name: "Taller 1", grade: 7 },
+//         { name: "Taller 2", grade: 6 },
+//       ],
+//     },
+//   },
+// ];
+
+// const calculateAverage = (grades: GradeDetail[]) => {
+//   const total = grades.reduce((sum, gradeDetail) => sum + gradeDetail.grade, 0);
+//   return (total / grades.length).toFixed(2);
+// };
+
+// const ClassRoomStudents = () => {
+//   const navigate = useNavigate();
+//   const [students, setStudents] = useState<Student[]>(initialStudents);
+//   const [dialogOpen, setDialogOpen] = useState(false);
+//   const [currentGrades, setCurrentGrades] = useState<GradeDetail[]>([]);
+//   const [currentStudentId, setCurrentStudentId] = useState<string>("");
+//   const [currentSubject, setCurrentSubject] = useState<Subject>("Math");
+
+
+//   const handleReportButtonClick = () => {
+//     navigate(`/teacher/class/student/report`);
+//   };
+
+//   const handleGradeClick = (studentId: string, subject: Subject) => {
+//     const student = students.find((s) => s.student_id === studentId);
+//     if (student) {
+//       setCurrentGrades(student.grades[subject]);
+//       setCurrentStudentId(studentId);
+//       setCurrentSubject(subject);
+//       setDialogOpen(true);
+//     }
+//   };
+
+//   const handleGradeChange = (
+//     index: number,
+//     field: "name" | "grade",
+//     value: string | number
+//   ) => {
+//     const newGrades = [...currentGrades];
+//     newGrades[index] = { ...newGrades[index], [field]: value };
+//     setCurrentGrades(newGrades);
+//   };
+
+//   const handleAddGrade = () => {
+//     setCurrentGrades([...currentGrades, { name: "", grade: 0 }]);
+//   };
+
+//   const handleRemoveGrade = (index: number) => {
+//     setCurrentGrades(currentGrades.filter((_, i) => i !== index));
+//   };
+
+//   const handleSaveGrades = () => {
+//     setStudents((prevStudents) =>
+//       prevStudents.map((student) => {
+//         if (student.student_id === currentStudentId) {
+//           return {
+//             ...student,
+//             grades: {
+//               ...student.grades,
+//               [currentSubject]: currentGrades,
+//             },
+//           };
+//         }
+//         return student;
+//       })
+//     );
+//     setDialogOpen(false);
+//   };
+
+//   return (
+//     <Container disableGutters>
+//       <Grid container spacing={3}>
+//         <Grid item xs={12}>
+//           <Grid container spacing={3}>
+//             <Grid
+//               item
+//               xs={12}
+//               sx={{
+//                 backgroundColor: "#004643",
+//                 padding: "4vh",
+//               }}
+//             >
+//               <Box
+//                 sx={{
+//                   display: "flex",
+//                   alignItems: "center",
+//                   justifyContent: "space-between",
+//                   marginBottom: "4vh",
+//                 }}
+//               >
+//               </Box>
+//               <TableContainer component={Paper}>
+//                 <Table
+//                   sx={{ minWidth: 650, backgroundColor: "#f9bc60" }}
+//                   aria-label="simple table"
+//                 >
+//                   <TableHead>
+//                     <TableRow>
+//                       {headers.map((header) => (
+//                         <TableCell
+//                           key={header.name}
+//                           align={header.align}
+//                           sx={{ color: "black", fontWeight: "bold" }}
+//                         >
+//                           {header.name}
+//                         </TableCell>
+//                       ))}
+//                     </TableRow>
+//                   </TableHead>
+//                   <TableBody>
+//                     {students.map((student, index) => (
+//                       <TableRow key={student.student_id}>
+//                         <TableCell
+//                           align="left"
+//                           sx={{ color: "black", fontWeight: "bold" }}
+//                         >
+//                           {index + 1}
+//                         </TableCell>
+//                         <TableCell
+//                           component="th"
+//                           scope="row"
+//                           sx={{ color: "black", fontWeight: "bold" }}
+//                         >
+//                           {student.user_id}
+//                         </TableCell>
+//                         {(
+//                           ["Math", "Science", "English", "History"] as Subject[]
+//                         ).map((subject) => (
+//                           <TableCell
+//                             key={subject}
+//                             align="right"
+//                             sx={{ color: "black", cursor: "pointer" }}
+//                             onClick={() =>
+//                               handleGradeClick(student.student_id, subject)
+//                             }
+//                           >
+//                             {calculateAverage(student.grades[subject])}
+//                           </TableCell>
+//                         ))}
+//                         <TableCell align="right" sx={{ color: "black" }}>
+//                           {calculateAverage(
+//                             ([] as GradeDetail[]).concat(
+//                               ...Object.values(student.grades)
+//                             )
+//                           )}
+//                         </TableCell>
+//                         <TableCell align="right">
+//                           <Button
+//                             variant="contained"
+//                             onClick={handleReportButtonClick}
+//                             sx={{
+//                               backgroundColor: "#f9bc60",
+//                               color: "white",
+//                               "&:hover": {
+//                                 backgroundColor: "#e16162",
+//                               },
+//                             }}
+//                           >
+//                             Report
+//                           </Button>
+//                         </TableCell>
+//                       </TableRow>
+//                     ))}
+//                   </TableBody>
+//                 </Table>
+//               </TableContainer>
+//             </Grid>
+//           </Grid>
+//         </Grid>
+//       </Grid>
+//       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+//         <DialogTitle>Edit or Add Notes</DialogTitle>
+//         <DialogContent>
+//           <Box
+//             sx={{
+//               maxHeight: 300,
+//               overflowY: "auto",
+//               marginBottom: "16px",
+//             }}
+//           >
+//             {currentGrades.map((gradeDetail, index) => (
+//               <Box key={index} display="flex" alignItems="center" mb={2}>
+//                 <TextField
+//                   label="Workshop Name"
+//                   value={gradeDetail.name}
+//                   onChange={(e) =>
+//                     handleGradeChange(index, "name", e.target.value)
+//                   }
+//                   sx={{ marginRight: 2 }}
+//                 />
+//                 <TextField
+//                   type="number"
+//                   label="Note"
+//                   value={gradeDetail.grade}
+//                   onChange={(e) =>
+//                     handleGradeChange(index, "grade", Number(e.target.value))
+//                   }
+//                   sx={{ marginRight: 2 }}
+//                 />
+//                 <IconButton onClick={() => handleRemoveGrade(index)}>
+//                   <Remove />
+//                 </IconButton>
+//               </Box>
+//             ))}
+//             <Button
+//               variant="contained"
+//               startIcon={<Add />}
+//               onClick={handleAddGrade}
+//               sx={{ marginBottom: "16px" }}
+//             >
+//               Add Workshop
+//             </Button>
+//           </Box>
+//         </DialogContent>
+//         <DialogActions>
+//           <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+//           <Button onClick={handleSaveGrades}>Keep</Button>
+//         </DialogActions>
+//       </Dialog>
+//     </Container>
+//   );
+// };
+
+// export default ClassRoomStudents;
+
 import { useState } from "react";
-import {Box,Container,Grid,IconButton,Button,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,
-  Paper,Checkbox,Snackbar,Alert,Dialog,DialogTitle,DialogContent,DialogActions,Typography} from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
+import {
+  Box,
+  Container,
+  Grid,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@mui/material";
+import { Add, Remove, ExpandMore } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
-const createData = (id, name, math, science, english, history) => {
-  const avg = (math + science + english + history) / 4;
-  return { id, name, math, science, english, history, avg };
+type Subject = "Math" | "Science";
+
+interface GradeDetail {
+  name: string;
+  grade: number;
+  period: number;
+}
+
+interface Student {
+  student_id: string;
+  user_id: string;
+  grades: {
+    [key in Subject]: GradeDetail[];
+  };
+}
+
+const headers: { name: string; align: "left" | "right" | "center" }[] = [
+  { name: "No.", align: "left" },
+  { name: "Student", align: "left" },
+  { name: "Subject", align: "center" },
+  { name: "Average", align: "right" },
+  { name: "Report", align: "right" },
+];
+
+const initialStudents: Student[] = [
+  {
+    student_id: "1",
+    user_id: "student1",
+    grades: {
+      Math: [
+        { name: "Taller 1", grade: 8, period: 1 },
+        { name: "Taller 2", grade: 9, period: 1 },
+        { name: "Taller 1", grade: 8, period: 2 },
+        { name: "Taller 2", grade: 9, period: 2 },
+        { name: "Taller 1", grade: 8, period: 3 },
+        { name: "Taller 2", grade: 9, period: 3 },
+        
+      ],
+      Science: [
+        { name: "Taller 1", grade: 7, period: 1 },
+        { name: "Taller 2", grade: 6, period: 1 },
+        { name: "Taller 1", grade: 8, period: 2 },
+        { name: "Taller 2", grade: 9, period: 2 },
+        { name: "Taller 1", grade: 8, period: 3 },
+        { name: "Taller 2", grade: 9, period: 3 },
+      ],
+    },
+  },
+  {
+    student_id: "2",
+    user_id: "student2",
+    grades: {
+      Math: [
+        { name: "Taller 1", grade: 7, period: 1 },
+        { name: "Taller 1", grade: 8, period: 1 },
+        { name: "Taller 2", grade: 9, period: 2 },
+        { name: "Taller 2", grade: 9, period: 3 },
+        { name: "Taller 2", grade: 8, period: 3 },
+      ],
+      Science: [
+        { name: "Taller 1", grade: 6, period: 1 },
+        { name: "Taller 2", grade: 7, period: 1 },
+        { name: "Taller 1", grade: 8, period: 2 },
+        { name: "Taller 2", grade: 9, period: 2 },
+        { name: "Taller 1", grade: 8, period: 3 },
+        { name: "Taller 2", grade: 9, period: 3 },
+      ],
+    },
+  },
+];
+
+const calculateAverage = (grades: GradeDetail[]) => {
+  const total = grades.reduce((sum, gradeDetail) => sum + gradeDetail.grade, 0);
+  return (total / grades.length).toFixed(2);
 };
 
-const rows = [
-  createData(1, "Patricia Rodriguez", 8.5, 9.2, 8.8, 9),
-  createData(2, "Samuel Velez", 7.8, 8.5, 8.2, 8.9),
-  createData(3, "Sam Luis", 9.5, 9.4, 9.0, 9.3),
-  createData(4, "Lucy Arandu", 7.0, 7.5, 8.0, 7.2),
-  createData(5, "Lorena Bedoya", 8.8, 9.1, 8.5, 8.7),
-];
+const calculatePeriodGrades = (grades: GradeDetail[], period: number) => {
+  const periodGrades = grades.filter((grade) => grade.period === period);
+  return calculateAverage(periodGrades.map((grade) => ({ ...grade, grade: Number(grade.grade) })));
+};
 
 const ClassRoomStudents = () => {
   const navigate = useNavigate();
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
-  const handleBackButtonClick = () => {
-    navigate(-1);
-  };
-
-  const handleNewStudentClick = () => {
-    navigate(`/classNewStudents/`);
-  };
-
-  const handleEditButtonClick = () => {
-    if (selectedRows.length === 1) {
-      navigate(`/classNewStudents/`);
-    } else {
-      setOpenSnackbar(true);
-    }
-  };
-
-  const handleDeleteButtonClick = () => {
-    if (selectedRows.length === 1) {
-      setOpenDeleteDialog(true);
-    } else {
-      setOpenSnackbar(true);
-    }
-  };
+  const [students, setStudents] = useState<Student[]>(initialStudents);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [currentGrades, setCurrentGrades] = useState<GradeDetail[]>([]);
+  const [currentStudentId, setCurrentStudentId] = useState<string>("");
+  const [currentSubject, setCurrentSubject] = useState<Subject>("Math");
+  const [currentPeriod, setCurrentPeriod] = useState<number>(10); // Assume the last period for editing
 
   const handleReportButtonClick = () => {
-    navigate(`/parent/`);
+    navigate(`/teacher/class/student/report`);
   };
 
-  const handleCheckboxChange = (id) => {
-    if (selectedRows.includes(id)) {
-      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
-    } else {
-      setSelectedRows([...selectedRows, id]);
+  const handleGradeClick = (studentId: string, subject: Subject) => {
+    const student = students.find((s) => s.student_id === studentId);
+    if (student) {
+      setCurrentGrades(student.grades[subject].filter(grade => grade.period === currentPeriod));
+      setCurrentStudentId(studentId);
+      setCurrentSubject(subject);
+      setDialogOpen(true);
     }
   };
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
+  const handleGradeChange = (
+    index: number,
+    field: "name" | "grade",
+    value: string | number
+  ) => {
+    const newGrades = [...currentGrades];
+    newGrades[index] = { ...newGrades[index], [field]: value };
+    setCurrentGrades(newGrades);
   };
 
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
+  const handleAddGrade = () => {
+    setCurrentGrades([...currentGrades, { name: "", grade: 0, period: currentPeriod }]);
   };
 
-  const handleConfirmDelete = () => {
-    console.log(`Eliminar estudiante con ID ${selectedRows[0]}`);
-    setOpenDeleteDialog(false);
+  const handleRemoveGrade = (index: number) => {
+    setCurrentGrades(currentGrades.filter((_, i) => i !== index));
+  };
+
+  const handleSaveGrades = () => {
+    setStudents((prevStudents) =>
+      prevStudents.map((student) => {
+        if (student.student_id === currentStudentId) {
+          return {
+            ...student,
+            grades: {
+              ...student.grades,
+              [currentSubject]: [
+                ...student.grades[currentSubject].filter(
+                  (grade) => grade.period !== currentPeriod
+                ),
+                ...currentGrades,
+              ],
+            },
+          };
+        }
+        return student;
+      })
+    );
+    setDialogOpen(false);
   };
 
   return (
@@ -93,66 +747,7 @@ const ClassRoomStudents = () => {
                   marginBottom: "4vh",
                 }}
               >
-                <IconButton
-                  onClick={handleBackButtonClick}
-                  sx={{
-                    color: "black",
-                    fontWeight: "bold",
-                    height: "5vh",
-                    width: "50px",
-                    borderRadius: "0px",
-                    "&:hover": {
-                      backgroundColor: "#f9bc60",
-                    },
-                  }}
-                >
-                  <ArrowBack />
-                </IconButton>
-                <Box>
-                  <Button
-                    variant="contained"
-                    onClick={handleNewStudentClick}
-                    sx={{
-                      color: "black",
-                      fontWeight: "bold",
-                      marginRight: "10px",
-                      "&:hover": {
-                        backgroundColor: "#e16162",
-                      },
-                    }}
-                  >
-                    Nuevo
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={handleEditButtonClick}
-                    sx={{
-                      color: "black",
-                      fontWeight: "bold",
-                      marginRight: "10px",
-                      "&:hover": {
-                        backgroundColor: "#e16162",
-                      },
-                    }}
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={handleDeleteButtonClick}
-                    sx={{
-                      color: "black",
-                      fontWeight: "bold",
-                      "&:hover": {
-                        backgroundColor: "#e16162",
-                      },
-                    }}
-                  >
-                    Eliminar
-                  </Button>
-                </Box>
               </Box>
-
               <TableContainer component={Paper}>
                 <Table
                   sx={{ minWidth: 650, backgroundColor: "#f9bc60" }}
@@ -160,85 +755,103 @@ const ClassRoomStudents = () => {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell sx={{ color: "black", fontWeight: "bold" }}>
-                        Selection
-                      </TableCell>
-                      <TableCell sx={{ color: "black", fontWeight: "bold" }}>
-                        Student
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "black", fontWeight: "bold" }}
-                      >
-                        Math
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "black", fontWeight: "bold" }}
-                      >
-                        Science
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "black", fontWeight: "bold" }}
-                      >
-                        English
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "black", fontWeight: "bold" }}
-                      >
-                        History
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "black", fontWeight: "bold" }}
-                      >
-                        Average
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "black", fontWeight: "bold" }}
-                      >
-                        Report
-                      </TableCell>
+                      {headers.map((header) => (
+                        <TableCell
+                          key={header.name}
+                          align={header.align}
+                          sx={{ color: "black", fontWeight: "bold" }}
+                        >
+                          {header.name}
+                        </TableCell>
+                      ))}
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
-                      <TableRow key={row.id}>
-                        <TableCell>
-                          <Checkbox
-                            checked={selectedRows.includes(row.id)}
-                            onChange={() => handleCheckboxChange(row.id)}
-                          />
+                    {students.map((student, index) => (
+                      <TableRow key={student.student_id}>
+                        <TableCell
+                          align="left"
+                          sx={{ color: "black", fontWeight: "bold" }}
+                        >
+                          {index + 1}
                         </TableCell>
                         <TableCell
                           component="th"
                           scope="row"
                           sx={{ color: "black", fontWeight: "bold" }}
                         >
-                          {row.name}
+                          {student.user_id}
                         </TableCell>
-                        <TableCell align="right" sx={{ color: "black" }}>
-                          {row.math}
-                        </TableCell>
-                        <TableCell align="right" sx={{ color: "black" }}>
-                          {row.science}
-                        </TableCell>
-                        <TableCell align="right" sx={{ color: "black" }}>
-                          {row.english}
-                        </TableCell>
-                        <TableCell align="right" sx={{ color: "black" }}>
-                          {row.history}
-                        </TableCell>
-                        <TableCell align="right" sx={{ color: "black" }}>
-                          {row.avg.toFixed(2)}
+                        {(["Math", "Science"] as Subject[]).map((subject) => (
+                          <TableCell
+                            key={subject}
+                            align="right"
+                            sx={{ color: "black" }}
+                          >
+                            <Accordion>
+                              <AccordionSummary expandIcon={<ExpandMore />}>
+                                <Typography>{subject}</Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                {Array.from({ length: 3 }, (_, period) => (
+                                  <Box key={period} mb={2}>
+                                    <Typography variant="h6">
+                                      Period {period + 1}
+                                    </Typography>
+                                    <Table>
+                                      <TableBody>
+                                        {student.grades[subject]
+                                          .filter(
+                                            (grade) => grade.period === period + 1
+                                          )
+                                          .map((grade, i) => (
+                                            <TableRow key={i}>
+                                              <TableCell>{grade.name}</TableCell>
+                                              <TableCell align="right">
+                                                {grade.grade}
+                                              </TableCell>
+                                            </TableRow>
+                                          ))}
+                                        <TableRow>
+                                          <TableCell sx={{color:"red"}}><strong>Average</strong></TableCell>
+                                          <TableCell align="right">
+                                            {calculatePeriodGrades(
+                                              student.grades[subject],
+                                              period + 1
+                                            )}
+                                          </TableCell>
+                                        </TableRow>
+                                      </TableBody>
+                                    </Table>
+                                    {period === 2 && ( // Only allow editing for the last period
+                                      <Button
+                                        variant="contained"
+                                        startIcon={<Add />}
+                                        onClick={() => {
+                                          setCurrentPeriod(period + 1);
+                                          handleGradeClick(student.student_id, subject);
+                                        }}
+                                      >
+                                        Add Workshop
+                                      </Button>
+                                    )}
+                                  </Box>
+                                ))}
+                              </AccordionDetails>
+                            </Accordion>
+                          </TableCell>
+                        ))}
+                        <TableCell align="right">
+                          {calculateAverage(
+                            ([] as GradeDetail[]).concat(
+                              ...Object.values(student.grades).flat()
+                            )
+                          )}
                         </TableCell>
                         <TableCell align="right">
                           <Button
                             variant="contained"
-                            onClick={() => handleReportButtonClick(row.id)}
+                            onClick={handleReportButtonClick}
                             sx={{
                               backgroundColor: "#f9bc60",
                               color: "white",
@@ -247,7 +860,7 @@ const ClassRoomStudents = () => {
                               },
                             }}
                           >
-                            Informe
+                            Report
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -259,41 +872,53 @@ const ClassRoomStudents = () => {
           </Grid>
         </Grid>
       </Grid>
-
-      {/* Snackbar para mostrar mensaje de selección */}
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity="warning"
-          sx={{ width: "100%" }}
-        >
-          {selectedRows.length === 0
-            ? "Debe seleccionar primero un estudiante antes de realizar esta acción."
-            : "Solo debe haber un estudiante seleccionado para realizar esta acción."}
-        </Alert>
-      </Snackbar>
-
-      {/* Dialog para confirmar eliminación */}
-      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>{"¿Está seguro de eliminar este estudiante?"}</DialogTitle>
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <DialogTitle>Edit or Add Notes</DialogTitle>
         <DialogContent>
-          <Box sx={{ marginBottom: 2 }}>
-            <Typography variant="body1">
-              Esta acción no se puede deshacer.
-            </Typography>
+          <Box
+            sx={{
+              maxHeight: 300,
+              overflowY: "auto",
+              marginBottom: "16px",
+            }}
+          >
+            {currentGrades.map((gradeDetail, index) => (
+              <Box key={index} display="flex" alignItems="center" mb={2}>
+                <TextField
+                  label="Workshop Name"
+                  value={gradeDetail.name}
+                  onChange={(e) =>
+                    handleGradeChange(index, "name", e.target.value)
+                  }
+                  sx={{ marginRight: 2 }}
+                />
+                <TextField
+                  type="number"
+                  label="Note"
+                  value={gradeDetail.grade}
+                  onChange={(e) =>
+                    handleGradeChange(index, "grade", Number(e.target.value))
+                  }
+                  sx={{ marginRight: 2 }}
+                />
+                <IconButton onClick={() => handleRemoveGrade(index)}>
+                  <Remove />
+                </IconButton>
+              </Box>
+            ))}
+            <Button
+              variant="contained"
+              startIcon={<Add />}
+              onClick={handleAddGrade}
+              sx={{ marginBottom: "16px" }}
+            >
+              Add Workshop
+            </Button>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog} color="primary">
-            Cancelar
-          </Button>
-          <Button onClick={handleConfirmDelete} color="primary" autoFocus>
-            Eliminar
-          </Button>
+          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleSaveGrades}>Keep</Button>
         </DialogActions>
       </Dialog>
     </Container>

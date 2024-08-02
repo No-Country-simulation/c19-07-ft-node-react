@@ -40,7 +40,7 @@ class Server {
   routes (): void {
     this.app.use('/api/v1/auth', authRoutes)
     this.app.use('/api/v1'
-      //  , verifyToken
+        , verifyToken
       , router)
 
     this.app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
