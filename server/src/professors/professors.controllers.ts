@@ -80,7 +80,7 @@ export const deleteProfessor = async (req: Request, res: Response): Promise<void
 export const createEvaluations = async (req: Request, res: Response): Promise<any> => {
   try {
     const isValidBody: boolean = professorService.validateCreateEvaluation(req.body)
-    if (!isValidBody) return res.status(400).send({ err: 'Invalid body' })
+    if (!isValidBody) throw new ValidationError('Invalid Body')
 
     const { historial_id } = await professorService.createAcademicRecord(req.body)
     if (historial_id.length === 0) throw new DatabaseError('Can not crate academic record')
@@ -185,5 +185,17 @@ export const getPeriodMarks = async (req: Request, res: Response): Promise<any> 
   } catch (e: any) {
     const { message, status } = getErrorMessageAndStatus(e)
     res.status(status).send({ message, err_details: e.message })
+  }
+}
+
+export const deleteAcademicRecordById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (typeof req.params.id !== 'string') throw new ValidationError('Invalid id')
+    const { id } = req.params
+    await professorService.deleteAcademicRecordById(id)
+    res.status(204).send()
+  } catch (err: any) {
+    const { message, status } = getErrorMessageAndStatus(err)
+    res.status(status).send({ message, err_details: err.message })
   }
 }

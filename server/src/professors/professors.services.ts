@@ -307,7 +307,7 @@ export const getAcademicRecordsByPeriod = (period: number, academicRecords: Acad
       case 2:
         return academicRecords.filter(record => record.date.getTime() >= periodTwo.getTime() && record.date.getTime() < periodThree.getTime())
       case 3:
-        return academicRecords.filter(record => record.date.getTime() <= periodThree.getTime() && record.date.getTime() > periodTwo.getTime())
+        return academicRecords.filter(record => record.date.getTime() >= periodThree.getTime())
       default:
         throw new NotFoundError('Invalid period number', 404)
     }
@@ -331,4 +331,8 @@ export const getAcademicRecordsByStudent = async (id: string): Promise<Academic_
 
 export const getCourseById = async (id: string): Promise<Courses | null> => {
   return await professorRepository.getCourseById(id)
+}
+
+export const deleteAcademicRecordById = async (id: string): Promise<Academic_records> => {
+  return await professorRepository.deleteAcademicRecordById(id)
 }
