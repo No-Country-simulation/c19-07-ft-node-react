@@ -34,6 +34,7 @@ interface AcademicRecord {
   comment: string;
   date: string;
   mark: number;
+  // interfa
 }
 interface Student {
   student_id: string;
