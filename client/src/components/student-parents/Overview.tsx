@@ -132,8 +132,9 @@ export const Overview = ({ parentView, overviewData }: OverviewProps) => {
             alignItems="center"
             justifyContent="center"
           >
-            {courses.map(({ name }) => (
+            {courses.map(({ name }, index) => (
               <Chip
+                key={index}
                 label={name}
                 sx={{
                   p: 4,
