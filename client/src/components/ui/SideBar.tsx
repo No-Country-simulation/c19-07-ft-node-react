@@ -1,5 +1,6 @@
 import {
   Chat,
+  Class,
   Close,
   People,
   School,
@@ -9,7 +10,6 @@ import {
   SquareFoot,
   BorderColor,
   FamilyRestroom,
-  Class,
 } from "@mui/icons-material";
 import {
   Box,

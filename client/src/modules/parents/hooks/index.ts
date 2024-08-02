@@ -1,0 +1,1 @@
+export { useContextParent } from "./useContextParent";

@@ -1,11 +1,20 @@
-import { Box, Chip, Stack } from "@mui/material";
+import {
+  Box,
+  Chip,
+  List,
+  Stack,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListItemButton,
+} from "@mui/material";
 
 import { OverviewData } from "../../interfaces";
 import { generateRandomColor } from "../../utils";
 
 import { CustomCard } from "../ui/CustomCard";
-import { FeedbackSlider } from "./FeedbackSlider";
 import { EvaluationResultsChart } from "./EvaluationResultsChart";
+import { Comment } from "@mui/icons-material";
 
 const periods: Record<string, string> = {
   PRIMER_PERIODO: "1st Period",
@@ -24,12 +33,14 @@ export const Overview = ({ parentView, overviewData }: OverviewProps) => {
     overviewData;
 
   const gradeTopText = parentView ? "Grade" : "My grade";
-  const gradeSubheading = `Currently in ${infoStudent.grade}°, section ${infoStudent.section}`;
+  const gradeSubheading = `Student: ${infoStudent.name}, Currently in ${infoStudent.grade}°, section ${infoStudent.section}`;
 
   const overallAverage = overallAverageByPeriod[0].average.toFixed(2);
   const currentPeriod = `Corresponds to the ${
     periods[overallAverageByPeriod[0].period]
   }`;
+
+  const evaluationSubheading = `Rating obtained in the last ${evaluationsByPeriod[0].evaluations.length} evaluations of the current period`;
 
   const coursesHeading = parentView ? "Courses" : "My courses";
   const coursesSubheading = parentView
@@ -63,14 +74,6 @@ export const Overview = ({ parentView, overviewData }: OverviewProps) => {
           flexDirection={{ xs: "column", sm: "row", md: "column" }}
           gap={2}
         >
-          {parentView && (
-            <CustomCard
-              heading={infoStudent.name}
-              headingVariant="h5"
-              sx={{ width: "100%" }}
-            />
-          )}
-
           <CustomCard
             heading={`${infoStudent.grade}${infoStudent.section}`}
             headingVariant="h2"
@@ -99,7 +102,7 @@ export const Overview = ({ parentView, overviewData }: OverviewProps) => {
         <CustomCard
           heading="Period Evaluations"
           headingVariant="h5"
-          subHeading="Rating obtained in the last 5 evaluations of the current period"
+          subHeading={evaluationSubheading}
           sx={{ width: { md: "70%" } }}
         >
           <EvaluationResultsChart
@@ -147,9 +150,23 @@ export const Overview = ({ parentView, overviewData }: OverviewProps) => {
           heading="Overall Feedback"
           headingVariant="h5"
           subHeading={feedbackSubheading}
-          sx={{ width: { sm: "50%" } }}
+          sx={{ width: { sm: "50%" }, overflow: "auto" }}
         >
-          <FeedbackSlider comments={comments} />
+          <List sx={{ overflow: "auto" }}>
+            {comments.map((comment, index) => (
+              <ListItem key={index} disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <Comment />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={comment}
+                    sx={{ fontStyle: "italic" }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
         </CustomCard>
       </Box>
     </Box>

@@ -1,0 +1,1 @@
+export { useContextStudent } from "./useContextStudent";

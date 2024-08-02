@@ -38,10 +38,11 @@ export const EvaluationResultsChart = ({
       display="flex"
       justifyContent="center"
       alignItems="center"
-      height="100%"
+      height="auto"
       mt={2}
+      overflow="scroll"
     >
-      <Pie data={data} style={{ maxHeight: "300px" }} />
+      <Pie data={data} style={{ height: "auto", maxHeight: "300px" }} />
     </Box>
   );
 };

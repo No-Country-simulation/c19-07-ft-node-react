@@ -21,8 +21,13 @@ export const Performance = () => {
         flexDirection={{ xs: "column", md: "row" }}
         gap={2}
       >
-        <CustomCard heading="" sx={{ width: "100%" }}></CustomCard>
-        <CustomCard heading="" sx={{ width: "100%" }}></CustomCard>
+        <CustomCard heading="" sx={{ width: "100%" }}>
+
+        </CustomCard>
+        
+        <CustomCard heading="" sx={{ width: "100%" }}>
+
+        </CustomCard>
       </Box>
 
       <Box
@@ -31,8 +36,13 @@ export const Performance = () => {
         flexDirection={{ xs: "column", md: "row" }}
         gap={2}
       >
-        <CustomCard heading="" sx={{ width: "100%" }}></CustomCard>
-        <CustomCard heading="" sx={{ width: "100%" }}></CustomCard>
+        <CustomCard heading="" sx={{ width: "100%" }}>
+          
+        </CustomCard>
+
+        <CustomCard heading="" sx={{ width: "100%" }}>
+          
+        </CustomCard>
       </Box>
     </Box>
   );

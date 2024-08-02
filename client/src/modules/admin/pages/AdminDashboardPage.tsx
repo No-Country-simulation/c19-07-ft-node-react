@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 
-import { Box, Skeleton } from "@mui/material";
+import { Box } from "@mui/material";
 
-import { useAxiosPrivate } from "../../../hooks";
-
-import { CustomCard } from "../../../components";
-import { showSnackbar } from "../../../helpers";
-import { DashboardChart } from "../components";
 import { dashboardMessage } from "../constants";
+import { showSnackbar } from "../../../helpers";
+import { useAxiosPrivate } from "../../../hooks";
+import { CustomCard } from "../../../components";
 import { DashboardData, DashboardResponse } from "../interfaces";
+import { DashboardChart, DashboardSkeleton } from "../components";
 
 export default function AdminDashboardPage() {
   const api = useAxiosPrivate();
@@ -49,6 +48,8 @@ export default function AdminDashboardPage() {
     fetchData();
   }, []);
 
+  if (!dashboardData) return <DashboardSkeleton />;
+
   return (
     <Box display="flex" flexDirection="column" height="100%">
       <Box
@@ -60,19 +61,19 @@ export default function AdminDashboardPage() {
         <CustomCard
           sx={{ width: "100%", textAlign: { xs: "center", sm: "left" } }}
           topText="Overall Cumulative Average"
-          heading={dashboardData?.overallAverage.toFixed(2)}
+          heading={dashboardData.overallAverage.toFixed(2)}
           headingVariant="h2"
         />
         <CustomCard
           sx={{ width: "100%", textAlign: { xs: "center", sm: "left" } }}
           topText="Active Students"
-          heading={dashboardData?.activeStudents}
+          heading={dashboardData.activeStudents}
           headingVariant="h2"
         />
         <CustomCard
           sx={{ width: "100%", textAlign: { xs: "center", sm: "left" } }}
           topText="No. of Teachers"
-          heading={dashboardData?.numberOfTeachers}
+          heading={dashboardData.numberOfTeachers}
           headingVariant="h2"
         />
       </Box>
@@ -87,11 +88,7 @@ export default function AdminDashboardPage() {
           heading="Top 5 Students"
           headingVariant="h5"
         >
-          {dashboardData ? (
-            <DashboardChart topStudents={dashboardData.topStudents} />
-          ) : (
-            <Skeleton variant="rounded" height="100%" sx={{ mt: 2 }} />
-          )}
+          <DashboardChart topStudents={dashboardData.topStudents} />
         </CustomCard>
       </Box>
     </Box>

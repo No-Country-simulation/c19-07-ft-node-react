@@ -4,6 +4,7 @@ export { Chat } from "./chat/Chat";
 // Student & Parents
 export { Overview } from "./student-parents/Overview";
 export { Performance } from "./student-parents/Performance";
+export { OverviewSkeleton } from "./student-parents/OverviewSkeleton";
 
 // Teacher & Parents
 export { ContactsTable } from "./teacher-parents/ContactsTable";

@@ -27,6 +27,7 @@ import {
 } from "./modules/teacher";
 import {
   ParentsLayout,
+  ParentProvider,
   ParentsChatPage,
   ParentsContactsPage,
   ParentsOverviewPage,
@@ -43,12 +44,12 @@ import {
 } from "./modules/admin";
 import {
   StudentLayout,
+  StudentProvider,
   StudentOverviewPage,
   StudentPerformancePage,
 } from "./modules/student";
 
 import { useAuthStore } from "./hooks";
-import { StudentProvider } from "./modules/student/contexts/StudentContext";
 
 const router = createBrowserRouter([
   {
@@ -113,7 +114,9 @@ const router = createBrowserRouter([
         path: "parents/*",
         element: (
           <RequireRole allowedRoles={["PARENTS"]}>
-            <ParentsLayout />
+            <ParentProvider>
+              <ParentsLayout />
+            </ParentProvider>
           </RequireRole>
         ),
         children: [

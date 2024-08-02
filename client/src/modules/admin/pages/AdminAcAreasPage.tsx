@@ -13,7 +13,7 @@ export default function AdminAcAreasPagePage() {
         p={2}
         height="auto"
         maxHeight="100%"
-        bgcolor="#e8e4e6"
+        bgcolor="white"
         borderRadius={1}
       >
         <Box

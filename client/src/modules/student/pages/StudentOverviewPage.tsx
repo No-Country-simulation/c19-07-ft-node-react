@@ -1,22 +1,21 @@
 import { useEffect } from "react";
-import { Overview } from "../../../components";
+
+import { useContextStudent } from "../hooks";
 import { useAuthStore } from "../../../hooks";
-import { useContextStudent } from "../hooks/useStudentUser";
+import { Overview, OverviewSkeleton } from "../../../components";
 
 export default function StudentOverviewPage() {
   const { user } = useAuthStore();
-  const { overviewData, setUserId } = useContextStudent();
+  const { overviewData, setStudentId } = useContextStudent();
 
   useEffect(() => {
     if (user === null) return;
     if (user.Students?.student_id === undefined) return;
 
-    console.log(user.Students.student_id);
-
-    setUserId(user.Students.student_id);
+    setStudentId(user.Students.student_id);
   }, []);
 
-  if (overviewData === null) return <p>Loadign...</p>;
+  if (overviewData === null) return <OverviewSkeleton />;
 
   return <Overview overviewData={overviewData} />;
 }

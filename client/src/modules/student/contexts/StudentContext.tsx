@@ -5,7 +5,7 @@ import { OverviewResponse, OverviewData } from "../../../interfaces";
 
 export interface StudentContextValue {
   overviewData: OverviewData | null;
-  setUserId: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setStudentId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 export const StudentContext = createContext<StudentContextValue | undefined>(
@@ -19,15 +19,15 @@ interface StudentProviderProps {
 export const StudentProvider = ({ children }: StudentProviderProps) => {
   const api = useAxiosPrivate();
 
-  const [userId, setUserId] = useState<string | undefined>(undefined);
+  const [studentId, setStudentId] = useState<string | undefined>(undefined);
   const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
 
   const fetchStudentData = async () => {
     try {
-      if (userId === undefined) return;
+      if (studentId === undefined) return;
 
       const res = await api.get<OverviewResponse>(
-        `students-management/dashboard/${userId}?periodo=PRIMER_PERIODO`
+        `students-management/dashboard/${studentId}?periodo=PRIMER_PERIODO`
       );
 
       setOverviewData(res.data.data);
@@ -38,10 +38,10 @@ export const StudentProvider = ({ children }: StudentProviderProps) => {
 
   useEffect(() => {
     fetchStudentData();
-  }, [userId]);
+  }, [studentId]);
 
   return (
-    <StudentContext.Provider value={{ overviewData, setUserId }}>
+    <StudentContext.Provider value={{ overviewData, setStudentId }}>
       {children}
     </StudentContext.Provider>
   );
