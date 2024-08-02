@@ -39,7 +39,7 @@ const useFetchPeriodMarks = () => {
           name: response.data.data.name
         }));
 
-        // console.log("Fetched Marks Data:", marksData);
+         console.log("Fetched Marks Data:", marksData);
 
 
         setData(marksData);
