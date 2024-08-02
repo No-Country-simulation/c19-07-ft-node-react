@@ -1,12 +1,11 @@
 import React, { createContext, useEffect, useState } from "react";
 
-import { useAxiosPrivate } from "../../../hooks";
+import { useAuthStore, useAxiosPrivate } from "../../../hooks";
 import { RelationResponse } from "../interfaces";
 import { OverviewResponse, OverviewData } from "../../../interfaces";
 
 export interface ParentContextValue {
   overviewData: OverviewData | null;
-  setParentId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 export const ParentContext = createContext<ParentContextValue | undefined>(
@@ -19,6 +18,7 @@ interface ParentProviderProps {
 
 export const ParentProvider = ({ children }: ParentProviderProps) => {
   const api = useAxiosPrivate();
+  const { user } = useAuthStore();
 
   const [parentId, setParentId] = useState<string | undefined>(undefined);
   const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
@@ -44,11 +44,16 @@ export const ParentProvider = ({ children }: ParentProviderProps) => {
   };
 
   useEffect(() => {
+    if (user === null) return;
+    if (user.Parents?.parent_id === undefined) return;
+
+    setParentId(user.Parents.parent_id);
+
     fetchStudentData();
-  }, [parentId]);
+  }, [parentId, user]);
 
   return (
-    <ParentContext.Provider value={{ overviewData, setParentId }}>
+    <ParentContext.Provider value={{ overviewData }}>
       {children}
     </ParentContext.Provider>
   );

@@ -1,11 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
 
-import { useAxiosPrivate } from "../../../hooks";
+import { useAuthStore, useAxiosPrivate } from "../../../hooks";
 import { OverviewResponse, OverviewData } from "../../../interfaces";
 
 export interface StudentContextValue {
   overviewData: OverviewData | null;
-  setStudentId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 export const StudentContext = createContext<StudentContextValue | undefined>(
@@ -18,6 +17,7 @@ interface StudentProviderProps {
 
 export const StudentProvider = ({ children }: StudentProviderProps) => {
   const api = useAxiosPrivate();
+  const { user } = useAuthStore();
 
   const [studentId, setStudentId] = useState<string | undefined>(undefined);
   const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
@@ -37,11 +37,16 @@ export const StudentProvider = ({ children }: StudentProviderProps) => {
   };
 
   useEffect(() => {
+    if (user === null) return;
+    if (user.Students?.student_id === undefined) return;
+
+    setStudentId(user.Students.student_id);
+
     fetchStudentData();
-  }, [studentId]);
+  }, [studentId, user]);
 
   return (
-    <StudentContext.Provider value={{ overviewData, setStudentId }}>
+    <StudentContext.Provider value={{ overviewData }}>
       {children}
     </StudentContext.Provider>
   );

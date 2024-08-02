@@ -33,7 +33,7 @@ export const Overview = ({ parentView, overviewData }: OverviewProps) => {
     overviewData;
 
   const gradeTopText = parentView ? "Grade" : "My grade";
-  const gradeSubheading = `Student: ${infoStudent.name}, Currently in ${infoStudent.grade}°, section ${infoStudent.section}`;
+  const gradeSubheading = `Student: ${infoStudent.name}`;
 
   const overallAverage = overallAverageByPeriod[0].average.toFixed(2);
   const currentPeriod = `Corresponds to the ${

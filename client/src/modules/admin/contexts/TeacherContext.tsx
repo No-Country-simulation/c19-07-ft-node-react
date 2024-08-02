@@ -3,7 +3,7 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { Filter } from "../interfaces";
 import { userMessage } from "../constants";
 import { useAxiosPrivate } from "../../../hooks";
-import { Message, ParentsResponse } from "../../../interfaces";
+import { StatusRespMsg, ParentsResponse } from "../../../interfaces";
 
 interface TeacherContextProps {
   children: ReactNode;
@@ -15,9 +15,9 @@ export interface TeacherContextValue {
   filter: Filter;
   setFilter: React.Dispatch<React.SetStateAction<Filter>>;
   getTeachers: () => Promise<void>;
-  createTeacher: (data: any) => Promise<Message>;
-  deleteTeacher: (id: string) => Promise<Message>;
-  updateTeacher: (id: string, data: any) => Promise<Message>;
+  createTeacher: (data: any) => Promise<StatusRespMsg>;
+  deleteTeacher: (id: string) => Promise<StatusRespMsg>;
+  updateTeacher: (id: string, data: any) => Promise<StatusRespMsg>;
 }
 
 export const TeacherContext = createContext<TeacherContextValue | undefined>(
@@ -42,7 +42,7 @@ export const TeacherProvider = ({ children }: TeacherContextProps) => {
     setTeacher(response.data);
   };
 
-  const createTeacher = async (data: any): Promise<Message> => {
+  const createTeacher = async (data: any): Promise<StatusRespMsg> => {
     try {
       const response = await api.post("/admin/create-parent", data);
 
@@ -58,7 +58,10 @@ export const TeacherProvider = ({ children }: TeacherContextProps) => {
     }
   };
 
-  const updateTeacher = async (id: string, data: any): Promise<Message> => {
+  const updateTeacher = async (
+    id: string,
+    data: any
+  ): Promise<StatusRespMsg> => {
     try {
       const response = await api.put(`/admin/update-parent/${id}`, data);
 
@@ -74,7 +77,7 @@ export const TeacherProvider = ({ children }: TeacherContextProps) => {
     }
   };
 
-  const deleteTeacher = async (id: string): Promise<Message> => {
+  const deleteTeacher = async (id: string): Promise<StatusRespMsg> => {
     try {
       const response = await api.delete(`/admin/delete-parent/${id}`);
 
