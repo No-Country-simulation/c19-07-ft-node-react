@@ -18,12 +18,12 @@ import { LoginPage, AuthLayout } from "./modules/auth/";
 import {
   TeacherClass,
   TeacherLayout,
+  TeacherReport,
   TeacherCalendar,
   TeacherChatPage,
   TeacherClassChosen,
   TeacherContactsPage,
   TeacherClassStudents,
-  TeacherReport,
 } from "./modules/teacher";
 import {
   ParentsLayout,
@@ -46,8 +46,6 @@ import {
   StudentOverviewPage,
   StudentPerformancePage,
 } from "./modules/student";
-
-// import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
 
 import { useAuthStore } from "./hooks";
 import { StudentProvider } from "./modules/student/contexts/StudentContext";
@@ -100,10 +98,6 @@ const router = createBrowserRouter([
             path: "class/student/report/:studentId/:courseId",
             element: <TeacherReport />,
           },
-          // {
-          //   path: "classNewStudents",
-          //   element: <TeacherClassNewStudents />,
-          // },
           {
             path: "calendar",
             element: <TeacherCalendar />,
