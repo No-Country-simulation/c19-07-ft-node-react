@@ -12,6 +12,7 @@ interface ParentContextProps {
 export interface ParentContextValue {
   parent: ParentsResponse | null;
   setParent: React.Dispatch<React.SetStateAction<ParentsResponse | null>>;
+  isLoading: boolean;
   filter: Filter;
   setFilter: React.Dispatch<React.SetStateAction<Filter>>;
   getParents: () => Promise<void>;
@@ -27,6 +28,7 @@ export const ParentContext = createContext<ParentContextValue | undefined>(
 export const ParentProvider = ({ children }: ParentContextProps) => {
   const api = useAxiosPrivate();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [parent, setParent] = useState<ParentsResponse | null>(null);
   const [filter, setFilter] = useState<Filter>({
     name: "",
@@ -36,10 +38,14 @@ export const ParentProvider = ({ children }: ParentContextProps) => {
   });
 
   const getParents = async () => {
+    setIsLoading(true);
+
     const response = await api.get<ParentsResponse>(
       `/admin/parents?page=${filter.page}&limit=${filter.limit}&name=${filter.name}`
     );
+
     setParent(response.data);
+    setIsLoading(false);
   };
 
   const createParent = async (data: any): Promise<StatusRespMsg> => {
@@ -102,6 +108,7 @@ export const ParentProvider = ({ children }: ParentContextProps) => {
       value={{
         parent,
         filter,
+        isLoading,
         setParent,
         setFilter,
         getParents,

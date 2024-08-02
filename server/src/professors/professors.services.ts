@@ -26,6 +26,8 @@ export const getAllProfessors = async () => {
   return data.map(professor => ({
     professor_id: professor.professor_id,
     user_id: professor.user_id,
+    name: professor.user.name,
+    email: professor.user.email,
     academic_area_id: professor.area_academica_id,
     hiring_date: professor.fecha_contratacion,
     employed_state: professor.estado_empleado,
@@ -33,7 +35,6 @@ export const getAllProfessors = async () => {
     createdAt: professor.createdAt,
     updatedAt: professor.updatedAt,
     deletedAt: professor.deletedAt,
-    name: professor.user.name
   }))
 }
 

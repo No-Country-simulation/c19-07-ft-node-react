@@ -18,17 +18,20 @@ import { LoginPage, AuthLayout } from "./modules/auth/";
 import {
   TeacherClass,
   TeacherLayout,
+  TeacherReport,
   TeacherCalendar,
   TeacherChatPage,
   TeacherClassChosen,
   TeacherContactsPage,
   TeacherClassStudents,
-  TeacherReport,
 } from "./modules/teacher";
 import {
   ParentsLayout,
+  ParentProvider,
   ParentsChatPage,
   ParentsContactsPage,
+  ParentsOverviewPage,
+  ParentsPerformancePage,
 } from "./modules/parents";
 import {
   AdminLayout,
@@ -41,12 +44,10 @@ import {
 } from "./modules/admin";
 import {
   StudentLayout,
+  StudentProvider,
   StudentOverviewPage,
   StudentPerformancePage,
-  StudentAssessmentsPage,
 } from "./modules/student";
-
-// import TeacherClassNewStudents from "./modules/teacher/pages/TeacherClassNewStudents.tsx";
 
 import { useAuthStore } from "./hooks";
 
@@ -98,10 +99,6 @@ const router = createBrowserRouter([
             path: "class/student/report/:studentId/:courseId",
             element: <TeacherReport />,
           },
-          // {
-          //   path: "classNewStudents",
-          //   element: <TeacherClassNewStudents />,
-          // },
           {
             path: "calendar",
             element: <TeacherCalendar />,
@@ -117,21 +114,19 @@ const router = createBrowserRouter([
         path: "parents/*",
         element: (
           <RequireRole allowedRoles={["PARENTS"]}>
-            <ParentsLayout />
+            <ParentProvider>
+              <ParentsLayout />
+            </ParentProvider>
           </RequireRole>
         ),
         children: [
           {
             path: "my-child/overview",
-            // element: < />,
+            element: <ParentsOverviewPage />,
           },
           {
             path: "my-child/performance",
-            // element: < />,
-          },
-          {
-            path: "my-child/assessments",
-            // element: < />,
+            element: <ParentsPerformancePage />,
           },
           {
             path: "contacts",
@@ -152,7 +147,9 @@ const router = createBrowserRouter([
         path: "student",
         element: (
           <RequireRole allowedRoles={["STUDENT"]}>
-            <StudentLayout />
+            <StudentProvider>
+              <StudentLayout />
+            </StudentProvider>
           </RequireRole>
         ),
         children: [
@@ -163,10 +160,6 @@ const router = createBrowserRouter([
           {
             path: "performance",
             element: <StudentPerformancePage />,
-          },
-          {
-            path: "assessments",
-            element: <StudentAssessmentsPage />,
           },
           {
             path: "*",

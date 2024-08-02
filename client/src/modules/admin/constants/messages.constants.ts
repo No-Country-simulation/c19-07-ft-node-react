@@ -27,3 +27,8 @@ export const acAreaMessage = {
   wrong: "Oops. we couldn't do that, try again later.",
   error: "Internal server error. Please contact support.",
 };
+
+export const dashboardMessage = {
+  wrong: "Unable to get the data. Please try again later.",
+  error: "Internal server error. Please contact support.",
+};

@@ -1,13 +1,11 @@
 import type { PropsWithChildren } from "react";
 
 import {
-  // Box,
   Card,
   Typography,
   CardContent,
   type SxProps,
   type Theme,
-  Skeleton,
 } from "@mui/material";
 
 type CustomCardProps = PropsWithChildren & {
@@ -36,20 +34,16 @@ export const CustomCard = ({
             {topText}
           </Typography>
         )}
-        {heading ? (
+        {heading && (
           <Typography
             variant={headingVariant ? headingVariant : "h6"}
             component="div"
           >
             {heading}
           </Typography>
-        ) : (
-          <Skeleton variant="rounded" height="72px" />
         )}
         {subHeading && (
-          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            {subHeading}
-          </Typography>
+          <Typography color="text.secondary">{subHeading}</Typography>
         )}
 
         {children}

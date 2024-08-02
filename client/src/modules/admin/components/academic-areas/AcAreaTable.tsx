@@ -13,6 +13,7 @@ import { CreateAcAreaFormData, EditAcAreaFormData } from "../../schemas";
 
 import { AcAreaEditForm } from "./AcAreaEditForm";
 import { AcAreaCreateForm } from "./AcAreaCreateForm";
+import { StatusRespMsg } from "../../../../interfaces";
 import { showStatusSnackbar } from "../../../../helpers";
 
 interface AcAreaTableProps {
@@ -31,6 +32,7 @@ export const AcAreaTable = ({
     acArea,
     filter,
     setFilter,
+    isLoading,
     createAcArea,
     updateAcArea,
     deleteAcArea,
@@ -38,14 +40,13 @@ export const AcAreaTable = ({
 
   // ? Creation
   const handleSubmitCreateForm = async (data: CreateAcAreaFormData) => {
-    await createAcArea(data)
-      .then((res) => {
-        showStatusSnackbar(res);
-        closeCreateModal();
-      })
-      .catch((error) => {
-        showStatusSnackbar(error);
-      });
+    try {
+      const res = await createAcArea(data);
+      showStatusSnackbar(res);
+      closeCreateModal();
+    } catch (error) {
+      showStatusSnackbar(error as StatusRespMsg);
+    }
   };
 
   // ? Update
@@ -60,14 +61,16 @@ export const AcAreaTable = ({
 
   const handleSubmitEditForm = async (data: EditAcAreaFormData) => {
     console.log({ data });
-    await updateAcArea(modalState.payload?.academic_area_id, data)
-      .then((res) => {
-        showStatusSnackbar(res);
-        closeModal();
-      })
-      .catch((error) => {
-        showStatusSnackbar(error);
-      });
+    try {
+      const res = await updateAcArea(
+        modalState.payload?.academic_area_id,
+        data
+      );
+      showStatusSnackbar(res);
+      closeModal();
+    } catch (error) {
+      showStatusSnackbar(error as StatusRespMsg);
+    }
   };
 
   // ? Deletion
@@ -78,16 +81,15 @@ export const AcAreaTable = ({
   const handleConfirmDeletion = async () => {
     setIsDeleting(true);
 
-    await deleteAcArea(modalState.payload?.academic_area_id)
-      .then((res) => {
-        showStatusSnackbar(res);
-        closeModal();
-        setIsDeleting(false);
-      })
-      .catch((error) => {
-        setIsDeleting(false);
-        showStatusSnackbar(error);
-      });
+    try {
+      const res = await deleteAcArea(modalState.payload?.user_id);
+      showStatusSnackbar(res);
+      closeModal();
+    } catch (error) {
+      showStatusSnackbar(error as StatusRespMsg);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // ? Pagination
@@ -108,25 +110,24 @@ export const AcAreaTable = ({
     }));
   };
 
-  if (acArea === null) return <p>Loading...</p>;
-
   return (
     <CustomTable
       actions={["edit"]}
-      rows={acArea.data.items}
+      rows={acArea?.data.items || []}
       columns={acAreaTableColumns}
       onEdit={handleEdit}
       onDelete={handleDelete}
-      isLoading={false}
+      isLoading={isLoading}
     >
       <TablePagination
         rowsPerPageOptions={[10, 20, 30, 40, 50]}
         component="div"
-        count={acArea.data.meta.totalItems}
+        count={acArea?.data.meta.totalItems || 0}
         rowsPerPage={Number(filter.limit)}
         page={Number(filter.page) - 1}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        disabled={isLoading}
       />
 
       <CustomDialog

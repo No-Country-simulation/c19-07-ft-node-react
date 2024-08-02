@@ -2,55 +2,50 @@ import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import {
-  Paper,
-  Table,
-  TableRow,
-  TableCell,
-  TableBody,
-  TableHead,
-  TableContainer,
-} from "@mui/material";
-
-import { Professor } from "../../../interfaces";
 import { useAxiosPrivate } from "../../../hooks";
+import { ContactsTable } from "../../../components";
 
 export default function ParentsContactsPage() {
-  const navigate = useNavigate();
   const api = useAxiosPrivate();
-  const [professors, setProfessors] = useState<Professor[]>([]);
+  const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [professors, setProfessors] = useState<any[]>([]);
+
+  const handleClickRow = (row: any) => {
+    navigate(`/parents/chat/${row.user_id}`, {
+      state: {
+        teacherName: row.name,
+        teacherEmail: row.email,
+      },
+    });
+  };
 
   useEffect(() => {
-    api.get<Professor[]>("/professors").then((res) => {
-      setProfessors(res.data);
-    });
+    const fetchProfessors = async () => {
+      try {
+        const resp = await api.get("/professors");
+        if (resp.status === 200) {
+          setProfessors(resp.data);
+          setIsLoading(false);
+          return;
+        }
+
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfessors();
   }, []);
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Teachers</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {professors!.map((professor) => (
-            <TableRow
-              key={professor.user_id}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              onClick={() => {
-                navigate(`/parents/chat/${professor.user_id}`);
-                console.log(professors);
-              }}
-            >
-              <TableCell component="th" scope="row">
-                {professor.user_id}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <ContactsTable
+      heading="Teachers"
+      rows={professors}
+      isLoading={isLoading}
+      onClickRow={handleClickRow}
+    />
   );
 }

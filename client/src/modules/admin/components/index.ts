@@ -3,6 +3,7 @@ export { AddButton } from "./common/AddButton";
 
 // Dashboard
 export { DashboardChart } from "./dashboard/DashboardChart";
+export { DashboardSkeleton } from "./dashboard/DashboardSkeleton";
 
 // Users
 export { UserTable } from "./users/UserTable";
