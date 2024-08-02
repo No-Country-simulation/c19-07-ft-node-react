@@ -11,8 +11,8 @@ import {
 import useFetchPeriodMarks from "./UseFetchPeriodMarks";
 
 interface ClassRoomChartProps {
-  studentId: string;
-  courseId: string;
+  studentId?: string;
+  courseId?: string;
 }
 
 const ClassRoomChart: React.FC<ClassRoomChartProps> = () => {

@@ -48,7 +48,7 @@ const StudentFilter: React.FC<StudentFilterProps> = ({
 
   useEffect(() => {
     const fetchStudents = async () => {
-      if (user && user.user_id) {
+      if (user !== null && user.Professors !== undefined) {
         try {
           const response = await api.get(
             `/professors/assigned_students/${user.Professors[0].professor_id}`

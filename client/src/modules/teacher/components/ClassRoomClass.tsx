@@ -38,7 +38,7 @@ const ClassRoomClass = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
-  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
+  const [selectedStudent] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [grade, setGrade] = useState<number | string>("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -48,7 +48,7 @@ const ClassRoomClass = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      if (user && user.user_id) {
+      if (user && user.Professors !== undefined) {
         try {
           const response = await api.get(
             `/professors/assigned_students/${user.Professors[0].professor_id}`
@@ -86,6 +86,9 @@ const ClassRoomClass = () => {
   const handleCardClick = async (courseId: string) => {
     console.log("Curso clickeado con ID:", courseId);
     try {
+      if(user === null || user.Professors === undefined) {
+        throw new Error("User not authenticated");
+      }
       const response = await api.get(
         `/professors/assigned_students/${user.Professors[0].professor_id}`
       );
