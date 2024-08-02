@@ -13,7 +13,7 @@ interface PeriodMarks {
   name: string;
 }
 
-const useFetchPeriodMarks = () => {
+const UseFetchPeriodMarks = () => {
   const api = useAxiosPrivate();
   const [data, setData] = useState<PeriodMarks[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -60,4 +60,4 @@ const useFetchPeriodMarks = () => {
   return { data, loading, error };
 };
 
-export default useFetchPeriodMarks;
+export default UseFetchPeriodMarks;
