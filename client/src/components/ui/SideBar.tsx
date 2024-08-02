@@ -10,6 +10,7 @@ import {
   SquareFoot,
   BorderColor,
   FamilyRestroom,
+  Class,
 } from "@mui/icons-material";
 import {
   Box,
@@ -74,7 +75,7 @@ const professorOptions = [
   {
     text: "Classes",
     path: "/teacher/class",
-    icon: <School></School>,
+    icon: <Class></Class>,
   },
   {
     text: "Chat",

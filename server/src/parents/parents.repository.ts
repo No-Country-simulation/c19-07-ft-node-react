@@ -191,3 +191,60 @@ export const getStudentParentDetailsRepository = async (): Promise<Array<{ stude
 
   return data
 }
+
+
+//get relation parent with student
+ export const getRelationParentWithStudentRepository = async (id: string) => {
+  //  const data = await prisma.students.findUnique({
+  //    where: { student_id: studentId },
+  //    include: {
+  //      parent: true
+  //    }
+  //  })
+   const data = await prisma.parents.findUnique({
+    where: { parent_id: id },
+    include: {
+      user: {
+        select: {
+          name: true
+        },
+      },
+      student: {
+        select: {
+          user: {
+            select: {
+              name: true,
+              Students: {
+                select: {
+                  student_id: true
+                }
+              }
+            },
+          }
+        }
+      }
+    }
+  })
+
+  if (data) {
+    const { user_id, relation, createdAt, updatedAt, deletedAt, ...rest } = data;
+
+    if (data.student && data.student.user && data.student.user.Students?.student_id) {
+      const transformedData = {
+        ...rest,
+        student: {
+          name: data.student.user.name,
+          student_id: data.student.user.Students?.student_id
+        }
+      };
+
+      return transformedData;
+    }
+    return {
+      ...rest,
+      user: data.user
+    };
+  }
+
+   return null
+ }

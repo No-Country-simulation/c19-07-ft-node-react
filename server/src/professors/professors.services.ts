@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/no-extra-non-null-assertion */
 /* eslint-disable @typescript-eslint/naming-convention */
 // src/modules/professors/services/professor.service.ts
-import { Academic_records, Courses, Evaluation_results, Evaluations, Parents, Professors, Students, Users } from '@prisma/client'
+import { Academic_records, Courses, Professors, Students, Users } from '@prisma/client'
 import * as professorRepository from '../professors/professors.repository'
-import { CreateAcademicRecord, CreateProfessor, StudentsAndCourse, StudentsWithData } from '../types/professors.type'
+import { CreateAcademicRecord, CreateProfessor, RecordsWithPeriod, StudentsAndCourse, StudentsWithData } from '../types/professors.type'
 import z from 'zod'
 import { getStudentEducationalLevel, getStudentMarksByCourse, studentsFromCourse } from '../students/students.services'
 import { DatabaseError } from '../errors/databaseError'
@@ -13,9 +13,7 @@ import { getUserByIdServices } from '../users/users.services'
 import { ValidationError } from '../errors/validationError'
 import { ParsedQs } from 'qs'
 import { NotFoundError } from '../errors/notFoundError'
-import { truncate } from 'fs'
 import { PERIOD_ONE, PERIOD_THREE, PERIOD_TWO } from '../constants/date.const'
-import { NOTFOUND } from 'dns'
 import { getParentById } from '../parents/parents.repository'
 
 // export const getAllProfessors = async (): Promise<Professors[]> => {
@@ -160,10 +158,18 @@ const getStudentData = async (students: Students[], courseId: string): Promise<S
   }
 }
 
-const getStudentAcademicRecords = async (courseId: string, studentId: string): Promise<Academic_records[] | undefined> => {
+const getStudentAcademicRecords = async (courseId: string, studentId: string): Promise<RecordsWithPeriod[] | undefined> => {
   const records = await getStudentMarksByCourse(courseId, studentId)
   if (records.length <= 0) return
-  return records
+  const periodOne = new Date(PERIOD_ONE)
+  const periodTwo = new Date(PERIOD_TWO)
+  const periodThree = new Date(PERIOD_THREE)
+  const recordsWithPeriod: RecordsWithPeriod[] = records.map(record => {
+    if (record.date.getTime() >= periodOne.getTime() && record.date.getTime() < periodTwo.getTime()) return { ...record, period: 1 }
+    if (record.date.getTime() >= periodTwo.getTime() && record.date.getTime() < periodThree.getTime()) return { ...record, period: 2 }
+    return { ...record, period: 3 }
+  })
+  return recordsWithPeriod
 }
 
 const getParentDataById = async (parentId: string): Promise<string | undefined> => {
@@ -307,7 +313,7 @@ export const getAcademicRecordsByPeriod = (period: number, academicRecords: Acad
       case 2:
         return academicRecords.filter(record => record.date.getTime() >= periodTwo.getTime() && record.date.getTime() < periodThree.getTime())
       case 3:
-        return academicRecords.filter(record => record.date.getTime() <= periodThree.getTime() && record.date.getTime() > periodTwo.getTime())
+        return academicRecords.filter(record => record.date.getTime() >= periodThree.getTime())
       default:
         throw new NotFoundError('Invalid period number', 404)
     }
@@ -331,4 +337,8 @@ export const getAcademicRecordsByStudent = async (id: string): Promise<Academic_
 
 export const getCourseById = async (id: string): Promise<Courses | null> => {
   return await professorRepository.getCourseById(id)
+}
+
+export const deleteAcademicRecordById = async (id: string): Promise<Academic_records> => {
+  return await professorRepository.deleteAcademicRecordById(id)
 }
