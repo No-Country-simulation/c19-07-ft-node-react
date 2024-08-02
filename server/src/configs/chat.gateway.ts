@@ -13,7 +13,7 @@ export class ServerSocket {
     this.server = server
     this.io = new SocketServer(this.server, {
       cors: {
-        origin: 'http://localhost:5173',
+        origin: process.env.CORS_ORIGIN_URL,
         methods: ['GET', 'POST'],
         credentials: true
       }

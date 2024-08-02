@@ -32,14 +32,21 @@ class Server {
     this.app.use(express.json())
     this.app.use(cookieParser())
     this.app.use(cors({
-      origin: 'http://localhost:5173',
+      origin: process.env.CORS_ORIGIN_URL,
       credentials: true
     }))
   }
 
   routes (): void {
     this.app.use('/api/v1/auth', authRoutes)
+<<<<<<< Updated upstream
     this.app.use('/api/v1', verifyToken, router)
+=======
+    this.app.use('/api/v1'
+      , verifyToken
+      , router)
+
+>>>>>>> Stashed changes
     this.app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
   }
 
