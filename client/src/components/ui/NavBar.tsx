@@ -10,14 +10,14 @@ import {
 
 import { useAuthStore, useUiStore } from "../../hooks";
 
-import { useAlert } from "../../hooks/useAlert";
+// import { useAlert } from "../../hooks/useAlert";
 import { NotificationComponent } from "./notificationSnackBar";
 
 export const NavBar = () => {
   const { startLogout } = useAuthStore();
   const { handleOpenSideBar } = useUiStore();
 
-  const { alert } = useAlert();
+  // const { alert } = useAlert();
 
   return (
     <AppBar position="static">

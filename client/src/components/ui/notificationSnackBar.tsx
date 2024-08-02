@@ -21,8 +21,9 @@ export const NotificationComponent = () => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   // Abre el menú de notificaciones
-  const handleClick = (event) => {
+  const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
+    setNotifications([]);
   };
 
   // Cierra el menú de notificaciones

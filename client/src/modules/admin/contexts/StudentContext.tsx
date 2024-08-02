@@ -3,7 +3,7 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { Filter } from "../interfaces";
 import { userMessage } from "../constants";
 import { useAxiosPrivate } from "../../../hooks";
-import { Message, ParentsResponse } from "../../../interfaces";
+import { StatusRespMsg, ParentsResponse } from "../../../interfaces";
 
 interface StudentContextProps {
   children: ReactNode;
@@ -15,9 +15,9 @@ export interface StudentContextValue {
   filter: Filter;
   setFilter: React.Dispatch<React.SetStateAction<Filter>>;
   getStudents: () => Promise<void>;
-  createStudent: (data: any) => Promise<Message>;
-  deleteStudent: (id: string) => Promise<Message>;
-  updateStudent: (id: string, data: any) => Promise<Message>;
+  createStudent: (data: any) => Promise<StatusRespMsg>;
+  deleteStudent: (id: string) => Promise<StatusRespMsg>;
+  updateStudent: (id: string, data: any) => Promise<StatusRespMsg>;
 }
 
 export const StudentContext = createContext<StudentContextValue | undefined>(
@@ -42,7 +42,7 @@ export const StudentProvider = ({ children }: StudentContextProps) => {
     setStudent(response.data);
   };
 
-  const createStudent = async (data: any): Promise<Message> => {
+  const createStudent = async (data: any): Promise<StatusRespMsg> => {
     try {
       const response = await api.post("/admin/create-parent", data);
 
@@ -58,7 +58,7 @@ export const StudentProvider = ({ children }: StudentContextProps) => {
     }
   };
 
-  const updateStudent = async (id: string, data: any): Promise<Message> => {
+  const updateStudent = async (id: string, data: any): Promise<StatusRespMsg> => {
     try {
       const response = await api.put(`/admin/update-parent/${id}`, data);
 
@@ -74,7 +74,7 @@ export const StudentProvider = ({ children }: StudentContextProps) => {
     }
   };
 
-  const deleteStudent = async (id: string): Promise<Message> => {
+  const deleteStudent = async (id: string): Promise<StatusRespMsg> => {
     try {
       const response = await api.delete(`/admin/delete-parent/${id}`);
 
