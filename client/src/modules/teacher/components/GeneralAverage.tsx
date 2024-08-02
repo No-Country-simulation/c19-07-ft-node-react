@@ -3,8 +3,11 @@ import { useParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import { useAxiosPrivate } from "../../../hooks";
 
+interface GeneralAverageProps {
+  selectedPeriod: number;
+}
 
-const GeneralAverage = () => {
+const GeneralAverage = ({ selectedPeriod }: GeneralAverageProps) => {
   const api = useAxiosPrivate();
   const { studentId, courseId } = useParams();
   const [average, setAverage] = useState<number | null>(null);
@@ -14,7 +17,7 @@ const GeneralAverage = () => {
     const fetchAverage = async () => {
       try {
         const response = await api.get(
-          `/professors/period_marks/${studentId}?courseId=${courseId}&period=3`
+          `/professors/period_marks/${studentId}?courseId=${courseId}&period=${selectedPeriod}`
         );
         const averageValue = response.data.data.average;
         setAverage(averageValue);
@@ -24,7 +27,7 @@ const GeneralAverage = () => {
     };
 
     fetchAverage();
-  }, [studentId, courseId]);
+  }, [studentId, courseId, selectedPeriod, api]);
 
   const getMarkColor = (mark: number | null) => {
     if (mark === null) return "black";
@@ -54,3 +57,5 @@ const GeneralAverage = () => {
 };
 
 export default GeneralAverage;
+
+

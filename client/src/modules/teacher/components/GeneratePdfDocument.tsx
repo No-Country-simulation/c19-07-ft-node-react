@@ -20,21 +20,29 @@ import {
   IconButton,
   Modal,
   Stack,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useAxiosPrivate } from "../../../hooks";
 import { useAuthStore } from "../../../hooks/useAuthStore";
 import AddIcon from "@mui/icons-material/Add";
 import ClassRoomChart from "./ClassRoomChart";
 import GeneralAverage from "./GeneralAverage";
+import FeedbackSection from "./StudentFeedback";
+import ActionButtons from "./ActionsButtons";
+import StudentReportData from "./StudentReportData";
 interface AcademicRecord {
   historial_id: string;
   name: string;
   comment: string;
   date: string;
   mark: number;
-
+  period: number;
 }
 interface Student {
   student_id: string;
@@ -62,6 +70,8 @@ const GeneratePdfDocument = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [studentFeedback, setStudentFeedback] = useState<string>("");
+  const [periods, setPeriods] = useState<number[]>([]);
+  const [selectedPeriod, setSelectedPeriod] = useState<number>(2);
   // const [courseId, setCourseId] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -73,7 +83,10 @@ const GeneratePdfDocument = () => {
     mark: 0,
   });
   const [editableRecords, setEditableRecords] = useState<AcademicRecord[]>([]);
-  const { studentId, courseId } = useParams<{ studentId: string; courseId: string }>();
+  const { studentId, courseId } = useParams<{
+    studentId: string;
+    courseId: string;
+  }>();
   const api = useAxiosPrivate();
   const { user } = useAuthStore();
   const reportRef = useRef<HTMLDivElement>(null);
@@ -93,8 +106,8 @@ const GeneratePdfDocument = () => {
           (student: Student) => student.student_id === studentId
         );
         setSelectedStudent(student);
-        setEditableRecords(student.academicRecords); 
-        setStudentFeedback(student.feedback || ""); 
+        setEditableRecords(student.academicRecords);
+        setStudentFeedback(student.feedback || "");
       } catch (error) {
         console.error("Error fetching students data:", error);
         setSnackbarMessage("Error fetching students data.");
@@ -104,6 +117,25 @@ const GeneratePdfDocument = () => {
 
     fetchStudentData();
   }, [studentId, api, user]);
+
+  useEffect(() => {
+    if (selectedStudent) {
+      const availablePeriods = Array.from(
+        new Set(selectedStudent.academicRecords.map((record) => record.period))
+      );
+      setPeriods(availablePeriods);
+      setSelectedPeriod(availablePeriods[0]); // Configura el período inicial
+    }
+  }, [selectedStudent]);
+
+  useEffect(() => {
+    if (selectedStudent) {
+      const filteredRecords = selectedStudent.academicRecords.filter(
+        (record) => record.period === selectedPeriod
+      );
+      setEditableRecords(filteredRecords);
+    }
+  }, [selectedPeriod, selectedStudent]);
 
   const handleDownloadPDF = async () => {
     if (!reportRef.current) return;
@@ -126,22 +158,24 @@ const GeneratePdfDocument = () => {
   //   setStudentFeedback(event.target.value);
   // };
 
-  const handleSaveChanges = async () => {
-    // Implement logic to save changes to the server
+
+  const handleDeleteRecord = async (historialId: string) => {
     try {
-      await api.put(`/students/${selectedStudent?.student_id}`, {
-        academicRecords: editableRecords,
-        feedback: studentFeedback,
-      });
-      setSnackbarMessage("Changes saved successfully!");
+      await api.delete(`/professors/evaluations/${historialId}`); // URL para eliminar el registro
+      setEditableRecords(
+        editableRecords.filter((record) => record.historial_id !== historialId)
+      );
+      setSnackbarMessage("Academic record deleted successfully!");
       setSnackbarOpen(true);
     } catch (error) {
-      console.error("Error saving changes:", error);
-      setSnackbarMessage("Error saving changes.");
+      console.error("Error deleting academic record:", error);
+      setSnackbarMessage("Error deleting academic record.");
       setSnackbarOpen(true);
     }
+  };
 
-    setIsEditing(false); 
+  const handleSaveChanges = () => {
+    setIsEditing(false);
   };
 
   const handleAddRecord = async () => {
@@ -150,18 +184,18 @@ const GeneratePdfDocument = () => {
       if (isNaN(userDate.getTime())) {
         throw new Error("Invalid date format");
       }
-      const isoDate = userDate.toISOString(); 
-      await api.post('/professors/evaluations', {
-        student_id: selectedStudent?.student_id, 
+      const isoDate = userDate.toISOString();
+      await api.post("/professors/evaluations", {
+        student_id: selectedStudent?.student_id,
         name: newRecord.name,
         date: isoDate,
         mark: newRecord.mark,
         comment: newRecord.comment,
-        curso_id: courseId 
+        curso_id: courseId,
       });
-  
+
       setEditableRecords([...editableRecords, newRecord]);
-  
+
       setSnackbarMessage("Academic record added successfully!");
       setSnackbarOpen(true);
     } catch (error) {
@@ -169,7 +203,7 @@ const GeneratePdfDocument = () => {
       setSnackbarMessage("Error adding academic record.");
       setSnackbarOpen(true);
     }
-  
+
     setModalOpen(false);
     setNewRecord({
       name: "",
@@ -178,11 +212,6 @@ const GeneratePdfDocument = () => {
       comment: "",
     });
   };
-  
-
-
-
-
 
   const handleCloseSnackbar = () => setSnackbarOpen(false);
 
@@ -198,7 +227,8 @@ const GeneratePdfDocument = () => {
 
   if (!selectedStudent) return <Typography variant="h6">Loading...</Typography>;
 
-  const { name, grade, section, parentName, educationalLevel } = selectedStudent;
+  const { name, grade, section, parentName, educationalLevel } =
+    selectedStudent;
 
   return (
     <>
@@ -208,7 +238,7 @@ const GeneratePdfDocument = () => {
           component="h1"
           gutterBottom
           sx={{
-            color: "#0c0c0cfc",
+            color: "#ffffff",
             textAlign: "center",
             fontWeight: "bold",
             fontSize: { xs: "2.5rem", sm: "3.5rem", md: "3.5rem" },
@@ -220,39 +250,14 @@ const GeneratePdfDocument = () => {
           Student Report: <strong>{name}</strong>
         </Typography>
         <Box ref={reportRef} sx={{ maxWidth: "800px", margin: "0 auto" }}>
-          <Box
-            sx={{
-              color: "#0a0a0ad2",
-              marginBottom: "20px",
-              marginTop: "40px",
-              padding: "10px",
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
-          >
-            <Typography
-              variant="h5"
-              component="h2"
-              gutterBottom
-              sx={{ fontSize: "2rem" }}
-            >
-              <strong>Student Data</strong>
-            </Typography>
-            <Typography variant="body1" sx={{ fontSize: "1.5rem" }}>
-              <strong>Grade:</strong> {grade}
-            </Typography>
-            <Typography variant="body1" sx={{ fontSize: "1.5rem" }}>
-              <strong>Section:</strong> {section}
-            </Typography>
-            <Typography variant="body1" sx={{ fontSize: "1.5rem" }}>
-              <strong>Educational Level:</strong> {educationalLevel || "N/A"}
-            </Typography>
-            <Typography variant="body1" sx={{ fontSize: "1.5rem" }}>
-              <strong>Parent:</strong> {parentName}
-            </Typography>
-          </Box>
-          <ClassRoomChart  studentId={studentId} courseId={courseId} />
+          <StudentReportData
+            name={selectedStudent.name}
+            grade={selectedStudent.grade}
+            section={selectedStudent.section}
+            educationalLevel={selectedStudent.educationalLevel}
+            parentName={selectedStudent.parentName}
+          />
+          <ClassRoomChart studentId={studentId} courseId={courseId} />
           <Card
             sx={{
               marginBottom: "20px",
@@ -263,7 +268,21 @@ const GeneratePdfDocument = () => {
             <CardHeader
               title={
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                  Academic Records Period 3
+                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                    <InputLabel>Academy Record</InputLabel>
+                    <Select
+                      value={selectedPeriod}
+                      onChange={(e) =>
+                        setSelectedPeriod(Number(e.target.value))
+                      }
+                    >
+                      {periods.map((period) => (
+                        <MenuItem key={period} value={period}>
+                          Period {period}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                   <IconButton
                     onClick={() => setModalOpen(true)}
                     sx={{ marginLeft: 2 }}
@@ -281,6 +300,7 @@ const GeneratePdfDocument = () => {
                       <TableCell>Record Name</TableCell>
                       <TableCell>Comment</TableCell>
                       <TableCell>Date</TableCell>
+                      <TableCell>Period</TableCell>
                       <TableCell>Mark</TableCell>
                     </TableRow>
                   </TableHead>
@@ -319,6 +339,7 @@ const GeneratePdfDocument = () => {
                             record.comment
                           )}
                         </TableCell>
+
                         <TableCell>
                           {isEditing ? (
                             <TextField
@@ -340,6 +361,23 @@ const GeneratePdfDocument = () => {
                             new Date(record.date).toLocaleDateString()
                           )}
                         </TableCell>
+                        <TableCell>
+                          {isEditing ? (
+                            <TextField
+                              value={record.period}
+                              onChange={(e) =>
+                                handleRecordChange(
+                                  index,
+                                  "comment",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          ) : (
+                            record.period
+                          )}
+                        </TableCell>
+
                         <TableCell style={{ color: getMarkColor(record.mark) }}>
                           {isEditing ? (
                             <TextField
@@ -357,48 +395,38 @@ const GeneratePdfDocument = () => {
                             record.mark
                           )}
                         </TableCell>
+                        <TableCell>
+                          {isEditing ? (
+                            <IconButton
+                              color="error"
+                              onClick={() =>
+                                handleDeleteRecord(record.historial_id)
+                              }
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          ) : null}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-                <GeneralAverage/>
+                <GeneralAverage selectedPeriod={selectedPeriod} />
               </TableContainer>
             </CardContent>
           </Card>
         </Box>
-        <Box sx={{ marginTop: 4 }}>
-          <Typography variant="h6" sx={{ marginBottom: 2, fontSize: "2rem" }}>
-            Student Feedback
-          </Typography>
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            value={studentFeedback} 
-            onChange={(e) => setStudentFeedback(e.target.value)} 
-            disabled={!isEditing} 
-            sx={{
-              marginBottom: 2,
-              backgroundColor: "#fffffff8",
-              borderRadius: "4px",
-            }}
-          />
-        </Box>
-        <Box sx={{ textAlign: "center", marginTop: "20px" }}>
-          <Button
-            variant="contained"
-            onClick={handleDownloadPDF}
-            sx={{ marginRight: 2 }}
-          >
-            Download PDF
-          </Button>
-          <Button
-            variant="contained"
-            onClick={isEditing ? handleSaveChanges : () => setIsEditing(true)}
-          >
-            {isEditing ? "Save Changes" : "Edit Document"}
-          </Button>
-        </Box>
+        <FeedbackSection
+          feedback={studentFeedback}
+          onFeedbackChange={(e) => setStudentFeedback(e.target.value)}
+          isEditing={isEditing}
+        />
+        <ActionButtons
+          isEditing={isEditing}
+          onDownloadPDF={handleDownloadPDF}
+          onSaveChanges={handleSaveChanges}
+          onEdit={() => setIsEditing(true)}
+        />
         <Modal
           open={modalOpen}
           onClose={() => setModalOpen(false)}
