@@ -37,12 +37,12 @@ import FeedbackSection from "./StudentFeedback";
 import ActionButtons from "./ActionsButtons";
 import StudentReportData from "./StudentReportData";
 interface AcademicRecord {
-  historial_id: string;
+  historial_id?: string;
   name: string;
   comment: string;
   date: string;
   mark: number;
-  period: number;
+  period?: number;
 }
 interface Student {
   student_id: string;
@@ -70,8 +70,8 @@ const GeneratePdfDocument = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [studentFeedback, setStudentFeedback] = useState<string>("");
-  const [periods, setPeriods] = useState<number[]>([]);
-  const [selectedPeriod, setSelectedPeriod] = useState<number>(2);
+  const [periods, setPeriods] = useState<Array<number | undefined>>([]); // coregir
+  const [selectedPeriod, setSelectedPeriod] = useState<number | undefined>(2);
   // const [courseId, setCourseId] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -94,6 +94,9 @@ const GeneratePdfDocument = () => {
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
+        if(user === null || user.Professors === undefined) {
+          throw new Error('User not authenticated');
+        }
         const response = await api.get(
           `/professors/assigned_students/${user.Professors[0].professor_id}`
         );
@@ -159,7 +162,7 @@ const GeneratePdfDocument = () => {
   // };
 
 
-  const handleDeleteRecord = async (historialId: string) => {
+  const handleDeleteRecord = async (historialId?: string) => {
     try {
       await api.delete(`/professors/evaluations/${historialId}`); // URL para eliminar el registro
       setEditableRecords(
@@ -227,7 +230,7 @@ const GeneratePdfDocument = () => {
 
   if (!selectedStudent) return <Typography variant="h6">Loading...</Typography>;
 
-  const { name, grade, section, parentName, educationalLevel } =
+  const { name } =
     selectedStudent;
 
   return (

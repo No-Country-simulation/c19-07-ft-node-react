@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { useAxiosPrivate } from "../../../hooks";
 
 interface GeneralAverageProps {
-  selectedPeriod: number;
+  selectedPeriod?: number;
 }
 
 const GeneralAverage = ({ selectedPeriod }: GeneralAverageProps) => {
