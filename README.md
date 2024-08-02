@@ -1,4 +1,3 @@
-
 # School Metrics
 
 ### ¿Qué es?
@@ -31,6 +30,9 @@ El objetivo es lograr facilitar la entrega de las notas y del seguimiento academ
 ### Como ejecutar el proyecto
 
 #### Para ejecutar la api
+
+#### Para ejecutar la API
+
 - ```cd server```
 - ```npm install```
 - ```npm run dev```
